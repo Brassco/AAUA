@@ -21,8 +21,8 @@ import {connect} from 'react-redux';
 class DetailsComponent extends Component {
 
     componentWillMount() {
-        let {token, phone} = this.props;
-        this.props.getProductById(token, phone, 60)
+        let {token, phone, productId} = this.props;
+        this.props.getProductById(token, phone, productId)
     }
 
     addToBascket() {

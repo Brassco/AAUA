@@ -8,7 +8,7 @@ import {
     STORE_GET_PRODUCT_BY_ID,
     STORE_GET_PRODUCT_BY_ID_SUCCESS,
     ADD_TO_BASKET,
-    CLEAN_BASKET
+    DELETE_FROM_BASKET
 } from '../Actions/types';
 import {
     STORE_CATEGORIES_URL,
@@ -31,45 +31,49 @@ console.log(token, phone)
         let signatureString = token+":"+phone;
         const signature = btoa(signatureString);
 console.log('STORE get categories - ', signatureString, signature, STORE_CATEGORIES_URL);
-        // axios.get(STORE_CATEGORIES_URL, {
-        //         headers: {
-        //             'Signature' : signature,
-        //         }
-        //     }
-        // )
-        //     .then(categories => onGetCategoriesSuccess(dispatch, categories.data))
-        //     .catch((error) => {
-        //         console.log(error)
-        //     })
-        let categories = [
-            {
-                "id":163,
-                "name":"Cars",
-                "slug":"cars",
-                "image":false
-            },
-            {
-                "id":170,
-                "name":"Clothing",
-                "slug":"clothing",
-                "image":false,
-                "sub_categories":[
-                    {
-                        "id":171,
-                        "name":"Hoodies",
-                        "slug":"hoodies",
-                        "image":false
-                    },
-                    {
-                        "id":175,
-                        "name":"T-shirts",
-                        "slug":"t-shirts",
-                        "image":false
-                    }
-                ]
+        axios.get(STORE_CATEGORIES_URL, {
+                headers: {
+                    'Signature' : signature,
+                }
             }
-        ]
-        onGetCategoriesSuccess(dispatch, categories)
+        )
+            .then(categories => {
+                    console.log(categories.data);
+                    onGetCategoriesSuccess(dispatch, categories.data.categories)
+                }
+            )
+            .catch((error) => {
+                console.log(error)
+            })
+        // let categories = [
+        //     {
+        //         "id":163,
+        //         "name":"Cars",
+        //         "slug":"cars",
+        //         "image":false
+        //     },
+        //     {
+        //         "id":170,
+        //         "name":"Clothing",
+        //         "slug":"clothing",
+        //         "image":false,
+        //         "sub_categories":[
+        //             {
+        //                 "id":171,
+        //                 "name":"Hoodies",
+        //                 "slug":"hoodies",
+        //                 "image":false
+        //             },
+        //             {
+        //                 "id":175,
+        //                 "name":"T-shirts",
+        //                 "slug":"t-shirts",
+        //                 "image":false
+        //             }
+        //         ]
+        //     }
+        // ]
+        // onGetCategoriesSuccess(dispatch, categories)
     }
 }
 
@@ -87,16 +91,10 @@ export const getProductsByCategoriesId = (token, phone, categoryId) => {
             type: STORE_GET_PRODUCTS_BY_CATEGORY_ID
         })
 
-        // const obj = {
-        //     "token" : token,
-        // };
-        //
-        // const data = JSON.stringify(obj);
-
         let signatureString = token+":"+phone;
         const signature = btoa(signatureString);
 console.log('STORE get products - ', signature, STORE_PRODUCTS_URL);
-        /*axios.get(STORE_PRODUCTS_URL, {
+        axios.get(STORE_PRODUCTS_URL, {
                 headers: {
                     'Signature' : signature,
                 }
@@ -105,61 +103,18 @@ console.log('STORE get products - ', signature, STORE_PRODUCTS_URL);
             .then(products => onGetProductsSuccess(dispatch, products.data))
             .catch((error) => {
                 console.log(error)
-            })*/
-        let products =  [
-            {
-                "id":60,
-                "name":"Woo Logo",
-                "photo":"http://wp.dev/wp-content/uploads/2013/06/hoodie_6_front.jpg",
-                "price":"35",
-                "bonus_price":"",
-                "views": "1",
-                "gallery":[
-                    "http://wp.dev/wp-content/uploads/2013/06/hoodie_6_back.jpg"
-                ],
-                "status":"instock",
-                "categories":{
-                    "id":171,
-                    "name":"Hoodies"
-                },
-                "brands":{
-                    "id":172,
-                    "name":"Coca Cola"
-                }
-            },
-            {
-                "id":61,
-                "name":"Woo Logo",
-                "photo":"http://wp.dev/wp-content/uploads/2013/06/hoodie_6_front.jpg",
-                "price":"35",
-                "bonus_price":"",
-                "views": "1",
-                "gallery":[
-                    "http://wp.dev/wp-content/uploads/2013/06/hoodie_6_back.jpg"
-                ],
-                "status":"instock",
-                "categories":{
-                    "id":171,
-                    "name":"Hoodies"
-                },
-                "brands":{
-                    "id":172,
-                    "name":"Coca Cola"
-                }
-            }
-        ]
-        onGetProductsSuccess(dispatch, products);
+            })
     }
 }
 
 const onGetProductsSuccess = (dispatch, products) => {
     dispatch ({
         type: STORE_GET_PRODUCTS_BY_CATEGORY_ID_SUCCESS,
-        payload: products
+        payload: products.products
     })
 }
 
-export const getProductById = (token, phone) => {
+export const getProductById = (token, phone, productId) => {
     return (dispatch) => {
 
         dispatch({
@@ -169,17 +124,17 @@ export const getProductById = (token, phone) => {
         let signatureString = token+":"+phone;
         const signature = btoa(signatureString);
         console.log('STORE get products - ', signature, STORE_PRODUCT_BY_ID_URL);
-        /*axios.get(STORE_PRODUCT_BY_ID_URL, {
+        axios.get(STORE_PRODUCT_BY_ID_URL+productId, {
                 headers: {
                     'Signature' : signature,
                 }
             }
         )
-            .then(product => onGetProductsSuccess(dispatch, product.data))
+            .then(product => onGetProductSuccess(dispatch, product.data))
             .catch((error) => {
                 console.log(error)
-            })*/
-        let product = {
+            })
+        /*let product = {
             "id":"60",
             "name":"Woo Logo",
             "photo":"http://wp.dev/wp-content/uploads/2013/06/hoodie_6_front.jpg",
@@ -195,14 +150,15 @@ export const getProductById = (token, phone) => {
                 "name":"Hoodies"
             }
         }
-        onGetProductSuccess(dispatch, product)
+        onGetProductSuccess(dispatch, product)*/
     }
 }
 
 const onGetProductSuccess = (dispatch, product) => {
+console.log(product);
     dispatch ({
         type: STORE_GET_PRODUCT_BY_ID_SUCCESS,
-        payload: product
+        payload: product.product
     })
 }
 
@@ -213,8 +169,9 @@ export const addToBasket = (productId) => {
     }
 }
 
-export const cleanBasket = () => {
+export const deleteFromBasket = (id) => {
     return {
-        type: CLEAN_BASKET
+        type: DELETE_FROM_BASKET,
+        payload: id
     }
 }

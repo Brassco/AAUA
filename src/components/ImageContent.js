@@ -40,6 +40,7 @@ export default class ImageContent extends Component {
     }
 
     render() {
+console.log(this.props);
         return (
             <MainCard>
                 <Header back/>

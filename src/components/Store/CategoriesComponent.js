@@ -18,12 +18,29 @@ class CategoriesComponent extends Component {
         this.props.getCategories(token, phone)
     }
 
-    openStoreCategories(categorieId) {
-        Actions.goods()
+    openStoreCategories(category) {
+        Actions.goods({category: category})
+    }
+
+    renderRowItems(row) {
+        return row.map( (item, index) => {
+            console.log(item);
+            return (
+                <Item
+                    key={item.id}
+                        onPress={() => this.openStoreCategories(item)}
+                        imageSrc={getImageByStoreCategoryId(item.id)}
+                    >
+                        {
+                            item.name
+                        }
+                    </Item>
+            )
+        })
     }
 
     renderRows() {
-        console.log(this.props.categories)
+console.log(this.props.categories)
         const categories = [...this.props.categories];
         var i=0;
         var rows = [];
@@ -41,22 +58,9 @@ console.log(row[0]);
                     justifyContent: 'space-around',
                     alignItems: 'center'
                 }}>
-                    <Item
-                        onPress={Actions.specialOffer}
-                        imageSrc={getImageByStoreCategoryId(row[0].id)}
-                    >
-                        {
-                            row[0].name
-                        }
-                    </Item>
-                    <Item
-                        onPress={() => this.openStoreCategories(row[1])}
-                        imageSrc={getImageByStoreCategoryId(row[1].id)}
-                    >
-                        {
-                            row[1].name
-                        }
-                    </Item>
+                    {
+                        this.renderRowItems(row)
+                    }
                 </CardItem>
             )
         })

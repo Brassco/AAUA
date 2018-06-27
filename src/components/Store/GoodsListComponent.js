@@ -16,8 +16,28 @@ import {connect} from 'react-redux';
 class GoodsListComponent extends Component {
 
     componentWillMount() {
-        let {token, phone} = this.props;
-        this.props.getProductsByCategoriesId(token, phone, 163)
+        let {token, phone, category} = this.props;
+        console.log(this.props);
+        this.props.getProductsByCategoriesId(token, phone, category.Id)
+    }
+
+    renderRowItems(row) {
+        return row.map( (item, index) => {
+            console.log(item);
+            return (
+                <GoodsComponent
+                    key={item.id+item.name}
+                    onPress={() => Actions.detail({productId: item.id})}
+                    imageSrc={{uri:item.photo}}
+                    price={item.price}
+                    isPresent
+                >
+                    {
+                        item.name
+                    }
+                </GoodsComponent>
+            )
+        })
     }
 
     renderRows() {
@@ -30,29 +50,13 @@ class GoodsListComponent extends Component {
             i = i+2;
         }
         return rows.map( (row, index) => {
-            console.log(row[0]);
             return (
                 <CardItem
                     key={row[0].id}
                     style={styles.cardItemStyle}>
-                    <GoodsComponent
-                        onPress={() => Actions.detail()}
-                        imageSrc={{uri:row[0].photo}}
-                        price={row[0].price}
-                        isPresent
-                    >
-                        {
-                            row[0].name
-                        }
-                    </GoodsComponent>
-                    <GoodsComponent
-                        imageSrc={{uri:row[1].photo}}
-                        price={row[1].price}
-                        >
-                        {
-                            row[1].name
-                        }
-                    </GoodsComponent>
+                    {
+                        this.renderRowItems(row)
+                    }
                 </CardItem>
             )
         })

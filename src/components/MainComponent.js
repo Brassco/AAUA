@@ -61,7 +61,7 @@ console.log(images, this.props.images);
                 }}>
                     <ImageSlider
                         onPress={(image) =>{
-                            Actions.imageContent({images: this.props.images, index: image.id});
+                            Actions.imageContent({images: this.props.images, index: image.index});
                             // this.props.images.map( imgObj => {
                             //     if (imgObj.url == image.image && imgObj.is_content) {
                             //         Actions.imageContent({images: imgObj});

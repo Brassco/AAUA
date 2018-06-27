@@ -77,7 +77,7 @@ class Header extends Component{
                         justifyContent: 'center',
                         alignItems: 'center',
                     }}
-                    onPress={Actions.drawerOpen}
+                    onPress={Actions.basketList}
                 >
                     <Icon
                         imageSrc={require('../../images/icons/basket.png')}

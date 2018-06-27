@@ -14,6 +14,8 @@ import CustomMarker from './CustomMarker';
 import MapFiltersComponent from './MapFiltersComponent';
 import {selectCategory} from '../../Actions/DiscountsAction';
 import {Actions} from 'react-native-router-flux';
+import {checkPermission} from 'react-native-android-permissions';
+
 
 class MapComponent extends Component {
 
@@ -53,7 +55,7 @@ class MapComponent extends Component {
     }
 
     requestPermission = async () => {
-        try {
+        /*try {
             const granted = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
                 {
@@ -74,14 +76,32 @@ class MapComponent extends Component {
                         });
                     },
                     (error) => console.log(error.message ),
-                    { enableHighAccuracy: false, timeout: 40000, maximumAge: 1000, distanceFilter: 10 },
+                    // { enableHighAccuracy: false, timeout: 4000},
                 );
             } else {
                 console.log("Camera permission denied")
             }
         } catch (err) {
             console.warn(err)
-        }
+        }*/
+
+        checkPermission("android.permission.ACCESS_FINE_LOCATION").then((result) => {
+            this.watchId = navigator.geolocation.watchPosition(
+                (position) => {
+                    console.log(position)
+                    this.setState({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        error: null,
+                    });
+                },
+                (error) => console.log(error.message ),
+                { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
+            );
+        }, (result) => {
+            console.log("Not Granted!");
+            console.log(result);
+        });
     }
 
     componentDidMount() {
@@ -95,7 +115,7 @@ class MapComponent extends Component {
     }
 
     renderContent() {
-console.log(this.props.places);
+console.log(this.state);
         const {
             container,
             map,
@@ -115,6 +135,8 @@ console.log(this.props.places);
                     <CardItem>
                         <View style={container}>
                             <MapView
+                                showsUserLocation={true}
+                                showsMyLocationButton={true}
                                 style={
                                     map
                                 }
@@ -124,7 +146,12 @@ console.log(this.props.places);
                                     latitudeDelta: 0.0922,
                                     longitudeDelta: 0.0421,
                                 }}
-
+                                region={{
+                                    latitude: this.state.latitude,
+                                    longitude: this.state.longitude,
+                                    latitudeDelta: 0.0922,
+                                    longitudeDelta: 0.0421,
+                                }}
                             >
                                 {this.renderMarkers()}
                             </MapView>

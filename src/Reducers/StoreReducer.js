@@ -9,7 +9,7 @@ import {
     STORE_GET_PRODUCT_BY_ID_SUCCESS,
     STORE_GET_PRODUCT_BY_ID_FAIL,
     ADD_TO_BASKET,
-    CLEAN_BASKET
+    DELETE_FROM_BASKET
 } from '../Actions/types';
 const INITIAL_STATE = {
     categories: [],
@@ -41,11 +41,17 @@ export default (state = INITIAL_STATE, action) => {
             return {...state, loading: false, products: [], error: action.payload};
         case ADD_TO_BASKET:
             let newBasket = state.basket.slice();
-            newBasket.push(action.payload);
+            newBasket[action.payload.id] = action.payload;
 console.log(newBasket);
             return {...state, loading: false, products: [], basket: newBasket};
-        case CLEAN_BASKET:
-            return {...state, loading: false, products: [], basket: []};
+        case DELETE_FROM_BASKET:
+            let copyBasket = state.basket;
+            var index = copyBasket.indexOf(action.payload);
+            if (index > -1) {
+                copyBasket.splice(index, 1);
+            }
+console.log(newBasket);
+            return {...state, loading: false, basket: newBasket};
         default: return state;
     }
 }

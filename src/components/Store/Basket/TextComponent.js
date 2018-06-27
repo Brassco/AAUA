@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {RATIO, WIDTH_RATIO} from '../../../styles/constants';
 
 const TextComponent = (props) => {
@@ -14,9 +14,11 @@ const TextComponent = (props) => {
                         {props.title}
                     </Text>
                 </View>
-                <View style={dateContainer}>
+                <TouchableOpacity
+                    onPress={props.onDelete}
+                    style={dateContainer}>
                     <Text style={deleteText}> Удалить Х</Text>
-                </View>
+                </TouchableOpacity>
             </View>
             <View style={isPresentContainer}>
                 <Text style={isPresentText}>

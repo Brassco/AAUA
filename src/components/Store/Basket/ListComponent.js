@@ -14,8 +14,69 @@ import {Actions} from 'react-native-router-flux';
 import TextComponent from './TextComponent';
 import ButtonComponent from './ButtonComponent';
 import {RATIO} from '../../../styles/constants';
+import {connect} from 'react-redux';
+import {deleteFromBasket} from '../../../Actions/StoreAction';
 
 class ListComponent extends Component {
+
+    state = {
+        sumPrice: 0,
+        sumBonusPrice: 0
+    }
+
+    onDeleteItem(id) {
+        this.props.deleteFromBasket(id)
+    }
+
+    componentDidMount() {
+        this.props.basket.map( product => {
+            let {sumPrice, sumBonusPrice} = this.state;
+            this.setState({
+                sumPrice: sumPrice + parseInt(product.price),
+                sumBonusPrice: sumBonusPrice + parseInt(product.bonus_price)
+            })
+        })
+    }
+
+    renderList() {
+        const {
+            imageStyle,
+            imageContainer,
+            textContainer,
+            componentStyle} = styles;
+        if (this.props.basket) {
+
+            return this.props.basket.map(product => {
+
+                return (
+                    <CardComponent
+                        key={product.id}
+                        style={componentStyle}
+                    >
+                        <View style={imageContainer}>
+                            <Image
+                                resizeMode={'contain'}
+                                style={imageStyle}
+                                source={require('../../../images/shell.png')}
+                            />
+                        </View>
+                        <View style={textContainer}>
+                            <TextComponent
+                                onDelete={this.onDeleteItem.bind(this, product.id)}
+                                title={product.name}
+                                isPresent
+                            />
+                            <ButtonComponent
+                                onPress={Actions.ordering}
+                                price={product.price}
+                                bonuses={product.bonus_price}
+                            />
+                        </View>
+                    </CardComponent>
+                )
+            })
+        }
+    }
 
     render() {
         const {
@@ -43,80 +104,17 @@ class ListComponent extends Component {
                         alignItems: 'center',
                     }}
                 >
-                        <CardComponent
-                            style={componentStyle}
-                        >
-                            <View style={imageContainer}>
-                                <Image
-                                    resizeMode={'contain'}
-                                    style={imageStyle}
-                                    source={require('../../../images/shell.png')}
-                                />
-                            </View>
-                            <View style={textContainer}>
-                                <TextComponent
-                                    title={'Моторное масло Shell Helix HX7 10W-40'}
-                                    isPresent
-                                />
-                                <ButtonComponent
-                                    onPress={Actions.ordering}
-                                    price={1750}
-                                    bonuses={1999}
-                                />
-                            </View>
-                        </CardComponent>
-                        <CardComponent
-                            style={componentStyle}
-                        >
-                            <View style={imageContainer}>
-                                <Image
-                                    resizeMode={'contain'}
-                                    style={imageStyle}
-                                    source={require('../../../images/shell.png')}
-                                />
-                            </View>
-                            <View style={textContainer}>
-                                <TextComponent
-                                    title={'Моторное масло Shell Helix HX7 10W-40'}
-                                    isPresent
-                                />
-                                <ButtonComponent
-                                    onPress={Actions.ordering}
-                                    price={1750}
-                                    bonuses={1999}
-                                />
-                            </View>
-                        </CardComponent>
-                        <CardComponent
-                            style={componentStyle}
-                        >
-                            <View style={imageContainer}>
-                                <Image
-                                    resizeMode={'contain'}
-                                    style={imageStyle}
-                                    source={require('../../../images/shell.png')}
-                                />
-                            </View>
-                            <View style={textContainer}>
-                                <TextComponent
-                                    title={'Моторное масло Shell Helix HX7 10W-40'}
-                                    isPresent
-                                />
-                                <ButtonComponent
-                                    onPress={Actions.ordering}
-                                    price={1750}
-                                    bonuses={1999}
-                                />
-                            </View>
-                        </CardComponent>
+                    {
+                        this.renderList()
+                    }
                 </ScrollView>
                 <View style={fixedFooterStyle}>
                     <View>
                         <Text style={priceText}>
-                            1750 грн
+                            {this.state.sumPrice} грн
                         </Text>
                         <Text style={bonusText}>
-                            1750 бонусов
+                            {this.state.sumBonusPrice} бонусов
                         </Text>
                     </View>
                     <View style={{
@@ -221,4 +219,10 @@ const styles = {
     },
 }
 
-export default ListComponent;
+const mapStateToProps = ({store}) => {
+    return {
+        basket: store.basket
+    }
+}
+
+export default connect(mapStateToProps, {deleteFromBasket})(ListComponent);
