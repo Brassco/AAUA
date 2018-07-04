@@ -13,10 +13,12 @@ import {
 import {
     STORE_CATEGORIES_URL,
     STORE_PRODUCTS_URL,
-    STORE_PRODUCT_BY_ID_URL
+    STORE_PRODUCT_BY_ID_URL,
+    STORE_PRODUCT_INCREASE_VIEWS_URL
 } from './constants';
 import axios from 'axios';
 import md5 from 'js-md5'
+import {encode} from 'base-64';
 
 /*
 Products, Categories
@@ -29,7 +31,7 @@ export const getCategories = (token, phone) => {
         })
 console.log(token, phone)
         let signatureString = token+":"+phone;
-        const signature = btoa(signatureString);
+        const signature = encode(signatureString);
 console.log('STORE get categories - ', signatureString, signature, STORE_CATEGORIES_URL);
         axios.get(STORE_CATEGORIES_URL, {
                 headers: {
@@ -92,7 +94,7 @@ export const getProductsByCategoriesId = (token, phone, categoryId) => {
         })
 
         let signatureString = token+":"+phone;
-        const signature = btoa(signatureString);
+        const signature = encode(signatureString);
 console.log('STORE get products - ', signature, STORE_PRODUCTS_URL);
         axios.get(STORE_PRODUCTS_URL, {
                 headers: {
@@ -122,7 +124,7 @@ export const getProductById = (token, phone, productId) => {
         })
 
         let signatureString = token+":"+phone;
-        const signature = btoa(signatureString);
+        const signature = encode(signatureString);
         console.log('STORE get products - ', signature, STORE_PRODUCT_BY_ID_URL);
         axios.get(STORE_PRODUCT_BY_ID_URL+productId, {
                 headers: {
@@ -173,5 +175,26 @@ export const deleteFromBasket = (id) => {
     return {
         type: DELETE_FROM_BASKET,
         payload: id
+    }
+}
+
+export const increseCounter = (token, phone, productId) => {
+    return (dispatch) => {
+
+        let signatureString = token+":"+phone;
+        const signature = encode(signatureString);
+        console.log('STORE increase product views counter - ', signature, STORE_PRODUCT_INCREASE_VIEWS_URL);
+        axios.post(STORE_PRODUCT_INCREASE_VIEWS_URL+productId,{}, {
+                headers: {
+                    'Signature' : signature,
+                }
+            }
+        )
+            .then( response => {
+                console.log(response)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 }

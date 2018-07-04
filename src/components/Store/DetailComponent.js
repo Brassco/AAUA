@@ -15,7 +15,7 @@ import {
 import {WIDTH_RATIO, RATIO} from '../../styles/constants';
 import ImageSlider from 'react-native-image-slider';
 import {Actions} from 'react-native-router-flux';
-import {getProductById, addToBasket} from '../../Actions/StoreAction';
+import {getProductById, addToBasket, increseCounter} from '../../Actions/StoreAction';
 import {connect} from 'react-redux';
 
 class DetailsComponent extends Component {
@@ -29,6 +29,11 @@ class DetailsComponent extends Component {
         let {addToBasket, product} = this.props;
         addToBasket(product);
         Actions.basketList();
+    }
+
+    componentWillReceiveProps(nextProps){
+        let {increseCounter, token, phone, product} = nextProps;
+        increseCounter(token, phone, product.id)
     }
 
     render() {
@@ -137,10 +142,10 @@ let {product} = this.props;
                     <View style={fixedFooterStyle}>
                         <View>
                             <Text style={priceText}>
-                                {product.price} грн
+                                {product.price || 0} грн
                             </Text>
                             <Text style={bonusText}>
-                                {product.bonus_price} бонусов
+                                {product.bonus_price || 0} бонусов
                             </Text>
                         </View>
                         <View style={{
@@ -257,4 +262,4 @@ const mapStateToProps = ({auth, store}) => {
     }
 }
 
-export default connect(mapStateToProps, {getProductById, addToBasket})(DetailsComponent);
+export default connect(mapStateToProps, {getProductById, addToBasket, increseCounter})(DetailsComponent);
