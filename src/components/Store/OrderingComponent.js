@@ -8,163 +8,160 @@ import {
     ButtonRoundet,
     PhoneInput,
     Icon,
-    Header} from '../common'
+    Header,
+    Autocomplete
+} from '../common'
 import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button'
 import {RATIO, WIDTH_RATIO} from '../../styles/constants';
-import {showAlert} from '../Modals';
 import {CITIES} from '../../Actions/constants';
-import {
-    changeDelivery,
-    changeNPCity,
-    changeCity,
-    changeAddress,
-    changeComment
-} from '../../Actions/OrderingAction';
+import {DELIVERY_CURIER,
+    DELIVERY_NP
+} from '../../Actions/types';
 import {connect} from 'react-redux';
+import {
+    makeOrder,
+    changeDelivery,
+    changeAddress,
+    changeCity,
+    changeNPCity,
+    changeNPSkald,
+    selectCity,
+    changeComment
+} from '../../Actions/StoreAction';
 import {getCities, getNPCities, getNPsklads} from '../../Actions/CitiesBrands';
+
+let listHeight = 0;
 
 class OrderingComponent extends Component {
 
-    onChangeCity(value) {
-        this.props.changeCity(value);
-        console.log('onChangeCity', value)
-    }
+    constructor(props) {
+        super(props);
 
-    onChangeNPCity(value) {
-        this.props.changeNPCity(value);
-        this.props.getNPsklads(value);
-        console.log('onChangeCity', value)
-    }
+        this.state = {
+            query: '',
+            searchedItems: []
+        };
+    };
 
     onChangeDelivery (value) {
-        console.log('onChangeMethod', value);
+
+console.log('onChangeDelivery', value);
+
         this.props.changeDelivery(value);
     }
 
-    onChangeNPSklad(value) {
-
-        console.log('onChangePoffice', value);
-
-    }
-
-    onChangeAddress(value) {
-        this.props.changeAddress(value);
-        console.log('address was changed', value)
-    }
-
-    onPhoneChange() {
-        console.log('onPhoneChange')
+    onPhoneChange(phone) {
+        this.props.changePhone(phone)
     }
 
     onChangeComment(text) {
         this.props.changeComment(text);
-        console.log('comment was changed', text);
+    }
+
+    searchedItems = (searchedText) => {
+        var searchedItems = this.props.cities.filter(function(item) {
+            return item.title.toLowerCase().indexOf(searchedText.toLowerCase()) == 0;
+        });
+        if (searchedText.length <= 0) {
+            searchedItems = []
+        }
+        if (searchedItems.length > 0 ) {
+            listHeight = searchedItems.length * 20;
+        }
+        if (searchedItems.length == 1) {
+            this.onSelectCity(searchedItems[0])
+            this.setState({searchedItems: []});
+        }
+        this.props.cities.some(e => {
+            if (e.title.toLowerCase() === searchedText.toLowerCase().trim()) {
+                this.onSelectCity(e)
+                this.setState({searchedItems: []});
+            }
+        })
+        this.setState({searchedItems: searchedItems.slice(0, 30)});
+    };
+
+    onChangeCity(title){
+        if (title.length >= 2) {
+            if (this.props.delivery == DELIVERY_NP) {
+                this.props.getNPCities(title);
+            } else {
+                this.searchedItems(title);
+            }
+        }
+        this.props.changeCity(title);
+        // this.refs._scrollView.scrollToEnd({animated: true})
+    }
+
+    onSelectCity(cityObj){
+        this.setState({searchedItems: []});
+        this.props.getNPCities('.');
+        if (this.props.delivery == DELIVERY_NP) {
+            this.props.selectCity(cityObj.id);
+            this.props.getNPsklads(cityObj.id);
+        } else {
+            this.props.selectCity(cityObj.title);
+        }
+    }
+
+    onChangeAddress(address) {
+        this.props.changeAddress(address);
     }
 
     onSubmit() {
-        console.log(this.props);
-        showAlert(
-            'Товар оплачен',
-            'Спасибо за покупку!',
-            'Закрыть',
-            console.log('onSubmit')
-        );
+        let productIds = []
+        this.props.basket.map(product => {
+            productIds.push(product.id)
+        });
+        let {user, makeOrder} = this.props;
+        makeOrder(user, productIds);
     }
 
-    onSelect() {
-        console.log(' on select')
+    setDefaultSkladToStore(address) {
+        this.props.changeNPSkald(address.title);
     }
 
-    showAlert() {
-        Alert.alert(
-            'Товар оплачен',
-            'Спасибо за покупку',
-            [
-                {text: 'Закрыть', onPress: () => {console.log('close alert')}},
-            ],
-        )
-    }
-
-    renderCities() {
-        if (this.props.cities.length) {
-            console.log(this.props.cities.length)
+    renderAddresses () {
+        console.log(this.props.delivery, this.props.city, this.props.NPsklads);
+        if (this.props.delivery == DELIVERY_NP && this.props.city && this.props.NPsklads.length) {
             return (
                 <DropDown
-                    label="Город"
-                    elements={this.props.cities}
-                    onValueChange={this.onChangeCity.bind(this)}
-                    selected={this.props.city}
-                />
-            )
-        }
-        return (
-            <DropDown
-                label="Город"
-                elements={[]}
-                onValueChange={this.onChangeCity.bind(this)}
-                selected={this.props.city}
-            />
-        )
-    }
-
-    renderNPCities() {
-        if (this.props.NPcities.length) {
-console.log(this.props.NPcities.length)
-            return (
-                <DropDown
-                    label="Город"
-                    elements={this.props.NPcities}
-                    onValueChange={this.onChangeNPCity.bind(this)}
-                    selected={this.props.npCity}
-                />
-            )
-        }
-        return (
-            <DropDown
-                label="Город"
-                elements={[]}
-                onValueChange={this.onChangeNPCity.bind(this)}
-                selected={this.props.city}
-            />
-        )
-    }
-
-    renderNPsklad () {
-        if (this.props.NPsklads.length) {
-            return (
-                <DropDown
-                    label="Отделение Новой почты"
+                    label="Адрес"
                     elements={this.props.NPsklads}
-                    selected={this.props.NPskald}
-                    onValueChange={this.onChangeNPSklad.bind(this)}
+                    onValueChange={this.onChangeAddress.bind(this)}
+                    selected={this.props.address}
+                    valueExtractor={ (value) => value.title}
+                    setDefaultValueToStore={this.setDefaultSkladToStore.bind(this)}
                 />
             )
         }
         return (
-            <DropDown
-                label="Отделение Новой почты"
-                elements={[]}
-                selected={this.props.NPskald}
-                onValueChange={this.onChangeNPSklad.bind(this)}
+            <LabelOnInput
+                label={'Адрес'}
+                placeholder={'введите адрес'}
+                onChangeText={this.onChangeAddress.bind(this)}
+                value={this.props.address}
             />
         )
     }
 
-    componentWillMount() {
-console.log('ordering component will mount');
-        this.props.getCities();
-        this.props.getNPCities();
-    }
+//     componentWillMount() {
+// console.log('ordering component will mount');
+//         this.props.getCities();
+//         this.props.getNPCities();
+//     }
 
     render() {
-console.log('render ordering component');
+console.log('render ordering component', this.props.delivery);
         const {textStyle, radiobuttonContainer, amountText} = styles;
         return (
             <MainCard>
                 <Header back>
                     ОФОРМЛЕНИЕ ЗАКАЗА
                 </Header>
-                <ScrollView>
+                <ScrollView
+                    ref='_scrollView'
+                >
                 <CardItem
                     style={{
                         marginTop: 33,
@@ -180,14 +177,14 @@ console.log('render ordering component');
                         selectTextOnFocus={false}
                         label={'Страна'}
                         placeholder={'Украина'}
-                        onChangeText={() => console.log('change country')}
+                        onChangeText={() => []}
                         value={this.props.county}
                     />
                 </CardItem>
                 <CardItem style={{
                     marginTop: 21,
                     flex:0,
-                    height:55,
+                    height: 85,
                     flexDirection:'column',
                     justifyContent: 'flex-end',
                     alignItems: 'flex-start'
@@ -195,72 +192,49 @@ console.log('render ordering component');
                     <DropDown
                         label="Способ доставки"
                         elements={[
-                            {title: 'Курьер', value: 1, id: 1},
-                            {title: 'Новая почта', value: 2, id: 2}
+                            {title: 'Курьер', id: DELIVERY_CURIER},
+                            {title: 'Новая почта', id: DELIVERY_NP}
                         ]}
+                        valueExtractor={ (value) => value.id}
                         selected={this.props.delivery}
                         onValueChange={this.onChangeDelivery.bind(this)}
                     />
+
                 </CardItem>
 
                 <CardItem
                     display={this.props.showCities}
                     style={{
-                    marginTop: 22,
-                    flex:0,
-                    height:60,
-                    flexDirection:'column',
-                    justifyContent: 'flex-end',
-                    alignItems: 'flex-start'
-                }}>
-                    {this.renderCities()}
-                </CardItem>
-
-                <CardItem
-                    display={this.props.showNPCities}
-                    style={{
                         marginTop: 22,
-                        flex:0,
-                        height:60,
+                        flex:11,
                         flexDirection:'column',
                         justifyContent: 'flex-end',
                         alignItems: 'flex-start'
                     }}>
-                    {this.renderNPCities()}
-                </CardItem>
-
-                <CardItem
-                    display={this.props.showNPSklads}
-                    style={{
-                        marginTop: 21,
-                        flex:0,
-                        height:60,
-                        flexDirection:'column',
-                        justifyContent: 'flex-end',
-                        alignItems: 'flex-start'
-                    }}
-                >
-                    {this.renderNPsklad()}
-                </CardItem>
-
-                <CardItem
-                    display={this.props.showAdress}
-                    style={{
-                    flex: 0,
-                    height: 65,
-                    marginTop:22,
-                }}>
-                    <LabelOnInput
-                        label={'Адрес'}
-                        placeholder={'введите адрес'}
-                        onChangeText={this.onChangeAddress.bind(this)}
-                        value={this.props.address}
+                    <Autocomplete
+                        label={'Город'}
+                        placeholder={'Введите город'}
+                        onChangeText={this.onChangeCity.bind(this)}
+                        onSelect={this.onSelectCity.bind(this)}
+                        data={
+                            this.props.delivery == DELIVERY_CURIER ?
+                                this.state.searchedItems : this.props.NPcities}
+                        value={this.props.city}
+                        listHeight={{height: listHeight}}
                     />
                 </CardItem>
                 <CardItem
-                    display={this.props.showAdress}
                     style={{
-                        flex: 0,
+                        flex:15,
+                        // height: 65,
+                        // marginTop:22,
+                    }}>
+
+                    {this.renderAddresses()}
+                </CardItem>
+                <CardItem
+                    style={{
+                        flex:11,
                         height: 65,
                         marginTop:22,
                     }}>
@@ -268,7 +242,7 @@ console.log('render ordering component');
                         label={'Коментарий'}
                         placeholder={'введите Коментарий'}
                         onChangeText={this.onChangeComment.bind(this)}
-                        value={this.props.address}
+                        value={this.props.comment}
                     />
                 </CardItem>
                 <CardItem style={{
@@ -278,7 +252,7 @@ console.log('render ordering component');
                 }}>
                     <PhoneInput
                         label={'Номер телефона'}
-                        placeholder={'+38'}
+                        placeholder={'+380'}
                         value={this.props.phone}
                         onChangeText={this.onPhoneChange.bind(this)}
                     />
@@ -412,24 +386,25 @@ const styles = {
     }
 }
 
-const mapStateToProps = ({ordering, citiesBrands}) => {
-console.log(citiesBrands);
+const mapStateToProps = ({ordering, citiesBrands, store}) => {
     return {
         showCities: ordering.showCities,
         showNPCities: ordering.showNPCities,
         showNPSklads: ordering.showNPSklads,
         showAdress: ordering.showAdress,
-        npCity: ordering.npCity,
-        delivery: ordering.delivery,
-        NPskald: ordering.NPskald,
-        phone: ordering.phone,
-        comment: ordering.comment,
-        address: ordering.address,
-        city: ordering.city,
+        npCity: store.npCity,
+        delivery: store.delivery,
+        NPskald: store.NPskald,
+        phone: store.phone,
+        comment: store.comment,
+        address: store.address,
+        city: store.city,
 
         NPsklads: citiesBrands.NPsklads,
         NPcities: citiesBrands.NPcities,
         cities: citiesBrands.cities,
+
+        basket: store.basket
     }
 }
 
@@ -443,5 +418,8 @@ export default connect(
         changeCity,
         changeAddress,
         getNPsklads,
-        changeComment
+        changeComment,
+        makeOrder,
+        selectCity,
+        changeNPSkald
     })(OrderingComponent);

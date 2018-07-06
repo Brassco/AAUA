@@ -158,7 +158,7 @@ console.log(NP_SKLADS_URL, data, signature);
                         title : sklads.data.data[sklad]
                     })
                 }
-
+console.log('sklads loaded', skladsArray);
                 onNPSkladsLoaded(dispatch, skladsArray)
             })
     }

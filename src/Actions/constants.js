@@ -78,6 +78,7 @@ export const STORE_PRODUCTS_URL = STORE_API_URL + 'wp-json/aaua/api/products/';
 export const STORE_PRODUCT_BY_ID_URL = STORE_API_URL + 'wp-json/aaua/api/product/';
 export const STORE_PRODUCT_SET_COUNTER_URL = STORE_API_URL + 'wp-json/aaua/api/products/set_views';
 export const STORE_PRODUCT_INCREASE_VIEWS_URL = STORE_API_URL + 'wp-json/aaua/api/product/'; //POST - Increase product views counter
+export const STORE_MAKE_ORDER_URL = STORE_API_URL + 'wp-json/aaua/api/orders/'; //POST - Place orders
 
 export const STORE_ORDER_URL = STORE_API_URL + 'wp-json/aaua/api/orders'; // POST - make order | PUT - update order | GET - get order by id
 export const STORE_USER_ORDERS_URL = STORE_API_URL + 'wp-json/aaua/api/orders/history/'; // GET

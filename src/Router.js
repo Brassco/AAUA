@@ -287,7 +287,7 @@ console.log('user from store', user);
                                 <Scene key="goods" component={GoodsListComponent} title="Goods"/>
                                 <Scene hideNavBar key="specialOffer" component={SpecialOfferComponent}/>
                                 <Scene hideNavBar key="basketList" component={BasketListComponent}/>
-                                <Scene hideNavBar key="basketOrdering" component={OrderingComponent} title="Goods"/>
+                                <Scene initial hideNavBar key="basketOrdering" component={OrderingComponent} title="Goods"/>
                             </Stack>
                             <Stack hideNavBar key="AAUA_card">
                                 <Scene

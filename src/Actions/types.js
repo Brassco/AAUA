@@ -186,5 +186,14 @@ export const STORE_GET_PRODUCT_BY_ID_FAIL = 'store_get_product_by_id_fail';
 export const ADD_TO_BASKET = 'add_to_basket';
 export const CLEAN_BASKET = 'clean_basket';
 export const DELETE_FROM_BASKET = 'delete_from_basket';
+export const STORE_DELIVERY_CHANGE = 'store_delivery_change';
+export const STORE_COUNTRY_CHANGE = 'store_country_change';
+export const STORE_CITY_CHANGE = 'store_city_change';
+export const STORE_NP_CITY_CHANGE = 'store_np_city_change';
+export const STORE_CITY_SELECTED = 'store_city_selected';
+export const STORE_SELECT_ADDRESS = 'store_select_address';
+export const STORE_ADDRESS_CHANGE = 'store_address_change';
+export const STORE_NP_SKLAD = 'store_np_sklad';
+export const STORE_COMMENT_CHANGE = 'store_comment_change';
 
 export const WOG_BONUSES_LOADED = 'wog_bonuses_loaded';

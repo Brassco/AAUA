@@ -33,7 +33,7 @@ class DetailsComponent extends Component {
 
     componentWillReceiveProps(nextProps){
         let {increseCounter, token, phone, product} = nextProps;
-        increseCounter(token, phone, product.id)
+        // increseCounter(token, phone, product.id)
     }
 
     render() {
@@ -142,10 +142,10 @@ let {product} = this.props;
                     <View style={fixedFooterStyle}>
                         <View>
                             <Text style={priceText}>
-                                {product.price || 0} грн
+                                {product.price} грн
                             </Text>
                             <Text style={bonusText}>
-                                {product.bonus_price || 0} бонусов
+                                {product.bonus_price} бонусов
                             </Text>
                         </View>
                         <View style={{
@@ -262,4 +262,4 @@ const mapStateToProps = ({auth, store}) => {
     }
 }
 
-export default connect(mapStateToProps, {getProductById, addToBasket, increseCounter})(DetailsComponent);
+export default connect(mapStateToProps, {getProductById, addToBasket})(DetailsComponent);
