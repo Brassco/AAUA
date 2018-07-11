@@ -8,13 +8,26 @@ import {
     STORE_GET_PRODUCT_BY_ID,
     STORE_GET_PRODUCT_BY_ID_SUCCESS,
     ADD_TO_BASKET,
-    DELETE_FROM_BASKET
+    DELETE_FROM_BASKET,
+    STORE_DELIVERY_CHANGE,
+    STORE_COUNTRY_CHANGE,
+    STORE_CITY_CHANGE,
+    STORE_NP_CITY_CHANGE,
+    STORE_CITY_SELECTED,
+    STORE_SELECT_ADDRESS,
+    STORE_ADDRESS_CHANGE,
+    STORE_NP_SKLAD,
+    STORE_COMMENT_CHANGE,
+    STORE_GET_HISTORY_START,
+    STORE_GET_HISTORY_SUCCESS
 } from '../Actions/types';
 import {
     STORE_CATEGORIES_URL,
     STORE_PRODUCTS_URL,
     STORE_PRODUCT_BY_ID_URL,
-    STORE_PRODUCT_INCREASE_VIEWS_URL
+    STORE_PRODUCT_INCREASE_VIEWS_URL,
+    STORE_MAKE_ORDER_URL,
+    STORE_HISTORY_URL
 } from './constants';
 import axios from 'axios';
 import md5 from 'js-md5'
@@ -196,5 +209,119 @@ export const increseCounter = (token, phone, productId) => {
             .catch((error) => {
                 console.log(error)
             })
+    }
+}
+
+export const makeOrder = (user, products) => {
+    return () => {
+        let signatureString = user.token+":"+user.profile.phone;
+        const signature = encode(signatureString);
+
+        const obj = {
+            "products":products, // Array of product's ID
+            "userID": user.id, // User ID (string or integer)
+            "orderType": ''// booking - will make create order without payment step, if empty will set status "Pending payment"
+        };
+        const data = JSON.stringify(obj);
+
+console.log('STORE make order - ', signature, STORE_MAKE_ORDER_URL, obj, user);
+        // axios.post(STORE_MAKE_ORDER_URL, data, {
+        //         headers: {
+        //             'Signature' : signature,
+        //             'Content-Type': 'application/json',
+        //         }
+        //     }
+        // )
+        //     .then(response => console.log(response))
+        //     .catch((error) => {
+        //         console.log(error)
+        //     })
+    }
+}
+
+export const changeDelivery = (delivery) => {
+    return {
+        type: STORE_DELIVERY_CHANGE,
+        payload: delivery
+    }
+}
+
+export const changeCity = (city) => {
+    return {
+        type: STORE_CITY_CHANGE,
+        payload: city
+    }
+}
+
+export const selectCity = (city) => {
+    return {
+        type: STORE_CITY_SELECTED,
+        payload: city
+    }
+}
+
+export const changeNPCity = (city) => {
+    return {
+        type: STORE_NP_CITY_CHANGE,
+        payload: city
+    }
+}
+
+export const changeAddress = (address) => {
+    return {
+        type: STORE_ADDRESS_CHANGE,
+        payload: address
+    }
+}
+
+export const selectAddress = (address) => {
+    return {
+        type: STORE_SELECT_ADDRESS,
+        payload: address
+    }
+}
+
+export const changeNPSkald = (value) => {
+    return {
+        type: STORE_NP_SKLAD,
+        payload: value
+    }
+}
+
+export const changeComment = (text) => {
+
+    return {
+        type: STORE_COMMENT_CHANGE,
+        payload: text
+    }
+}
+
+export const getHistory = (user) => {
+    return (dispatch) => {
+
+        dispatch({
+            type: STORE_GET_HISTORY_START
+        })
+
+        let signatureString = user.token+":"+user.phone;
+        const signature = encode(signatureString);
+        console.log('STORE get products - ', signature, STORE_HISTORY_URL);
+        axios.get(STORE_HISTORY_URL+user.id, {
+                headers: {
+                    'Signature' : signature,
+                }
+            }
+        )
+            .then(products => onGetHistorySuccess(dispatch, products.data))
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+}
+
+const onGetHistorySuccess = (dispatch, products) => {
+    return {
+        type: STORE_GET_HISTORY_SUCCESS,
+        payload: products.orders
     }
 }

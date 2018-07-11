@@ -89,6 +89,7 @@ console.log('onChangeDelivery', value);
                 this.searchedItems(title);
             }
         }
+        console.log(this.props);
         this.props.changeCity(title);
         // this.refs._scrollView.scrollToEnd({animated: true})
     }
@@ -104,6 +105,10 @@ console.log('onChangeDelivery', value);
         }
     }
 
+    onSelect() {
+        console.log(' on select')
+    }
+
     onChangeAddress(address) {
         this.props.changeAddress(address);
     }
@@ -113,6 +118,7 @@ console.log('onChangeDelivery', value);
         this.props.basket.map(product => {
             productIds.push(product.id)
         });
+        console.log('***Make order***', this.props);
         let {user, makeOrder} = this.props;
         makeOrder(user, productIds);
     }
@@ -122,7 +128,6 @@ console.log('onChangeDelivery', value);
     }
 
     renderAddresses () {
-        console.log(this.props.delivery, this.props.city, this.props.NPsklads);
         if (this.props.delivery == DELIVERY_NP && this.props.city && this.props.NPsklads.length) {
             return (
                 <DropDown
@@ -386,8 +391,10 @@ const styles = {
     }
 }
 
-const mapStateToProps = ({ordering, citiesBrands, store}) => {
+const mapStateToProps = ({ordering, citiesBrands, store, auth}) => {
+console.log(auth);
     return {
+        user: auth.user,
         showCities: ordering.showCities,
         showNPCities: ordering.showNPCities,
         showNPSklads: ordering.showNPSklads,

@@ -15,92 +15,94 @@ import TextComponent from './TextComponent';
 import ButtonComponent from './ButtonComponent';
 import {RATIO} from '../../styles/constants';
 import {DEVICE_OS, iOS, Android} from '../../Actions/constants';
+import {getHistory} from '../../Actions/StoreAction';
+import {connect} from 'react-redux';
 
 class ListComponent extends Component {
 
+
+    componentWillMount() {
+        let {user, getHistory} = this.props;
+        getHistory(user);
+    }
+
+    renderItem() {
+        const {imageStyle, imageContainer, textContainer,componentStyle} = styles;
+        let {orders} = this.props;
+        if (orders.length) {
+            return orders.map( order => {
+                let product = order.products[0];
+                return (
+                    <CardComponent
+                        style={componentStyle}
+                    >
+                        <View style={imageContainer}>
+                            <Image
+                                resizeMode={'contain'}
+                                style={imageStyle}
+                                source={{uri: product.photo}}
+                            />
+                        </View>
+                        <View style={textContainer}>
+                            <TextComponent
+                                title={product.name}
+                                isPresent
+                            />
+                            <ButtonComponent
+                                onPress={Actions.ordering}
+                                price={
+                                    product.price || 0
+                                }
+                                bonuses={
+                                    product.bonus_price || 0
+                                }
+                            />
+                        </View>
+                    </CardComponent>
+                )
+            })
+        }
+    }
+
+    renderList() {
+        return (
+            <ScrollView style={{
+                paddingLeft: 13,
+                paddingRight: 14,
+                marginTop: 21
+            }}
+                        contentContainerStyle={{
+                            flexDirection: 'column',
+                            justifyContent: 'flex-start',
+                            alignItems: 'center',
+                        }}
+            >
+                {
+                    this.renderItem()
+                }
+            </ScrollView>
+        )
+    }
+
+    renderContent(){
+        let {loading} = this.props;
+        if (loading ) {
+            return <Spiner size="large"/>
+        } else {
+            return this.renderList()
+        }
+    }
+
     render() {
-        const {imageStyle, imageContainer, textContainer, iconImageStyle, componentStyle, buttonContainer} = styles;
+
         return (
             <MainCard>
                 <Header burger goToMain={DEVICE_OS == iOS ? true : false}>
                     {"ИСТОРИЯ ЗАКАЗОВ"}
                 </Header>
-                <ScrollView style={{
-                    paddingLeft: 13,
-                    paddingRight: 14,
-                    marginTop: 21
-                }}
-                contentContainerStyle={{
-                    flexDirection: 'column',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                }}
-                >
-                        <CardComponent
-                            style={componentStyle}
-                        >
-                            <View style={imageContainer}>
-                                <Image
-                                    resizeMode={'contain'}
-                                    style={imageStyle}
-                                    source={require('../../images/shell.png')}
-                                />
-                            </View>
-                            <View style={textContainer}>
-                                <TextComponent
-                                    title={'Моторное масло Shell Helix HX7 10W-40'}
-                                    isPresent
-                                />
-                                <ButtonComponent
-                                    onPress={Actions.ordering}
-                                    price={1750}
-                                    bonuses={1999}
-                                />
-                            </View>
-                        </CardComponent>
-                        <CardComponent
-                            style={componentStyle}
-                        >
-                            <View style={imageContainer}>
-                                <Image
-                                    resizeMode={'contain'}
-                                    style={iconImageStyle}
-                                    source={require('../../images/icons/onroad1.png')}
-                                />
-                            </View>
-                            <View style={textContainer}>
-                                <TextComponent
-                                    title={'Техническая помощь'}
-
-                                />
-                                <ButtonComponent
-                                    price={1750}
-                                    bonuses={1999}
-                                />
-                            </View>
-                        </CardComponent>
-                        <CardComponent
-                            style={componentStyle}
-                        >
-                            <View style={imageContainer}>
-                                <Image
-                                    resizeMode={'contain'}
-                                    style={iconImageStyle}
-                                    source={require('../../images/icons/subscription_box.png')}
-                                />
-                            </View>
-                            <View style={textContainer}>
-                                <TextComponent
-                                    title={'Годовая подписка'}
-
-                                />
-                                <ButtonComponent
-                                    price={1750}
-                                    bonuses={1999}
-                                />
-                            </View>
-                        </CardComponent>
-                </ScrollView>
+                {
+                    this.renderContent()
+                }
             </MainCard>
         )
     }
@@ -154,4 +156,11 @@ const styles = {
     }
 }
 
-export default ListComponent;
+const mapStateToProps = ({auth, store}) => {
+    return {
+        user: auth.user,
+        basket: store.basket
+    }
+}
+
+export default connect(mapStateToProps, {getHistory})(ListComponent);
