@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, Image, ScrollView} from 'react-native';
+import {View, Text, Image, ScrollView, TouchableOpacity} from 'react-native';
 import {
     MainCard,
     CardItem,
@@ -15,7 +15,7 @@ import TextComponent from './TextComponent';
 import ButtonComponent from './ButtonComponent';
 import {RATIO} from '../../styles/constants';
 import {DEVICE_OS, iOS, Android} from '../../Actions/constants';
-import {getHistory} from '../../Actions/StoreAction';
+import {getHistory, getOrderDetails} from '../../Actions/StoreAction';
 import {connect} from 'react-redux';
 
 class ListComponent extends Component {
@@ -26,11 +26,19 @@ class ListComponent extends Component {
         getHistory(user);
     }
 
+    openDetails(orderId) {
+        console.log(this.props, orderId);
+        let {user, getOrderDetails} = this.props;
+        getOrderDetails(user, orderId);
+        Actions.basketList();
+    }
+
     renderItem() {
         const {imageStyle, imageContainer, textContainer,componentStyle} = styles;
         let {orders} = this.props;
         if (orders.length) {
             return orders.map( order => {
+                console.log(order);
                 let product = order.products[0];
                 return (
                     <CardComponent
@@ -94,7 +102,7 @@ class ListComponent extends Component {
     }
 
     render() {
-
+console.log(this.props)
         return (
             <MainCard>
                 <Header burger goToMain={DEVICE_OS == iOS ? true : false}>
@@ -158,9 +166,11 @@ const styles = {
 
 const mapStateToProps = ({auth, store}) => {
     return {
+        loading: store.loading,
         user: auth.user,
-        basket: store.basket
+        basket: store.basket,
+        orders: store.orders
     }
 }
 
-export default connect(mapStateToProps, {getHistory})(ListComponent);
+export default connect(mapStateToProps, {getHistory, getOrderDetails})(ListComponent);

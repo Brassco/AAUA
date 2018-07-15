@@ -195,8 +195,11 @@ export const STORE_SELECT_ADDRESS = 'store_select_address';
 export const STORE_ADDRESS_CHANGE = 'store_address_change';
 export const STORE_NP_SKLAD = 'store_np_sklad';
 export const STORE_COMMENT_CHANGE = 'store_comment_change';
-export const STORE_GET_HISTORY_START = 'store_comment_start';
-export const STORE_GET_HISTORY_SUCCESS = 'store_comment_success';
-export const STORE_GET_HISTORY_FAIL = 'store_comment_fail';
+export const STORE_GET_HISTORY_START = 'store_history_start';
+export const STORE_GET_HISTORY_SUCCESS = 'store_history_success';
+export const STORE_GET_HISTORY_FAIL = 'store_history_fail';
+export const STORE_GET_DETAILS_SUCCESS = 'store_details_success';
+export const STORE_GET_DETAILS_FAIL = 'store_details_fail';
+
 
 export const WOG_BONUSES_LOADED = 'wog_bonuses_loaded';

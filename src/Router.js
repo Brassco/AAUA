@@ -283,8 +283,8 @@ console.log('user from store', user);
                                    title="Годовая подписка"/>
                             <Stack hideNavBar key="store">
                                 <Scene hideNavBar key="categories" component={CategoriesComponent} title="Store"/>
-                                <Scene key="detail" component={DetailsComponent} title="Details"/>
-                                <Scene key="goods" component={GoodsListComponent} title="Goods"/>
+                                <Scene hideNavBar key="detail" component={DetailsComponent} title="Details"/>
+                                <Scene hideNavBar key="goods" component={GoodsListComponent} title="Goods"/>
                                 <Scene hideNavBar key="specialOffer" component={SpecialOfferComponent}/>
                                 <Scene hideNavBar key="basketList" component={BasketListComponent}/>
                                 <Scene hideNavBar key="basketOrdering" component={OrderingComponent} title="Goods"/>

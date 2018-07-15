@@ -29,12 +29,23 @@ class ListComponent extends Component {
     }
 
     componentDidMount() {
-        this.props.basket.map( product => {
-            let {sumPrice, sumBonusPrice} = this.state;
-            this.setState({
-                sumPrice: sumPrice + parseInt(product.price),
-                sumBonusPrice: sumBonusPrice + parseInt(product.bonus_price)
+        let sum = 0;
+        let sumBonus = 0;
+        this.props.basket.map( products => {
+            products.map( product => {
+                let price = product.price == '' ? 0 :product.price;
+                let bonus_price = product.bonus_price == '' ? 0 :product.bonus_price;
+                sum = sum + price,
+                sumBonus = sumBonus + bonus_price
             })
+console.log(
+    sum, sumBonus,
+);
+        })
+        let {sumPrice, sumBonusPrice} = this.state;
+        this.setState({
+            sumPrice: sumPrice + sum,
+            sumBonusPrice: sumBonusPrice + sumBonus
         })
     }
 
@@ -44,13 +55,13 @@ class ListComponent extends Component {
             imageContainer,
             textContainer,
             componentStyle} = styles;
+console.log(this.props.basket);
         if (this.props.basket) {
-
             return this.props.basket.map(product => {
-
+console.log(product[0], product.length)
                 return (
                     <CardComponent
-                        key={product.id}
+                        key={product[0].id}
                         style={componentStyle}
                     >
                         <View style={imageContainer}>
@@ -62,14 +73,15 @@ class ListComponent extends Component {
                         </View>
                         <View style={textContainer}>
                             <TextComponent
-                                onDelete={this.onDeleteItem.bind(this, product.id)}
-                                title={product.name}
+                                onDelete={this.onDeleteItem.bind(this, product[0].id)}
+                                title={product[0].name}
                                 isPresent
                             />
                             <ButtonComponent
+                                count={product.length}
                                 onPress={Actions.ordering}
-                                price={product.price}
-                                bonuses={product.bonus_price}
+                                price={product[0].price || 0}
+                                bonuses={product[0].bonus_price || 0}
                             />
                         </View>
                     </CardComponent>

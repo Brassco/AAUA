@@ -21,7 +21,9 @@ import {
     STORE_NP_SKLAD,
     STORE_COMMENT_CHANGE,
     STORE_GET_HISTORY_START,
-    STORE_GET_HISTORY_SUCCESS
+    STORE_GET_HISTORY_SUCCESS,
+    STORE_GET_DETAILS_SUCCESS,
+    STORE_GET_DETAILS_FAIL
 } from '../Actions/types';
 
 const INITIAL_STATE = {
@@ -29,7 +31,7 @@ const INITIAL_STATE = {
     products: [],
     product: null,
     error: null,
-    loading: false,
+    loading: true,
     basket: [],
 
     showCities: 'flex',
@@ -69,9 +71,14 @@ export default (state = INITIAL_STATE, action) => {
             return {...state, loading: false, products: [], error: action.payload};
         case ADD_TO_BASKET:
             let newBasket = state.basket.slice();
-            newBasket[action.payload.id] = action.payload;
+            if (newBasket[action.payload.id]) {
+                newBasket[action.payload.id].push(action.payload)
+            } else {
+                newBasket[action.payload.id] = [];
+                newBasket[action.payload.id].push(action.payload)
+            }
 console.log(newBasket);
-            return {...state, loading: false, products: [], basket: newBasket};
+            return {...state, loading: false, basket: newBasket};
         case DELETE_FROM_BASKET:
             let copyBasket = state.basket;
             var index = copyBasket.indexOf(action.payload);
@@ -140,15 +147,24 @@ console.log(newBasket);
                 orderCardSuccess: false,
                 addCardError: null};
         case STORE_GET_HISTORY_START:
+console.log('STORE_GET_HISTORY_START');
             return {...state,
                 loading: true,
                 error: null,
             };
         case STORE_GET_HISTORY_SUCCESS:
+console.log('STORE_GET_HISTORY_SUCCESS', action.payload)
             return {...state,
                 loading: false,
                 error: null,
                 orders: action.payload
+            };
+        case STORE_GET_DETAILS_SUCCESS:
+console.log('STORE_GET_DETAILS_SUCCESS', action.payload)
+            return {...state,
+                loading: false,
+                error: null,
+                basket: action.payload
             };
         default: return state;
     }

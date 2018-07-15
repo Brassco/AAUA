@@ -4,7 +4,12 @@ import {
     Text,
     ScrollView
 } from 'react-native';
-import {MainCard, CardItem, Header} from '../common';
+import {
+    MainCard,
+    CardItem,
+    Header,
+    Spiner
+} from '../common';
 import Item from './Item';
 import {Actions} from 'react-native-router-flux';
 import {getCategories} from '../../Actions/StoreAction';
@@ -24,7 +29,6 @@ class CategoriesComponent extends Component {
 
     renderRowItems(row) {
         return row.map( (item, index) => {
-            console.log(item);
             return (
                 <Item
                     key={item.id}

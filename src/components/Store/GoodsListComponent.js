@@ -10,7 +10,7 @@ import {
 import {WIDTH_RATIO, RATIO} from '../../styles/constants';
 import GoodsComponent from './GoodsComponent';
 import {Actions} from 'react-native-router-flux';
-import {getProductsByCategoriesId} from '../../Actions/StoreAction';
+import {getProductsByCategoriesId, addToBasket} from '../../Actions/StoreAction';
 import {connect} from 'react-redux';
 
 class GoodsListComponent extends Component {
@@ -21,6 +21,13 @@ class GoodsListComponent extends Component {
         this.props.getProductsByCategoriesId(token, phone, category.Id)
     }
 
+    addToBasket(product) {
+console.log(product);
+        let {addToBasket} = this.props;
+        addToBasket(product);
+        // Actions.basketList();
+    }
+
     renderRowItems(row) {
         return row.map( (item, index) => {
             console.log(item);
@@ -28,8 +35,10 @@ class GoodsListComponent extends Component {
                 <GoodsComponent
                     key={item.id+item.name}
                     onPress={() => Actions.detail({productId: item.id})}
+                    addToBasket={this.addToBasket.bind(this, item)}
                     imageSrc={{uri:item.photo}}
                     price={item.price}
+                    bonus_price={item.bonus_price}
                     isPresent
                 >
                     {
@@ -63,6 +72,7 @@ class GoodsListComponent extends Component {
     }
 
     renderContent() {
+console.log(this.props);
         const {loading} = this.props
         if (!loading) {
             return (
@@ -156,4 +166,4 @@ const mapStateToProps = ({auth, store}) => {
     }
 }
 
-export default connect(mapStateToProps, {getProductsByCategoriesId})(GoodsListComponent);
+export default connect(mapStateToProps, {getProductsByCategoriesId, addToBasket})(GoodsListComponent);

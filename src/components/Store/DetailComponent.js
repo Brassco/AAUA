@@ -142,10 +142,10 @@ let {product} = this.props;
                     <View style={fixedFooterStyle}>
                         <View>
                             <Text style={priceText}>
-                                {product.price} грн
+                                {product.price || 0} грн
                             </Text>
                             <Text style={bonusText}>
-                                {product.bonus_price} бонусов
+                                {product.bonus_price || 0} бонусов
                             </Text>
                         </View>
                         <View style={{

@@ -30,7 +30,15 @@ class GoodsComponent extends Component {
             priceText,
             bonusText,
             buttonText} = styles;
-        const {imageSrc, price, children, isPresent, onPress} = this.props;
+        const {
+            imageSrc,
+            price,
+            bonus_price,
+            children,
+            isPresent,
+            onPress,
+            addToBasket
+        } = this.props;
         return (
             <TouchableOpacity
                 onPress={onPress}
@@ -57,16 +65,17 @@ class GoodsComponent extends Component {
                 <View style={footerStyle}>
                     <View>
                         <Text style={priceText}>
-                            {price} грн
+                            {price || 0} грн
                         </Text>
                         <Text style={bonusText}>
-                            {price} бонусов
+                            {bonus_price || 0} бонусов
                         </Text>
                     </View>
                     <View style={{
                         height: 25
                     }}>
                         <ButtonRoundet
+                            onPress={addToBasket}
                             style= {{
                                 backgroundColor: '#ffc200',
                                 borderColor: '#ffc200',
