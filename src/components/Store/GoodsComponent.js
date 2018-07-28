@@ -101,12 +101,13 @@ const styles = {
         marginRight: 12 * WIDTH_RATIO,
     },
     componentStyle: {
-        alignItems: 'flex-start',
+        // backgroundColor: '#279',
+        alignItems: 'center',
         marginRight: WIDTH_RATIO < 1 ? 3 : 6 * WIDTH_RATIO
     },
     iconStyle: {
-        marginLeft: 24 * WIDTH_RATIO,
-        marginRight: 22 * WIDTH_RATIO,
+        // marginLeft: 24 * WIDTH_RATIO,
+        // marginRight: 22 * WIDTH_RATIO,
         marginTop: 19 * RATIO,
         width: 114 * WIDTH_RATIO,
         height: 114 * RATIO

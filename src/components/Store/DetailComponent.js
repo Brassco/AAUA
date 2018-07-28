@@ -71,7 +71,7 @@ let {product} = this.props;
                         <CardItem style={imageContainer}>
                             <View style={sliderContainer}>
                                 <ImageSlider
-                                    images={images}
+                                    images={product.gallery}
                                     autoPlayWithInterval={4000}
                                     customSlide={({ index, item, style, width }) =>{
                                         return (
@@ -81,11 +81,14 @@ let {product} = this.props;
                                             alignItems:'center',
                                             backgroundColor:'#ffffff'
                                         }]}>
-                                            <Image source={item }
-                                                   style={{
-                                                        height: imageHeight,
-                                                        width: 215 * WIDTH_RATIO,
-                                                        flex: 1 }}
+                                            <Image
+                                                source={{uri:item}}
+                                                style={{
+                                                    height: imageHeight,
+                                                    width: 215 * WIDTH_RATIO,
+                                                    flex: 1
+                                                }}
+                                                resizeMode={'contain'}
                                             />
                                         </View>
                                         )

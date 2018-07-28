@@ -29,11 +29,12 @@ class CategoriesComponent extends Component {
 
     renderRowItems(row) {
         return row.map( (item, index) => {
+console.log(item);
             return (
                 <Item
                     key={item.id}
                         onPress={() => this.openStoreCategories(item)}
-                        imageSrc={getImageByStoreCategoryId(item.id)}
+                        imageSrc={{uri: item.image}}
                     >
                         {
                             item.name
@@ -44,7 +45,6 @@ class CategoriesComponent extends Component {
     }
 
     renderRows() {
-console.log(this.props.categories)
         const categories = [...this.props.categories];
         var i=0;
         var rows = [];
@@ -53,7 +53,7 @@ console.log(this.props.categories)
             i = i+3;
         }
         return rows.map( (row, index) => {
-console.log(row[0]);
+
             return (
                 <CardItem
                     key={row[0].id}

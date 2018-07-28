@@ -17,12 +17,10 @@ class GoodsListComponent extends Component {
 
     componentWillMount() {
         let {token, phone, category} = this.props;
-        console.log(this.props);
-        this.props.getProductsByCategoriesId(token, phone, category.Id)
+        this.props.getProductsByCategoriesId(token, phone, category.id)
     }
 
     addToBasket(product) {
-console.log(product);
         let {addToBasket} = this.props;
         addToBasket(product);
         // Actions.basketList();
@@ -59,10 +57,11 @@ console.log(product);
             i = i+2;
         }
         return rows.map( (row, index) => {
+            console.log(row.length);
             return (
                 <CardItem
                     key={row[0].id}
-                    style={styles.cardItemStyle}>
+                    style={[styles.cardItemStyle, {justifyContent: row.length == 1 ? 'flex-start' : 'space-around'}]}>
                     {
                         this.renderRowItems(row)
                     }
@@ -91,14 +90,6 @@ console.log(this.props);
     }
 
     render() {
-        const {
-            cardItemStyle,
-            componentStyle,
-            iconStyle,
-            titleStyle,
-            titleContainer,
-            isPresentContainer,
-            isPresentText} = styles;
         return (
             <MainCard>
                 <Header back basket>
@@ -115,11 +106,8 @@ console.log(this.props);
 const styles = {
     cardItemStyle: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
         alignItems: 'center',
-        marginBottom: 14 * RATIO,
-        marginLeft: 14 * WIDTH_RATIO,
-        marginRight: 12 * WIDTH_RATIO,
     },
     componentStyle: {
         marginRight: WIDTH_RATIO < 1 ? 3 : 6 * WIDTH_RATIO
