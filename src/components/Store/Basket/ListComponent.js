@@ -15,7 +15,7 @@ import TextComponent from './TextComponent';
 import ButtonComponent from './ButtonComponent';
 import {RATIO} from '../../../styles/constants';
 import {connect} from 'react-redux';
-import {deleteFromBasket} from '../../../Actions/StoreAction';
+import {deleteFromBasket, addToBasket} from '../../../Actions/StoreAction';
 
 class ListComponent extends Component {
 
@@ -24,29 +24,33 @@ class ListComponent extends Component {
         sumBonusPrice: 0
     }
 
+    componentDidMount() {
+        let sum = 0;
+        let sumBonus = 0;
+        if (this.props.basket.length) {
+            this.props.basket.map(products => {
+                products.map(product => {
+                    let price = product.price == '' ? 0 : product.price;
+                    let bonus_price = product.bonus_price == '' ? 0 : product.bonus_price;
+                    sum = sum + price,
+                        sumBonus = sumBonus + bonus_price
+                })
+
+            })
+            let {sumPrice, sumBonusPrice} = this.state;
+            this.setState({
+                sumPrice: sumPrice + sum,
+                sumBonusPrice: sumBonusPrice + sumBonus
+            })
+        }
+    }
+
     onDeleteItem(id) {
         this.props.deleteFromBasket(id)
     }
 
-    componentDidMount() {
-        let sum = 0;
-        let sumBonus = 0;
-        this.props.basket.map( products => {
-            products.map( product => {
-                let price = product.price == '' ? 0 :product.price;
-                let bonus_price = product.bonus_price == '' ? 0 :product.bonus_price;
-                sum = sum + price,
-                sumBonus = sumBonus + bonus_price
-            })
-console.log(
-    sum, sumBonus,
-);
-        })
-        let {sumPrice, sumBonusPrice} = this.state;
-        this.setState({
-            sumPrice: sumPrice + sum,
-            sumBonusPrice: sumBonusPrice + sumBonus
-        })
+    onAddToBasket(product) {
+        this.props.addToBasket(product)
     }
 
     renderList() {
@@ -55,8 +59,8 @@ console.log(
             imageContainer,
             textContainer,
             componentStyle} = styles;
-console.log(this.props.basket);
-        if (this.props.basket) {
+console.log(this.props.basket.length, this.props.basket);
+        if (this.props.basket.length) {
             return this.props.basket.map(product => {
 console.log(product[0], product.length)
                 return (
@@ -79,7 +83,8 @@ console.log(product[0], product.length)
                             />
                             <ButtonComponent
                                 count={product.length}
-                                onPress={Actions.ordering}
+                                onAdd={this.onAddToBasket.bind(this, product[0])}
+                                onDelete={this.onDeleteItem.bind(this, product[0].id)}
                                 price={product[0].price || 0}
                                 bonuses={product[0].bonus_price || 0}
                             />
@@ -90,16 +95,44 @@ console.log(product[0], product.length)
         }
     }
 
-    render() {
+    renderFooter() {
         const {
-            imageStyle,
-            imageContainer,
-            textContainer,
-            componentStyle,
             fixedFooterStyle,
             priceText,
             bonusText,
             buttonText} = styles;
+        console.log(this.props.basket, this.props.basket[0])
+        if (this.props.basket[0]) {
+            return (
+                <View style={fixedFooterStyle}>
+                    <View>
+                        <Text style={priceText}>
+                            {this.state.sumPrice} грн
+                        </Text>
+                        <Text style={bonusText}>
+                            {this.state.sumBonusPrice} бонусов
+                        </Text>
+                    </View>
+                    <View style={{
+                        height: 36
+                    }}>
+                        <ButtonRoundet
+                            onPress={Actions.basketOrdering}
+                            style={{
+                                backgroundColor: '#ffc200',
+                                borderColor: '#ffc200',
+                            }}
+                            textStyle={buttonText}
+                        >
+                            Купить
+                        </ButtonRoundet>
+                    </View>
+                </View>
+            )
+        }
+    }
+
+    render() {
         return (
             <MainCard>
                 <Header burger >
@@ -120,30 +153,7 @@ console.log(product[0], product.length)
                         this.renderList()
                     }
                 </ScrollView>
-                <View style={fixedFooterStyle}>
-                    <View>
-                        <Text style={priceText}>
-                            {this.state.sumPrice} грн
-                        </Text>
-                        <Text style={bonusText}>
-                            {this.state.sumBonusPrice} бонусов
-                        </Text>
-                    </View>
-                    <View style={{
-                        height: 36
-                    }}>
-                        <ButtonRoundet
-                            onPress={Actions.basketOrdering}
-                            style= {{
-                                backgroundColor: '#ffc200',
-                                borderColor: '#ffc200',
-                            }}
-                            textStyle={buttonText}
-                        >
-                            Купить
-                        </ButtonRoundet>
-                    </View>
-                </View>
+                { this.renderFooter()}
             </MainCard>
         )
     }
@@ -237,4 +247,4 @@ const mapStateToProps = ({store}) => {
     }
 }
 
-export default connect(mapStateToProps, {deleteFromBasket})(ListComponent);
+export default connect(mapStateToProps, {deleteFromBasket, addToBasket})(ListComponent);

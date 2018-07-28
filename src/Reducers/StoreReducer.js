@@ -70,7 +70,8 @@ export default (state = INITIAL_STATE, action) => {
         case STORE_GET_PRODUCT_BY_ID_FAIL:
             return {...state, loading: false, products: [], error: action.payload};
         case ADD_TO_BASKET:
-            let newBasket = state.basket.slice();
+            let newBasket = state.basket.slice(0);
+console.log(newBasket, state.basket);
             if (newBasket[action.payload.id]) {
                 newBasket[action.payload.id].push(action.payload)
             } else {
@@ -80,13 +81,14 @@ export default (state = INITIAL_STATE, action) => {
 console.log(newBasket);
             return {...state, loading: false, basket: newBasket};
         case DELETE_FROM_BASKET:
-            let copyBasket = state.basket;
-            var index = copyBasket.indexOf(action.payload);
-            if (index > -1) {
-                copyBasket.splice(index, 1);
+            let copyBasket = state.basket.slice();
+// console.log(action.payload, copyBasket[action.payload]);
+            copyBasket[action.payload].pop();
+            if (copyBasket[action.payload].length < 1) {
+                delete copyBasket[action.payload];
             }
-console.log(newBasket);
-            return {...state, loading: false, basket: newBasket};
+console.log(copyBasket);
+            return {...state, loading: false, basket: copyBasket};
         case STORE_COUNTRY_CHANGE:
             return {...state, country: action.payload, addCardError: null};
         case STORE_CITY_CHANGE:

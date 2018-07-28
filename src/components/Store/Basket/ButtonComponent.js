@@ -6,11 +6,11 @@ import {RATIO} from '../../../styles/constants';
 class ButtonComponent extends Component {
 
     increasCounter() {
-        console.log('counter incresed')
+        this.props.onAdd();
     }
 
     decreasCounter() {
-        console.log('counter decresed')
+        this.props.onDelete()
     }
 
     render() {
@@ -40,7 +40,7 @@ class ButtonComponent extends Component {
                         width: 24
                     }}>
                         <ButtonRoundet
-                            onPress={this.decreasCounter}
+                            onPress={this.props.onDelete}
                             style={[buttonStyle, {
                                 paddingLeft: 2,
                                 paddingRight: 2,
@@ -65,7 +65,7 @@ class ButtonComponent extends Component {
                         width: 24
                     }}>
                         <ButtonRoundet
-                            onPress={this.increasCounter}
+                            onPress={this.props.onAdd}
                             style={buttonStyle}
                             textStyle={buttonTextStyle}
                         >
