@@ -1,19 +1,29 @@
 import React, {Component} from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import {
     MainCard,
     CardItem,
     Header,
     CardComponent,
     Icon,
-    ButtonRoundet} from '../common';
+    CheckBox} from '../common';
 import {WIDTH_RATIO, RATIO} from '../../styles/constants';
 import GoodsComponent from './GoodsComponent';
 import {Actions} from 'react-native-router-flux';
-import {getProductsByCategoriesId, addToBasket} from '../../Actions/StoreAction';
+import {getProductsByCategoriesId, addToBasket, checkFilters, getFilteredProduct} from '../../Actions/StoreAction';
 import {connect} from 'react-redux';
+import Filters from './Filters';
+import Modal from 'react-native-modalbox';
+import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button'
+import FiltersModal from './modals/FiltersModal';
+import OrderingModal from "./modals/OrderingModal";
 
 class GoodsListComponent extends Component {
+
+    state = {
+        isFiltersOpen: false,
+        isOrdersOpen: false,
+    };
 
     componentWillMount() {
         let {token, phone, category} = this.props;
@@ -26,9 +36,29 @@ class GoodsListComponent extends Component {
         // Actions.basketList();
     }
 
+    onSorting(filterName) {
+        let {token, phone, category} = this.props;
+        this.props.getProductsByCategoriesId(token, phone, category.id, filterName)
+        this.setState({isOrdersOpen: false});
+    }
+
+    onFiltering() {
+        let {token, phone, checkedBrands} = this.props;
+        console.log('onFiltering', token, phone, checkedBrands);
+        this.props.getFilteredProduct(token, phone, checkedBrands)
+        this.setState({isFiltersOpen: false})
+    }
+
+    showFilters() {
+        this.setState({isFiltersOpen: true})
+    }
+
+    showOrders() {
+        this.setState({isOrdersOpen: true})
+    }
+
     renderRowItems(row) {
         return row.map( (item, index) => {
-            console.log(item);
             return (
                 <GoodsComponent
                     key={item.id+item.name}
@@ -95,9 +125,27 @@ console.log(this.props);
                 <Header back basket>
                     автомасла
                 </Header>
+                <Filters
+                    showFilters={this.showFilters.bind(this)}
+                    showOrders={this.showOrders.bind(this)}
+                />
                 {
                     this.renderContent()
                 }
+                <FiltersModal
+                    isOpen={this.state.isFiltersOpen}
+                    closeModal={() => this.setState({isFiltersOpen: false})}
+                    checkFilters={this.props.checkFilters}
+                    filters={this.props.filters}
+                    onFiltering={this.onFiltering.bind(this)}
+                />
+                <OrderingModal
+                    isOpen={this.state.isOrdersOpen}
+                    closeModal={() => this.setState({isOrdersOpen: false})}
+                    checkFilters={this.props.checkFilters}
+                    filters={this.props.filters}
+                    sortingProducts={this.onSorting.bind(this)}
+                />
             </MainCard>
         )
     }
@@ -143,6 +191,16 @@ const styles = {
         fontFamily: 'SFUIText-Medium',
         fontSize: 10,
         color: '#2fc047'
+    },
+    modal: {
+        height: 300,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0,0,0,0)'
+    },
+    labelStyle: {
+        fontFamily: 'SFUIText-Medium',
+        fontSize: 16
     }
 }
 
@@ -150,8 +208,10 @@ const mapStateToProps = ({auth, store}) => {
     return {
         phone: auth.user.profile.phone,
         token: auth.user.token,
-        products: store.products
+        products: store.products,
+        filters: store.filters,
+        checkedBrands: store.checkedBrands
     }
 }
 
-export default connect(mapStateToProps, {getProductsByCategoriesId, addToBasket})(GoodsListComponent);
+export default connect(mapStateToProps, {getProductsByCategoriesId, addToBasket, checkFilters, getFilteredProduct})(GoodsListComponent);

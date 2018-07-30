@@ -200,6 +200,9 @@ export const STORE_GET_HISTORY_SUCCESS = 'store_history_success';
 export const STORE_GET_HISTORY_FAIL = 'store_history_fail';
 export const STORE_GET_DETAILS_SUCCESS = 'store_details_success';
 export const STORE_GET_DETAILS_FAIL = 'store_details_fail';
+export const STORE_CHECK_FILTER = 'store_check_filter';
+export const STORE_CHECK_ORDER = 'store_check_order';
+export const STORE_GET_BRANDS_SUCCESS = 'store_get_brands_success';
 
 
 export const WOG_BONUSES_LOADED = 'wog_bonuses_loaded';

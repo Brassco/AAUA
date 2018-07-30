@@ -21,7 +21,8 @@ import {
     STORE_GET_HISTORY_START,
     STORE_GET_HISTORY_SUCCESS,
     STORE_GET_DETAILS_SUCCESS,
-    STORE_GET_DETAILS_FAIL
+    STORE_CHECK_FILTER,
+    STORE_GET_BRANDS_SUCCESS
 } from '../Actions/types';
 import {
     STORE_CATEGORIES_URL,
@@ -30,7 +31,9 @@ import {
     STORE_PRODUCT_INCREASE_VIEWS_URL,
     STORE_MAKE_ORDER_URL,
     STORE_HISTORY_URL,
-    STORE_ORDER_DETAILS_URL
+    STORE_ORDER_DETAILS_URL,
+    STORE_BRANDS_FOR_FILTERS_URL,
+    STORE_FILTER_URL
 } from './constants';
 import axios from 'axios';
 import md5 from 'js-md5'
@@ -63,35 +66,6 @@ console.log('STORE get categories - ', signatureString, signature, STORE_CATEGOR
             .catch((error) => {
                 console.log(error)
             })
-        // let categories = [
-        //     {
-        //         "id":163,
-        //         "name":"Cars",
-        //         "slug":"cars",
-        //         "image":false
-        //     },
-        //     {
-        //         "id":170,
-        //         "name":"Clothing",
-        //         "slug":"clothing",
-        //         "image":false,
-        //         "sub_categories":[
-        //             {
-        //                 "id":171,
-        //                 "name":"Hoodies",
-        //                 "slug":"hoodies",
-        //                 "image":false
-        //             },
-        //             {
-        //                 "id":175,
-        //                 "name":"T-shirts",
-        //                 "slug":"t-shirts",
-        //                 "image":false
-        //             }
-        //         ]
-        //     }
-        // ]
-        // onGetCategoriesSuccess(dispatch, categories)
     }
 }
 
@@ -102,7 +76,7 @@ const onGetCategoriesSuccess = (dispatch, categories) => {
     })
 }
 
-export const getProductsByCategoriesId = (token, phone, categoryId) => {
+export const getProductsByCategoriesId = (token, phone, categoryId, sortingName) => {
     return (dispatch) => {
 
         dispatch({
@@ -111,8 +85,12 @@ export const getProductsByCategoriesId = (token, phone, categoryId) => {
 
         let signatureString = token+":"+phone;
         const signature = encode(signatureString);
-console.log('STORE get products - ', signature, STORE_PRODUCTS_URL);
-        axios.get(STORE_PRODUCTS_URL, {
+        let url = STORE_PRODUCTS_URL+categoryId;
+        if (sortingName) {
+            url = STORE_PRODUCTS_URL+categoryId+'/'+sortingName;
+        }
+console.log('STORE get products - ', signature, url);
+        axios.get(url, {
                 headers: {
                     'Signature' : signature,
                 }
@@ -141,7 +119,7 @@ export const getProductById = (token, phone, productId) => {
 
         let signatureString = token+":"+phone;
         const signature = encode(signatureString);
-        console.log('STORE get products - ', signature, STORE_PRODUCT_BY_ID_URL);
+        console.log('STORE get product by ID- ', signature, STORE_PRODUCT_BY_ID_URL+productId);
         axios.get(STORE_PRODUCT_BY_ID_URL+productId, {
                 headers: {
                     'Signature' : signature,
@@ -228,7 +206,6 @@ export const makeOrder = (user, products) => {
         };
         const data = JSON.stringify(obj);
 
-// console.log('STORE make order - ', signature, STORE_MAKE_ORDER_URL, obj, user);
         axios.post(STORE_MAKE_ORDER_URL, data, {
                 headers: {
                     'Signature' : signature,
@@ -240,6 +217,13 @@ export const makeOrder = (user, products) => {
             .catch((error) => {
                 console.log(error)
             })
+    }
+}
+
+export const checkFilters = (filterId) => {
+    return {
+        type: STORE_CHECK_FILTER,
+        payload: filterId
     }
 }
 
@@ -357,5 +341,79 @@ console.log('onGetDetailsSuccess', products);
     dispatch({
         type: STORE_GET_DETAILS_SUCCESS,
         payload: products.products
+    })
+}
+
+export const getBrandsForFilters = (token, phone) => {
+    return (dispatch) => {
+
+        let signatureString = token+":"+phone;
+        const signature = encode(signatureString);
+        console.log('STORE get brands for filters', signature, STORE_BRANDS_FOR_FILTERS_URL);
+        axios.get(STORE_BRANDS_FOR_FILTERS_URL, {
+                headers: {
+                    'Signature' : signature,
+                }
+            }
+        )
+            .then(brands => onGetBrandsSuccess(dispatch, brands.data))
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+}
+
+const onGetBrandsSuccess = (dispatch, brands) => {
+console.log('onGetBrandsSuccess', brands);
+    // let brands = [
+    //         {
+    //             "id":172,
+    //             "name":"Coca Cola",
+    //             "slug":"cola-cola",
+    //             "image":"http://wp.dev/wp-content/uploads/2013/06/hoodie_6_back.jpg",
+    //         }
+    //     ];
+    dispatch({
+        type: STORE_GET_BRANDS_SUCCESS,
+        payload: brands
+    })
+}
+
+export const getFilteredProduct = (token, phone, brandIds) => {
+    return (dispatch) => {
+        const obj = {
+            "brands": brandIds,
+        }
+
+        const data = JSON.stringify(obj);
+        let signatureString = token+":"+phone;
+        const signature = encode(signatureString);
+console.log('STORE_FILTER_URL', signature, data, STORE_FILTER_URL)
+        axios.post(STORE_FILTER_URL, data, {
+                headers: {
+                    'Signature' : signature,
+                    'Content-Type': 'application/json',
+                }
+            }
+        )
+            .then(result => onFilteredProductsSuccess(dispatch, result.data))
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+}
+
+const onFilteredProductsSuccess = (dispatch, products) => {
+    // let brands = [
+    //     {
+    //         "id":172,
+    //         "name":"Coca Cola",
+    //         "slug":"cola-cola",
+    //         "image":"http://wp.dev/wp-content/uploads/2013/06/hoodie_6_back.jpg",
+    //     }
+    // ];
+    dispatch({
+        type: STORE_GET_PRODUCTS_BY_CATEGORY_ID_SUCCESS,
+        payload: products
     })
 }

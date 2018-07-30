@@ -23,7 +23,10 @@ import {
     STORE_GET_HISTORY_START,
     STORE_GET_HISTORY_SUCCESS,
     STORE_GET_DETAILS_SUCCESS,
-    STORE_GET_DETAILS_FAIL
+    STORE_GET_DETAILS_FAIL,
+    STORE_CHECK_FILTER,
+    STORE_CHECK_ORDER,
+    STORE_GET_BRANDS_SUCCESS
 } from '../Actions/types';
 
 const INITIAL_STATE = {
@@ -47,7 +50,16 @@ const INITIAL_STATE = {
     sklad: null,
     address: null,
     comment: null,
-    phone: null
+    phone: null,
+    filters: [
+        {name:'cheap', label: 'от дешевых к дорогим', status: true},
+        {name:'expensive', label: 'от дорогих к дешевым', status: false},
+        {name:'new', label: 'Новинки', status: false},
+        {name:'promo', label: 'Акционные', status: false},
+        {name:'popular', label: 'Популярные', status: false},
+    ],
+    checkedBrands: [1],
+    brands: []
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -168,6 +180,33 @@ console.log('STORE_GET_DETAILS_SUCCESS', action.payload)
                 error: null,
                 basket: action.payload
             };
+        case STORE_CHECK_FILTER:
+            let newBrands = [...state.checkedBrands];
+            if (!newBrands.includes(action.payload)) {
+                newBrands.push(action.payload)
+            } else {
+                newBrands.splice(newBrands.indexOf(action.payload), 1)
+            }
+            return {
+                ...state,
+                checkedBrands: newBrands
+            }
+        case STORE_CHECK_ORDER:
+            let newOrders = [...state.orders];
+            newFilters.map( filter => {
+                if (filter.name == action.payload) {
+                    filter.status = !filter.status
+                }
+            })
+            return {
+                ...state,
+                filters: newOrders
+            }
+        case STORE_GET_BRANDS_SUCCESS:
+            return {
+                ...state,
+                brands: action.payload
+            }
         default: return state;
     }
 }
