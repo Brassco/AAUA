@@ -58,7 +58,7 @@ const INITIAL_STATE = {
         {name:'promo', label: 'Акционные', status: false},
         {name:'popular', label: 'Популярные', status: false},
     ],
-    checkedBrands: [1],
+    checkedBrands: [],
     brands: []
 }
 

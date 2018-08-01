@@ -365,17 +365,9 @@ export const getBrandsForFilters = (token, phone) => {
 
 const onGetBrandsSuccess = (dispatch, brands) => {
 console.log('onGetBrandsSuccess', brands);
-    // let brands = [
-    //         {
-    //             "id":172,
-    //             "name":"Coca Cola",
-    //             "slug":"cola-cola",
-    //             "image":"http://wp.dev/wp-content/uploads/2013/06/hoodie_6_back.jpg",
-    //         }
-    //     ];
     dispatch({
         type: STORE_GET_BRANDS_SUCCESS,
-        payload: brands
+        payload: brands.brands
     })
 }
 
@@ -388,7 +380,8 @@ export const getFilteredProduct = (token, phone, brandIds) => {
         const data = JSON.stringify(obj);
         let signatureString = token+":"+phone;
         const signature = encode(signatureString);
-console.log('STORE_FILTER_URL', signature, data, STORE_FILTER_URL)
+        // let url = brandIds.length > 0 ? STORE_FILTER_URL : STORE_GET_PRODUCTS_BY_CATEGORY_ID+categoryId
+console.log('STORE_FILTER_URL', signature, data, url)
         axios.post(STORE_FILTER_URL, data, {
                 headers: {
                     'Signature' : signature,

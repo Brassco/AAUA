@@ -12,9 +12,23 @@ class Filters extends React.Component {
                     <TouchableOpacity
                         onPress={this.props.showOrders}
                         style={component}>
-                        <View>
-                            <Image />
-                            <Text>
+                        <View style={{
+                            flexDirection:'row',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}>
+                            <Image
+                                style={{
+                                    width: 30,
+                                    height: 30,
+                                }}
+                                source={require('../../images/icon_1_filter.png')}
+                            />
+                            <Text style={{
+                                fontFamily: 'SFUIText-Medium',
+                                color: '#1b1b1b',
+                                fontSize: 16
+                            }}>
                                 Сортировка
                             </Text>
                         </View>
@@ -22,9 +36,23 @@ class Filters extends React.Component {
                     <TouchableOpacity
                         onPress={this.props.showFilters}
                         style={component}>
-                        <View>
-                            <Image />
-                            <Text>
+                        <View style={{
+                            flexDirection:'row',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}>
+                            <Image
+                                style={{
+                                    width: 30,
+                                    height: 30,
+                                }}
+                                source={require('../../images/icon_2_filter.png')}
+                            />
+                            <Text style={{
+                                fontFamily: 'SFUIText-Medium',
+                                color: '#1b1b1b',
+                                fontSize: 16
+                            }}>
                                 Фильтры
                             </Text>
                         </View>
@@ -45,7 +73,6 @@ const styles = {
     },
     component: {
         flex: 1,
-        // backgroundColor:'#279',
         justifyContent: 'space-between',
         alignItems: 'center',
     },

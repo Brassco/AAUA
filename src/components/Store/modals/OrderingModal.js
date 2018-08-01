@@ -70,7 +70,12 @@ class OrderingModal extends React.Component {
                             alignItems: 'center',
                             // backgroundColor: '#279',
                         }}>
-                            <Text>
+                            <Text style={{
+                                color: '#1b1b1b',
+                                fontWeight: '600',
+                                fontSize: 17,
+                                fontFamily: 'SFUIText-Medium',
+                            }}>
                                 Сортировка
                             </Text>
                         </View>
@@ -119,7 +124,11 @@ class OrderingModal extends React.Component {
                                     borderRightColor: '#1b1b1b',
                                 }}
                             >
-                                <Text>
+                                <Text style={{
+                                    fontFamily: 'SFUIText-Medium',
+                                    color: '#423486',
+                                    fontSize: 15
+                                }}>
                                     Отмена
                                 </Text>
                             </TouchableOpacity>
@@ -131,7 +140,11 @@ class OrderingModal extends React.Component {
                                 alignItems: 'center',
                                 alignSelf: 'stretch'
                             }}>
-                                <Text>
+                                <Text style={{
+                                    fontFamily: 'SFUIText-Medium',
+                                    color: '#423486',
+                                    fontSize: 17
+                                }}>
                                     Применить
                                 </Text>
                             </TouchableOpacity>

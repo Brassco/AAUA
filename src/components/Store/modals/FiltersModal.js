@@ -65,13 +65,20 @@ console.log(phone, token);
                         alignItems: 'flex-start',
                     }}>
                         <View style={{
-                            flex: 1,
+                            flex: 2,
                             justifyContent: 'center',
                             alignSelf: 'stretch',
                             alignItems: 'center',
                             // backgroundColor: '#279',
                         }}>
-                            <Text>
+                            <Text
+                                style={{
+                                    color: '#1b1b1b',
+                                    fontWeight: '600',
+                                    fontSize: 17,
+                                    fontFamily: 'SFUIText-Medium',
+                                }}
+                            >
                                 Фильтр
                             </Text>
                         </View>
@@ -115,7 +122,11 @@ console.log(phone, token);
                                     borderRightColor: '#1b1b1b',
                                 }}
                             >
-                                <Text>
+                                <Text style={{
+                                    fontFamily: 'SFUIText-Medium',
+                                    color: '#423486',
+                                    fontSize: 15
+                                }}>
                                     Отмена
                                 </Text>
                             </TouchableOpacity>
@@ -127,7 +138,11 @@ console.log(phone, token);
                                 alignItems: 'center',
                                 alignSelf: 'stretch'
                             }}>
-                                <Text>
+                                <Text style={{
+                                    fontFamily: 'SFUIText-Medium',
+                                    color: '#423486',
+                                    fontSize: 17
+                                }}>
                                     Применить
                                 </Text>
                             </TouchableOpacity>
