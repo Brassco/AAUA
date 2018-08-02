@@ -35,8 +35,14 @@ class CategoriesComponent extends Component {
     renderRowItems(row) {
         return row.map( (item, index) => {
             return (
-                <Item
+                <View
                     key={item.id}
+                    style={{
+                        flex: 1,
+                        margin: 1,
+                    }}
+                >
+                    <Item
                         onPress={() => this.openStoreCategories(item)}
                         imageSrc={{uri: item.image}}
                     >
@@ -44,6 +50,7 @@ class CategoriesComponent extends Component {
                             item.name
                         }
                     </Item>
+                </View>
             )
         })
     }
@@ -64,7 +71,7 @@ class CategoriesComponent extends Component {
                     style={{
                     flexDirection: 'row',
                     justifyContent: 'space-around',
-                    alignItems: 'center'
+                    alignItems: 'flex-start'
                 }}>
                     {
                         this.renderRowItems(row)
