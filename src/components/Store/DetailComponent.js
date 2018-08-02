@@ -64,7 +64,7 @@ let {product} = this.props;
                 <MainCard>
                     <Header back basket countBasket={this.props.countBasket}>
                         {
-                            product.name
+                            this.props.category.name
                         }
                     </Header>
                     <ScrollView>
@@ -110,8 +110,15 @@ let {product} = this.props;
 
                         </CardItem>
                         <CardItem style={descriptionContainer}>
-                            <CardComponent style={{
+                            <View style={{
+                                flex: 1,
                                 paddingTop: 22,
+                                justifyContent: 'flex-start',
+                                alignItems: 'center',
+                                marginBottom: 8,
+                                borderWidth:1,
+                                borderRadius:4,
+                                borderColor: '#bcbcb3',
                             }}>
                                 <Text style={
                                     descriptionTitle
@@ -128,7 +135,7 @@ let {product} = this.props;
                                         {product.description}
                                     </Text>
                                 </View>
-                            </CardComponent>
+                            </View>
                         </CardItem>
                     </ScrollView>
                     <View style={fixedFooterStyle}>
