@@ -67,10 +67,15 @@ export default (state = INITIAL_STATE, action) => {
         case STORE_GET_CATEGORIES:
             return {...state, loading: true};
         case STORE_GET_CATEGORIES_SUCCESS:
+            let categoires = action.payload.slice();
+            action.payload.map( (category, index) => {
+                if (category.id == 15) {// if this is Uncategorized
+                    categoires = action.payload.splice(index, 1)
+                }
+            })
             return {...state, loading: false, categories: action.payload};
         case STORE_GET_CATEGORIES_FAIL:
             return {...state, loading: false, categories: [], error: action.payload};
-
         case STORE_GET_PRODUCTS_BY_CATEGORY_ID:
             return {...state, loading: true};
         case STORE_GET_PRODUCTS_BY_CATEGORY_ID_SUCCESS:
@@ -83,28 +88,24 @@ export default (state = INITIAL_STATE, action) => {
             return {...state, loading: false, products: [], error: action.payload};
         case ADD_TO_BASKET:
             let newBasket = state.basket.slice(0);
-console.log(newBasket, state.basket);
             if (newBasket[action.payload.id]) {
                 newBasket[action.payload.id].push(action.payload)
             } else {
                 newBasket[action.payload.id] = [];
                 newBasket[action.payload.id].push(action.payload)
             }
-console.log(newBasket);
             return {...state, loading: false, basket: newBasket};
         case DELETE_FROM_BASKET:
             let copyBasket = state.basket.slice();
-// console.log(action.payload, copyBasket[action.payload]);
             copyBasket[action.payload].pop();
             if (copyBasket[action.payload].length < 1) {
                 delete copyBasket[action.payload];
             }
-console.log(copyBasket);
             return {...state, loading: false, basket: copyBasket};
         case STORE_COUNTRY_CHANGE:
             return {...state, country: action.payload, addCardError: null};
-        case STORE_CITY_CHANGE:
-            return {...state, city: action.payload, addCardError: null};
+        // case STORE_CITY_CHANGE:
+        //     return {...state, city: action.payload, addCardError: null};
         case STORE_DELIVERY_CHANGE:
             return {...state,
                 city: null,
