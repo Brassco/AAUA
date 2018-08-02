@@ -32,8 +32,8 @@ class ListComponent extends Component {
                 products.map(product => {
                     let price = product.price == '' ? 0 : product.price;
                     let bonus_price = product.bonus_price == '' ? 0 : product.bonus_price;
-                    sum = sum + price,
-                        sumBonus = sumBonus + bonus_price
+                    sum = sum + parseInt(price),
+                        sumBonus = sumBonus + parseInt(bonus_price)
                 })
 
             })
@@ -59,10 +59,9 @@ class ListComponent extends Component {
             imageContainer,
             textContainer,
             componentStyle} = styles;
-console.log(this.props.basket.length, this.props.basket);
-        if (this.props.basket.length) {
+        if (this.props.basket[this.props.basket.length-1]) {
             return this.props.basket.map(product => {
-console.log(product[0], product.length)
+console.log(product[0]);
                 return (
                     <CardComponent
                         key={product[0].id}
@@ -72,7 +71,7 @@ console.log(product[0], product.length)
                             <Image
                                 resizeMode={'contain'}
                                 style={imageStyle}
-                                source={require('../../../images/shell.png')}
+                                source={{uri: product[0].photo}}
                             />
                         </View>
                         <View style={textContainer}>
@@ -101,8 +100,7 @@ console.log(product[0], product.length)
             priceText,
             bonusText,
             buttonText} = styles;
-        console.log(this.props.basket, this.props.basket[0])
-        if (this.props.basket[0]) {
+        if (this.props.basket[this.props.basket.length-1]) {
             return (
                 <View style={fixedFooterStyle}>
                     <View>
@@ -141,7 +139,8 @@ console.log(product[0], product.length)
                 <ScrollView style={{
                     paddingLeft: 13,
                     paddingRight: 14,
-                    marginTop: 21
+                    marginTop: 21,
+                    marginBottom: 60,
                     }}
                     contentContainerStyle={{
                         flexDirection: 'column',
@@ -162,7 +161,7 @@ console.log(product[0], product.length)
 const styles = {
     componentStyle: {
         // backgroundColor: '#9f9f96',
-        height: 111,
+        // maxheight: 111,
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',

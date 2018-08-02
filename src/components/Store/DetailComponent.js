@@ -103,7 +103,7 @@ let {product} = this.props;
                                 </Text>
                                 <Text style={isPresentText}>
                                     {
-                                        product.status == 'instock' ? 'Вналичии' : 'Нет на складе'
+                                        product.status == 'instock' ? 'Вналичии' : 'Нет в наличии'
                                     }
                                 </Text>
                             </View>
@@ -112,8 +112,6 @@ let {product} = this.props;
                         <CardItem style={descriptionContainer}>
                             <CardComponent style={{
                                 paddingTop: 22,
-                                justifyContent: 'flex-start',
-                                alignItems: 'flex-start'
                             }}>
                                 <Text style={
                                     descriptionTitle
@@ -127,16 +125,7 @@ let {product} = this.props;
                                         fontSize: 13,
                                         color: '#1b1b1b'
                                     }}>
-                                        Давно выяснено, что при оценке дизайна и композиции читаемый текст
-                                        мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более
-                                        или менее стандартное заполнение шаблона, а также реальное распределение букв и
-                                        пробелов в абзацах, которое не получается при простой дубликации "Здесь ваш текст..
-                                        Здесь ваш текст.. Здесь ваш текст.." Многие программы электронной вёрстки и
-                                        редакторы HTML используют Lorem Ipsum в качестве текста по умолчанию, так что
-                                        поиск по ключевым словам "lorem ipsum" сразу показывает, как много веб-страниц
-                                        всё ещё дожидаются своего настоящего рождения. За прошедшие годы текст Lorem Ipsum
-                                        получил много версий. Некоторые версии появились по ошибке, некоторые - намеренно
-                                        (например, юмористические варианты).
+                                        {product.description}
                                     </Text>
                                 </View>
                             </CardComponent>
@@ -190,7 +179,8 @@ const styles = {
         flex: 2,
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        alignSelf: 'stretch'
     },
     titleStyle: {
         fontFamily: 'SFUIText-Medium',
@@ -208,6 +198,9 @@ const styles = {
         flex: 40,
         paddingLeft: 14 * WIDTH_RATIO,
         paddingRight: 14 * WIDTH_RATIO,
+        alignSelf: 'stretch',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     textContainer: {
         marginRight: 17,

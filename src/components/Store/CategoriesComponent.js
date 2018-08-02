@@ -24,12 +24,16 @@ class CategoriesComponent extends Component {
     }
 
     openStoreCategories(category) {
-        Actions.goods({category: category})
+        console.log(category);
+        if (category.id == 17) { // if this is Specail offers category
+            Actions.specialOffer({subcategories: category.sub_categories})
+        } else {
+            Actions.goods({category: category})
+        }
     }
 
     renderRowItems(row) {
         return row.map( (item, index) => {
-console.log(item);
             return (
                 <Item
                     key={item.id}
