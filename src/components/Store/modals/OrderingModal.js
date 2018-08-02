@@ -6,17 +6,21 @@ import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button'
 class OrderingModal extends React.Component {
 
     state = {
-        sortingName: ''
+        sortingName: '',
+        index: 0
     }
 
-    onSelect(filterName) {
-        console.log(filterName);
-        // this.props.checkFilters(filterName);
-        this.setState({sortingName: filterName})
+    onSelect(filterName, index) {
+        // console.log(index);
+        // this.props.onSorting(index);
+        this.setState({
+            sortingName: filterName,
+            index: index
+        })
     }
 
     onSorting() {
-        this.props.sortingProducts(this.state.sortingName)
+        this.props.sortingProducts(this.state.sortingName, this.state.index);
     }
 
     renderCheckboxes() {
@@ -47,7 +51,7 @@ class OrderingModal extends React.Component {
     }
 
     render() {
-        let {isOpen, closeModal} = this.props;
+        let {isOpen, closeModal, selectedId} = this.props;
         return (
             <Modal style={styles.modal}
                    position={"center"}
@@ -103,13 +107,13 @@ class OrderingModal extends React.Component {
                             }}>
                                 <RadioGroup
                                     size={15}
-                                    selectedIndex={0}
+                                    selectedIndex={selectedId}
                                     color='#423486'
                                     style={{
                                         justifyContent: 'flex-start',
                                         // backgroundColor: '#279'
                                     }}
-                                    onSelect = {(index, value) => this.onSelect(value)}
+                                    onSelect = {(index, value) => this.onSelect(value, index)}
                                 >
                                     {this.renderCheckboxes()}
                                 </RadioGroup>

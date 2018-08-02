@@ -22,7 +22,8 @@ import {
     STORE_GET_HISTORY_SUCCESS,
     STORE_GET_DETAILS_SUCCESS,
     STORE_CHECK_FILTER,
-    STORE_GET_BRANDS_SUCCESS
+    STORE_GET_BRANDS_SUCCESS,
+    STORE_SET_SELECTED_SORTING
 } from '../Actions/types';
 import {
     STORE_CATEGORIES_URL,
@@ -409,4 +410,12 @@ const onFilteredProductsSuccess = (dispatch, products) => {
         type: STORE_GET_PRODUCTS_BY_CATEGORY_ID_SUCCESS,
         payload: products
     })
+}
+
+export const setSelectedSorting = (sortingId) => {
+console.log('setSelectedSorting', sortingId);
+    return {
+        type: STORE_SET_SELECTED_SORTING,
+        payload: sortingId
+    }
 }

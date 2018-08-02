@@ -203,6 +203,7 @@ export const STORE_GET_DETAILS_FAIL = 'store_details_fail';
 export const STORE_CHECK_FILTER = 'store_check_filter';
 export const STORE_CHECK_ORDER = 'store_check_order';
 export const STORE_GET_BRANDS_SUCCESS = 'store_get_brands_success';
+export const STORE_SET_SELECTED_SORTING = 'store_set_selecting_sorting';
 
 
 export const WOG_BONUSES_LOADED = 'wog_bonuses_loaded';

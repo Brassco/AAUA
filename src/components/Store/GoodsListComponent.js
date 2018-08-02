@@ -10,7 +10,7 @@ import {
 import {WIDTH_RATIO, RATIO} from '../../styles/constants';
 import GoodsComponent from './GoodsComponent';
 import {Actions} from 'react-native-router-flux';
-import {getProductsByCategoriesId, addToBasket, checkFilters, getFilteredProduct} from '../../Actions/StoreAction';
+import {getProductsByCategoriesId, addToBasket, checkFilters, getFilteredProduct, setSelectedSorting} from '../../Actions/StoreAction';
 import {connect} from 'react-redux';
 import Filters from './Filters';
 import Modal from 'react-native-modalbox';
@@ -35,9 +35,10 @@ class GoodsListComponent extends Component {
         addToBasket(product);
     }
 
-    onSorting(filterName) {
+    onSorting(filterName, index) {
         let {token, phone, category} = this.props;
-        this.props.getProductsByCategoriesId(token, phone, category.id, filterName)
+        this.props.getProductsByCategoriesId(token, phone, category.id, filterName);
+        this.props.setSelectedSorting(index);
         this.setState({isOrdersOpen: false});
     }
 
@@ -139,7 +140,7 @@ class GoodsListComponent extends Component {
                 <OrderingModal
                     isOpen={this.state.isOrdersOpen}
                     closeModal={() => this.setState({isOrdersOpen: false})}
-                    checkFilters={this.props.checkFilters}
+                    selectedId={this.props.selectedSorting}
                     filters={this.props.filters}
                     sortingProducts={this.onSorting.bind(this)}
                 />
@@ -208,8 +209,9 @@ const mapStateToProps = ({auth, store}) => {
         products: store.products,
         filters: store.filters,
         checkedBrands: store.checkedBrands,
-        countBasket: store.countBasket
+        countBasket: store.countBasket,
+        selectedSorting: store.selectedSorting
     }
 }
 
-export default connect(mapStateToProps, {getProductsByCategoriesId, addToBasket, checkFilters, getFilteredProduct})(GoodsListComponent);
+export default connect(mapStateToProps, {getProductsByCategoriesId, addToBasket, checkFilters, getFilteredProduct, setSelectedSorting})(GoodsListComponent);
