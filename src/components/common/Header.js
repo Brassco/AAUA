@@ -72,16 +72,18 @@ class Header extends Component{
             return (
                 <TouchableOpacity
                     style={{
-                        paddingTop:25,
-                        paddingRight:25,
-                        justifyContent: 'center',
-                        alignItems: 'center',
+                        width:75,
+                        height:55,
+                        justifyContent: 'flex-start',
+                        alignItems: 'flex-end',
+                        flexDirection: 'row'
                     }}
                     onPress={Actions.basketList}
                 >
                     <Icon
                         imageSrc={require('../../images/icons/basket.png')}
                     />
+                    {this.renderCounter()}
                 </TouchableOpacity>
             )
         }
@@ -107,6 +109,36 @@ class Header extends Component{
         return (
             <View></View>
         )
+    }
+
+    renderCounter() {
+        if (this.props.countBasket > 0) {
+            return (
+                <View style={{
+                    width: 15,
+                    height: 15,
+                    borderRadius: 7,
+                    backgroundColor: '#e1a700',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'absolute',
+                    bottom: 2,
+                    left: 22
+                }}>
+                    <Text style={{
+                        fontFamily: 'SFUIText-Medium',
+                        color: '#1b1b1b',
+                        fontSize: 10,
+                        marginLeft: 2,
+                        marginRight: 2,
+                        marginTop: 1,
+                        minWidth: 12
+                    }}>
+                        { this.props.countBasket > 0 ? this.props.countBasket : 15}
+                    </Text>
+                </View>
+            )
+        }
     }
 
     render() {
