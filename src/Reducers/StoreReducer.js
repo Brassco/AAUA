@@ -55,8 +55,8 @@ const INITIAL_STATE = {
     comment: null,
     phone: null,
     filters: [
-        {name:'cheap', label: 'от дешевых к дорогим', status: true},
-        {name:'expensive', label: 'от дорогих к дешевым', status: false},
+        {name:'cheap', label: 'От дешевых к дорогим', status: true},
+        {name:'expensive', label: 'От дорогих к дешевым', status: false},
         {name:'new', label: 'Новинки', status: false},
         {name:'promo', label: 'Акционные', status: false},
         {name:'popular', label: 'Популярные', status: false},

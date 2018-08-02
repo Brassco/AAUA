@@ -33,7 +33,6 @@ class GoodsListComponent extends Component {
     addToBasket(product) {
         let {addToBasket} = this.props;
         addToBasket(product);
-        // Actions.basketList();
     }
 
     onSorting(filterName) {
@@ -62,12 +61,12 @@ class GoodsListComponent extends Component {
             return (
                 <GoodsComponent
                     key={item.id+item.name}
-                    onPress={() => Actions.detail({productId: item.id})}
+                    onPress={() => Actions.detail({productId: item.id, category: this.props.category})}
                     addToBasket={this.addToBasket.bind(this, item)}
                     imageSrc={{uri:item.photo}}
                     price={item.price}
                     bonus_price={item.bonus_price}
-                    isPresent
+                    isPresent={item.status == "instock"}
                 >
                     {
                         item.name
@@ -78,7 +77,6 @@ class GoodsListComponent extends Component {
     }
 
     renderRows() {
-        console.log(this.props.products)
         const products = [...this.props.products];
         var i=0;
         var rows = [];
@@ -101,7 +99,6 @@ class GoodsListComponent extends Component {
     }
 
     renderContent() {
-console.log(this.props);
         const {loading} = this.props
         if (!loading) {
             return (
@@ -122,8 +119,8 @@ console.log(this.props);
     render() {
         return (
             <MainCard>
-                <Header back basket>
-                    автомасла
+                <Header back basket countBasket={this.props.countBasket}>
+                    {this.props.category.name}
                 </Header>
                 <Filters
                     showFilters={this.showFilters.bind(this)}
@@ -210,7 +207,8 @@ const mapStateToProps = ({auth, store}) => {
         token: auth.user.token,
         products: store.products,
         filters: store.filters,
-        checkedBrands: store.checkedBrands
+        checkedBrands: store.checkedBrands,
+        countBasket: store.countBasket
     }
 }
 

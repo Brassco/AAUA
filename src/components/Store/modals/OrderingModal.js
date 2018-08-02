@@ -26,12 +26,21 @@ class OrderingModal extends React.Component {
                 <RadioButton
                     value={filter.name}
                     key={filter.name}
+                    style={{
+                        alignItems: 'center',
+                        justifyContent: 'flex-start',
+                    }}
                 >
-                    <Text>
-                        {
-                            filter.label
-                        }
-                    </Text>
+                    <View style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}>
+                        <Text>
+                            {
+                                filter.label
+                            }
+                        </Text>
+                    </View>
                 </RadioButton>
             )
         })
@@ -80,7 +89,7 @@ class OrderingModal extends React.Component {
                             </Text>
                         </View>
                         <View style={{
-                            flex: 8,
+                            flex: 10,
                             flexDirection: 'column',
                             justifyContent: 'flex-start',
                             alignItems: 'flex-start',

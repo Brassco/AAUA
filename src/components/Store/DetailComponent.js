@@ -28,7 +28,6 @@ class DetailsComponent extends Component {
     addToBascket() {
         let {addToBasket, product} = this.props;
         addToBasket(product);
-        Actions.basketList();
     }
 
     componentWillReceiveProps(nextProps){
@@ -37,6 +36,7 @@ class DetailsComponent extends Component {
     }
 
     render() {
+console.log(this.props);
 let {product} = this.props;
         const images = [
             require('../../images/avtoOil.png'),
@@ -62,7 +62,7 @@ let {product} = this.props;
         if (product) {
             return (
                 <MainCard>
-                    <Header back basket>
+                    <Header back basket countBasket={this.props.countBasket}>
                         {
                             product.name
                         }
@@ -254,7 +254,9 @@ const mapStateToProps = ({auth, store}) => {
     return {
         phone: auth.user.profile.phone,
         token: auth.user.token,
-        product: store.product
+        product: store.product,
+        basket: store.basket,
+        countBasket: store.countBasket
     }
 }
 
