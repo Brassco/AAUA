@@ -159,17 +159,17 @@ console.log(product);
 }
 
 export const addToBasket = (product) => {
-    console.log(product)
     return {
         type: ADD_TO_BASKET ,
         payload: product
     }
 }
 
-export const deleteFromBasket = (id) => {
+export const deleteFromBasket = (product, isAll = false) => {
     return {
         type: DELETE_FROM_BASKET,
-        payload: id
+        payload: product,
+        isAll: isAll
     }
 }
 

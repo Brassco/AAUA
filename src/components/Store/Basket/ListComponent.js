@@ -16,33 +16,13 @@ import ButtonComponent from './ButtonComponent';
 import {RATIO} from '../../../styles/constants';
 import {connect} from 'react-redux';
 import {deleteFromBasket, addToBasket} from '../../../Actions/StoreAction';
+import _ from 'lodash';
 
 class ListComponent extends Component {
 
     state = {
         sumPrice: 0,
         sumBonusPrice: 0
-    }
-
-    componentDidMount() {
-        let sum = 0;
-        let sumBonus = 0;
-        if (this.props.basket.length) {
-            this.props.basket.map(products => {
-                products.map(product => {
-                    let price = product.price == '' ? 0 : product.price;
-                    let bonus_price = product.bonus_price == '' ? 0 : product.bonus_price;
-                    sum = sum + parseInt(price),
-                        sumBonus = sumBonus + parseInt(bonus_price)
-                })
-
-            })
-            let {sumPrice, sumBonusPrice} = this.state;
-            this.setState({
-                sumPrice: sumPrice + sum,
-                sumBonusPrice: sumBonusPrice + sumBonus
-            })
-        }
     }
 
     onDeleteItem(id) {
@@ -63,33 +43,34 @@ class ListComponent extends Component {
             imageContainer,
             textContainer,
             componentStyle} = styles;
-        if (this.props.basket[this.props.basket.length-1]) {
-            return this.props.basket.map(product => {
-console.log(product[0]);
+        console.log(this.props.basket.length)
+        if (this.props.basket.length) {
+            return this.props.basket.map(row => {
+                let product = row.product;
                 return (
                     <CardComponent
-                        key={product[0].id}
+                        key={row.id}
                         style={componentStyle}
                     >
                         <View style={imageContainer}>
                             <Image
                                 resizeMode={'contain'}
                                 style={imageStyle}
-                                source={{uri: product[0].photo}}
+                                source={{uri: product.photo}}
                             />
                         </View>
                         <View style={textContainer}>
                             <TextComponent
-                                onDelete={this.onClearBasket.bind(this, product[0].id)}
-                                title={product[0].name}
+                                onDelete={this.onClearBasket.bind(this, product)}
+                                title={product.name}
                                 isPresent
                             />
                             <ButtonComponent
-                                count={product.length}
-                                onAdd={this.onAddToBasket.bind(this, product[0])}
-                                onDelete={this.onDeleteItem.bind(this, product[0].id)}
-                                price={product[0].price || 0}
-                                bonuses={product[0].bonus_price || 0}
+                                count={row.counter}
+                                onAdd={this.onAddToBasket.bind(this, product)}
+                                onDelete={this.onDeleteItem.bind(this, product)}
+                                price={product.price || 0}
+                                bonuses={product.bonus_price || 0}
                             />
                         </View>
                     </CardComponent>
@@ -104,15 +85,15 @@ console.log(product[0]);
             priceText,
             bonusText,
             buttonText} = styles;
-        if (this.props.basket[this.props.basket.length-1]) {
+        if (this.props.basket.length) {
             return (
                 <View style={fixedFooterStyle}>
                     <View>
                         <Text style={priceText}>
-                            {this.state.sumPrice} грн
+                            {this.props.basketSum} грн
                         </Text>
                         <Text style={bonusText}>
-                            {this.state.sumBonusPrice} бонусов
+                            {this.props.basketBonusSum} бонусов
                         </Text>
                     </View>
                     <View style={{
@@ -246,7 +227,9 @@ const styles = {
 
 const mapStateToProps = ({store}) => {
     return {
-        basket: store.basket
+        basket: store.basket,
+        basketSum: store.basketSum,
+        basketBonusSum: store.basketBonusSum,
     }
 }
 
