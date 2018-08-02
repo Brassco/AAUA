@@ -49,6 +49,10 @@ class ListComponent extends Component {
         this.props.deleteFromBasket(id)
     }
 
+    onClearBasket(id) {
+        this.props.deleteFromBasket(id, true)
+    }
+
     onAddToBasket(product) {
         this.props.addToBasket(product)
     }
@@ -76,7 +80,7 @@ console.log(product[0]);
                         </View>
                         <View style={textContainer}>
                             <TextComponent
-                                onDelete={this.onDeleteItem.bind(this, product[0].id)}
+                                onDelete={this.onClearBasket.bind(this, product[0].id)}
                                 title={product[0].name}
                                 isPresent
                             />
