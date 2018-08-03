@@ -6,6 +6,7 @@ import {
     STORE_GET_PRODUCTS_BY_CATEGORY_ID_SUCCESS,
     STORE_GET_PRODUCTS_BY_CATEGORY_ID_FAIL,
     STORE_GET_PRODUCTS_BY_ID,
+    STORE_GET_PRODUCT_BY_ID,
     STORE_GET_PRODUCT_BY_ID_SUCCESS,
     STORE_GET_PRODUCT_BY_ID_FAIL,
     ADD_TO_BASKET,
@@ -82,11 +83,13 @@ export default (state = INITIAL_STATE, action) => {
         case STORE_GET_CATEGORIES_FAIL:
             return {...state, loading: false, categories: [], error: action.payload};
         case STORE_GET_PRODUCTS_BY_CATEGORY_ID:
-            return {...state, loading: true};
+            return {...state, loading: true, product: null};
         case STORE_GET_PRODUCTS_BY_CATEGORY_ID_SUCCESS:
-            return {...state, loading: false, products: action.payload};
+            return {...state, loading: false, products: action.payload, product: null};
         case STORE_GET_PRODUCTS_BY_CATEGORY_ID_FAIL:
             return {...state, loading: false, products: [], error: action.payload};
+        case STORE_GET_PRODUCT_BY_ID:
+            return {...state, loading: false, product: null};
         case STORE_GET_PRODUCT_BY_ID_SUCCESS:
             return {...state, loading: false, product: action.payload};
         case STORE_GET_PRODUCT_BY_ID_FAIL:

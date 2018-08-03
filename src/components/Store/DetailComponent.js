@@ -36,14 +36,7 @@ class DetailsComponent extends Component {
     }
 
     render() {
-console.log(this.props);
 let {product} = this.props;
-        const images = [
-            require('../../images/avtoOil.png'),
-            require('../../images/avtoOil.png'),
-            require('../../images/avtoOil.png'),
-        ];
-
         const {
             sliderContainer,
             imageContainer,

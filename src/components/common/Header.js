@@ -10,9 +10,11 @@ class Header extends Component{
             return (
                 <TouchableOpacity
                     style={{
-
+                        flex: 1,
                         justifyContent: 'center',
                         alignItems: 'center',
+                        paddingTop:25,
+                        paddingBottom: 15,
                         // backgroundColor: '#382'
                     }}
                     onPress={this.props.onPressBack || Actions.pop}
@@ -31,10 +33,13 @@ class Header extends Component{
             return (
                 <TouchableOpacity
                     style={{
+                        flex: 1,
                         paddingTop:25,
-                        paddingRight:25,
+                        // paddingRight:25,
                         justifyContent: 'center',
                         alignItems: 'center',
+                        paddingBottom: 15,
+                        // backgroundColor: '#382'
                     }}
                     onPress={Actions.drawerOpen}
                 >
@@ -74,9 +79,11 @@ class Header extends Component{
                     style={{
                         width:75,
                         height:55,
-                        justifyContent: 'flex-start',
+                        paddingBottom: 15,
+                        paddingRight: 15,
+                        justifyContent: 'center',
                         alignItems: 'flex-end',
-                        flexDirection: 'row'
+                        flexDirection: 'row',
                     }}
                     onPress={Actions.basketList}
                 >
@@ -168,15 +175,15 @@ const style = {
         fontFamily: 'SFUIText-Bold',
         fontSize: 13,
         color:'#1b1b1b',
+        paddingBottom: 15,
     },
     buttonContainer: {
         // backgroundColor: '#9f9f96',
         width: 70,
         height: 56,
-        // paddingBottom:13.3,
-        paddingLeft:15.6,
-        justifyContent: 'flex-end',
-        alignItems: 'flex-start',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-end',
     },
     viewStyle: {
         elevation:5,
@@ -185,7 +192,7 @@ const style = {
         justifyContent: 'space-between',
         alignItems: 'flex-end',
         height: 56,
-        paddingBottom: 15,
+        // paddingBottom: 15,
         marginBottom:1,
         borderBottomWidth:1,
         borderColor: '#fafafa',
