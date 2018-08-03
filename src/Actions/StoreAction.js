@@ -382,7 +382,7 @@ export const getFilteredProduct = (token, phone, brandIds) => {
         let signatureString = token+":"+phone;
         const signature = encode(signatureString);
         // let url = brandIds.length > 0 ? STORE_FILTER_URL : STORE_GET_PRODUCTS_BY_CATEGORY_ID+categoryId
-console.log('STORE_FILTER_URL', signature, data, url)
+console.log('STORE_FILTER_URL', signature, data, STORE_FILTER_URL)
         axios.post(STORE_FILTER_URL, data, {
                 headers: {
                     'Signature' : signature,
@@ -390,25 +390,17 @@ console.log('STORE_FILTER_URL', signature, data, url)
                 }
             }
         )
-            .then(result => onFilteredProductsSuccess(dispatch, result.data))
-            .catch((error) => {
-                console.log(error)
-            })
+        .then(result => onFilteredProductsSuccess(dispatch, result.data))
+        .catch((error) => {
+            console.log(error)
+        })
     }
 }
 
 const onFilteredProductsSuccess = (dispatch, products) => {
-    // let brands = [
-    //     {
-    //         "id":172,
-    //         "name":"Coca Cola",
-    //         "slug":"cola-cola",
-    //         "image":"http://wp.dev/wp-content/uploads/2013/06/hoodie_6_back.jpg",
-    //     }
-    // ];
     dispatch({
         type: STORE_GET_PRODUCTS_BY_CATEGORY_ID_SUCCESS,
-        payload: products
+        payload: products.products
     })
 }
 

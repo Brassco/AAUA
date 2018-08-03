@@ -26,7 +26,8 @@ import {
     STORE_GET_DETAILS_FAIL,
     STORE_CHECK_FILTER,
     STORE_CHECK_ORDER,
-    STORE_GET_BRANDS_SUCCESS
+    STORE_GET_BRANDS_SUCCESS,
+    STORE_SET_SELECTED_SORTING
 } from '../Actions/types';
 
 const INITIAL_STATE = {
@@ -62,7 +63,8 @@ const INITIAL_STATE = {
         {name:'popular', label: 'Популярные', status: false},
     ],
     checkedBrands: [],
-    brands: []
+    brands: [],
+    selectedSorting: 0
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -253,6 +255,11 @@ console.log('STORE_GET_DETAILS_SUCCESS', action.payload)
             return {
                 ...state,
                 brands: action.payload
+            }
+        case STORE_SET_SELECTED_SORTING:
+            return {
+                ...state,
+                selectedSorting: action.payload
             }
         default: return state;
     }

@@ -26,8 +26,13 @@ class GoodsListComponent extends Component {
     };
 
     componentWillMount() {
-        let {token, phone, category} = this.props;
-        this.props.getProductsByCategoriesId(token, phone, category.id)
+        let {token, phone, category, checkedBrands} = this.props;
+
+        if (checkedBrands.length) {
+            this.props.getFilteredProduct(token, phone, checkedBrands)
+        } else {
+            this.props.getProductsByCategoriesId(token, phone, category.id)
+        }
     }
 
     addToBasket(product) {
