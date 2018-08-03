@@ -21,8 +21,11 @@ const TextComponent = (props) => {
                 </TouchableOpacity>
             </View>
             <View style={isPresentContainer}>
-                <Text style={isPresentText}>
-                    { props.isPresent ? 'В наличии' : ''}
+                <Text style={[
+                    isPresentText,
+                    {color: props.isPresent ? '#2fc047' : '#e33c57'}
+                ]}>
+                    { props.isPresent ? 'В наличии' : 'Нет в наличии'}
                 </Text>
             </View>
         </View>

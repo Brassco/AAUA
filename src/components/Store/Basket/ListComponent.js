@@ -43,7 +43,6 @@ class ListComponent extends Component {
             imageContainer,
             textContainer,
             componentStyle} = styles;
-        console.log(this.props.basket.length)
         if (this.props.basket.length) {
             return this.props.basket.map(row => {
                 let product = row.product;
@@ -63,7 +62,7 @@ class ListComponent extends Component {
                             <TextComponent
                                 onDelete={this.onClearBasket.bind(this, product)}
                                 title={product.name}
-                                isPresent
+                                isPresent={product.status == "instock"}
                             />
                             <ButtonComponent
                                 count={row.counter}
