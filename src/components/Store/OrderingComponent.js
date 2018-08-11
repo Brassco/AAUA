@@ -26,7 +26,8 @@ import {
     changeNPCity,
     changeNPSkald,
     selectCity,
-    changeComment
+    changeComment,
+    changePhone
 } from '../../Actions/StoreAction';
 import {getCities, getNPCities, getNPsklads} from '../../Actions/CitiesBrands';
 
@@ -251,8 +252,8 @@ console.log('render ordering component', this.props.delivery);
                     />
                 </CardItem>
                 <CardItem style={{
-                    flex: 0,
-                    height: 65,
+                    flex: 12,
+                    // height: 65,
                     marginTop:22,
                 }}>
                     <PhoneInput
@@ -263,8 +264,7 @@ console.log('render ordering component', this.props.delivery);
                     />
                 </CardItem>
                 <CardItem style={{
-                    flex:0,
-                    height: 125 * RATIO,
+                    flex:15,
                     flexDirection: 'column',
                     justifyContent: 'flex-end',
                     alignItems: 'flex-start',
@@ -428,5 +428,6 @@ export default connect(
         changeComment,
         makeOrder,
         selectCity,
-        changeNPSkald
+        changeNPSkald,
+        changePhone
     })(OrderingComponent);

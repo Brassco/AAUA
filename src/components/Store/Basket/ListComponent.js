@@ -224,11 +224,11 @@ const styles = {
     },
 }
 
-const mapStateToProps = ({store}) => {
+const mapStateToProps = ({basket}) => {
     return {
-        basket: store.basket,
-        basketSum: store.basketSum,
-        basketBonusSum: store.basketBonusSum,
+        basket: basket.basket,
+        basketSum: basket.basketSum,
+        basketBonusSum: basket.basketBonusSum,
     }
 }
 

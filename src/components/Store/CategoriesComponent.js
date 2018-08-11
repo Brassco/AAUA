@@ -19,6 +19,7 @@ import {getImageByStoreCategoryId} from '../../Helpers/ImageHelper';
 class CategoriesComponent extends Component {
 
     componentWillMount() {
+        console.log('***STORE CATEGORIES componentWillMount')
         let {phone, token} = this.props;
         this.props.getCategories(token, phone)
     }
@@ -100,9 +101,10 @@ class CategoriesComponent extends Component {
     }
 
     render() {
+        console.log('***STORE CATEGORIES RENDER')
         return (
             <MainCard>
-                <Header burger basket>
+                <Header burger basket countBasket={this.props.countBasket}>
                     Магазин
                 </Header>
                 {
@@ -113,11 +115,12 @@ class CategoriesComponent extends Component {
     }
 }
 
-const mapStateToProps = ({auth, store}) => {
+const mapStateToProps = ({auth, store, basket}) => {
     return {
         phone: auth.user.profile.phone,
         token: auth.user.token,
-        categories: store.categories
+        categories: store.categories,
+        countBasket: basket.countBasket,
     }
 }
 

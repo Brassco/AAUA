@@ -207,14 +207,14 @@ const styles = {
     }
 }
 
-const mapStateToProps = ({auth, store}) => {
+const mapStateToProps = ({auth, store, basket}) => {
     return {
         phone: auth.user.profile.phone,
         token: auth.user.token,
         products: store.products,
         filters: store.filters,
         checkedBrands: store.checkedBrands,
-        countBasket: store.countBasket,
+        countBasket: basket.countBasket,
         selectedSorting: store.selectedSorting
     }
 }
