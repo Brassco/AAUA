@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import {Icon} from './'
+import BasketIcon from './BasketIcon';
 
 class Header extends Component{
 
@@ -75,25 +76,7 @@ class Header extends Component{
         }
         if (this.props.basket) {
             return (
-                <TouchableOpacity
-                    style={{
-                        width:75,
-                        height:55,
-                        paddingBottom: 15,
-                        paddingRight: 10,
-                        justifyContent: 'center',
-                        alignItems: 'flex-end',
-                        flexDirection: 'row',
-                    }}
-                    onPress={Actions.basketList}
-                >
-                    <View>
-                        <Icon
-                            imageSrc={require('../../images/icons/basket.png')}
-                        />
-                        {this.renderCounter()}
-                    </View>
-                </TouchableOpacity>
+                <BasketIcon />
             )
         }
 
@@ -118,36 +101,6 @@ class Header extends Component{
         return (
             <View></View>
         )
-    }
-
-    renderCounter() {
-        if (this.props.countBasket > 0) {
-            return (
-                <View style={{
-                    width: 15,
-                    height: 15,
-                    borderRadius: 7,
-                    backgroundColor: '#e1a700',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    position: 'absolute',
-                    bottom: 2,
-                    left: 22
-                }}>
-                    <Text style={{
-                        fontFamily: 'SFUIText-Medium',
-                        color: '#1b1b1b',
-                        fontSize: 9,
-                        marginLeft: 3,
-                        // marginRight: 2,
-                        marginTop: 1,
-                        minWidth: 12,
-                    }}>
-                        { this.props.countBasket > 0 ? this.props.countBasket : 15}
-                    </Text>
-                </View>
-            )
-        }
     }
 
     render() {

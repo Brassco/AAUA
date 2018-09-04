@@ -121,7 +121,7 @@ console.log(this.props.phone.length > 0, this.props.code.length);
                 <ButtonRoundet
                     onPress={this.checkPhone.bind(this)}
                 >
-                    Подтвердить номер
+                    Заказать SMS код
                 </ButtonRoundet>
             )
         }

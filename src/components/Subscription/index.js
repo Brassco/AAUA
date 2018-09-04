@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, Image, ScrollView, Platform, BackHandler, AppState} from 'react-native';
+import {View, Text, Image, ScrollView, Platform, BackHandler} from 'react-native';
 import {
     MainCard,
     CardItem,
@@ -15,10 +15,6 @@ import DetailsItem from './DetailsItem';
 import {DEVICE_OS, iOS, Android} from '../../Actions/constants';
 
 class SubscriptionComponent extends Component {
-
-    state = {
-        appState: AppState.currentState
-    }
 
     addToBalance() {
         if (this.props.bought_at != null) {

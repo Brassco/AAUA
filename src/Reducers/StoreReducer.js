@@ -9,8 +9,6 @@ import {
     STORE_GET_PRODUCT_BY_ID,
     STORE_GET_PRODUCT_BY_ID_SUCCESS,
     STORE_GET_PRODUCT_BY_ID_FAIL,
-    ADD_TO_BASKET,
-    DELETE_FROM_BASKET,
     DELIVERY_CURIER,
     STORE_COUNTRY_CHANGE,
     STORE_CITY_CHANGE,
@@ -21,15 +19,16 @@ import {
     STORE_ADDRESS_CHANGE,
     STORE_NP_SKLAD,
     STORE_COMMENT_CHANGE,
-    STORE_GET_HISTORY_START,
-    STORE_GET_HISTORY_SUCCESS,
     STORE_GET_DETAILS_SUCCESS,
     STORE_GET_DETAILS_FAIL,
     STORE_CHECK_FILTER,
     STORE_CHECK_ORDER,
     STORE_GET_BRANDS_SUCCESS,
-    STORE_SET_SELECTED_SORTING
+    STORE_SET_SELECTED_SORTING,
+    STORE_PHONE_CHANGE,
+    STORE_SET_PAYMENT_TYPE
 } from '../Actions/types';
+import {AsyncStorage} from 'react-native';
 
 const INITIAL_STATE = {
     categories: [],
@@ -37,6 +36,7 @@ const INITIAL_STATE = {
     product: null,
     error: null,
     loading: true,
+
     basket: [],
     countBasket: 0,
     basketSum: 0,
@@ -65,7 +65,8 @@ const INITIAL_STATE = {
     ],
     checkedBrands: [],
     brands: [],
-    selectedSorting: 0
+    selectedSorting: 0,
+    paymentType: 1
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -83,7 +84,7 @@ export default (state = INITIAL_STATE, action) => {
         case STORE_GET_CATEGORIES_FAIL:
             return {...state, loading: false, categories: [], error: action.payload};
         case STORE_GET_PRODUCTS_BY_CATEGORY_ID:
-            return {...state, loading: true, product: null};
+            return {...state, loading: true, product: null, products: []};
         case STORE_GET_PRODUCTS_BY_CATEGORY_ID_SUCCESS:
             return {...state, loading: false, products: action.payload, product: null};
         case STORE_GET_PRODUCTS_BY_CATEGORY_ID_FAIL:
@@ -94,67 +95,6 @@ export default (state = INITIAL_STATE, action) => {
             return {...state, loading: false, product: action.payload};
         case STORE_GET_PRODUCT_BY_ID_FAIL:
             return {...state, loading: false, products: [], error: action.payload};
-        case ADD_TO_BASKET:
-            let newBasket = state.basket.slice(0);
-            if (newBasket.length) {
-                let isNewRow = true;
-                for (var i=0; i < newBasket.length; i++) {
-                    let row = newBasket[i];
-                    if (row.id == action.payload.id) {
-                        row.counter = row.counter + 1;
-                        isNewRow = false;
-                        break;
-                    }
-                }
-                if (isNewRow) {
-                    newBasket.push({id: action.payload.id, counter: 1, product: action.payload})
-                }
-            } else {
-                newBasket.push({id: action.payload.id, counter: 1, product: action.payload})
-            }
-            return {
-                ...state,
-                loading: false,
-                basket: newBasket,
-                countBasket: state.countBasket+1,
-                basketSum: state.basketSum + parseInt(action.payload.price),
-                basketBonusSum: state.basketBonusSum + parseInt(action.payload.bonus_price)
-            };
-        case DELETE_FROM_BASKET:
-            let copyBasket = state.basket.slice();
-            let counter = state.countBasket;
-            let sum = state.basketSum;
-            let bonusSum = state.basketBonusSum;
-            if (copyBasket.length) {
-                for (var i=0; i < copyBasket.length; i++) {
-                    let row = copyBasket[i];
-                    if (row.id == action.payload.id) {
-                        if (action.isAll) {
-                            counter = 0;
-                            sum = sum - (parseInt(action.payload.price) * row.counter)
-                            bonusSum = bonusSum - (parseInt(action.payload.bonus_price) * row.counter)
-                            copyBasket.splice(i, 1);
-                        } else {
-                            row.counter = row.counter - 1;
-                            sum = sum - parseInt(action.payload.price);
-                            bonusSum = bonusSum - parseInt(action.payload.bonus_price);
-                            if (row.counter == 0) {
-                                copyBasket.splice(i, 1);
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-            console.log('DELETE_FROM_BASKET sum', sum, bonusSum, copyBasket)
-            return {
-                ...state,
-                loading: false,
-                basket: copyBasket,
-                countBasket: counter,
-                basketSum: sum,
-                basketBonusSum: bonusSum
-            };
         case STORE_COUNTRY_CHANGE:
             return {...state, country: action.payload, addCardError: null};
         case STORE_DELIVERY_CHANGE:
@@ -212,19 +152,7 @@ export default (state = INITIAL_STATE, action) => {
                 comment: action.payload,
                 orderCardSuccess: false,
                 addCardError: null};
-        case STORE_GET_HISTORY_START:
-console.log('STORE_GET_HISTORY_START');
-            return {...state,
-                loading: true,
-                error: null,
-            };
-        case STORE_GET_HISTORY_SUCCESS:
-console.log('STORE_GET_HISTORY_SUCCESS', action.payload)
-            return {...state,
-                loading: false,
-                error: null,
-                orders: action.payload
-            };
+
         case STORE_GET_DETAILS_SUCCESS:
 console.log('STORE_GET_DETAILS_SUCCESS', action.payload)
             return {...state,
@@ -263,6 +191,14 @@ console.log('STORE_GET_DETAILS_SUCCESS', action.payload)
             return {
                 ...state,
                 selectedSorting: action.payload
+            }
+        case STORE_PHONE_CHANGE:
+            return {...state, phone: action.payload};
+        case STORE_SET_PAYMENT_TYPE:
+console.log("REDUCER STORE_SET_PAYMENT_TYPE")
+            return {
+                ...state,
+                paymentType: action.payload
             }
         default: return state;
     }

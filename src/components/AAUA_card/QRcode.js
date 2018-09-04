@@ -89,15 +89,29 @@ class QRcode extends Component {
                     style={{
                         backgroundColor: '#FFF',
                         flexDirection: 'column',
-                        justifyContent: 'flex-start',
+                        justifyContent: 'center',
                         alignItems: 'center',
-                        flex: 2
+                        flex: 1
                     }}
                 >
                     <Text
                         style={[text, {fontSize: 22}]}
                     >
                         {card}
+                    </Text>
+                </CardItem>
+                <CardItem
+                    style={{
+                        backgroundColor: '#FFF',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginBottom: 5,
+                        flex: 2,
+                        paddingLeft: 15,
+                        paddingRight: 10,
+                    }}>
+                    <Text style={text}>
+                        В данный момент QR код не работает по техническим причинам. Мы скоро исправим эту проблему
                     </Text>
                 </CardItem>
             </MainCard>

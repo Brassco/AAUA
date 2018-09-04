@@ -36,33 +36,38 @@ class ListComponent extends Component {
     renderItem() {
         const {imageStyle, imageContainer, textContainer,componentStyle} = styles;
         let {orders} = this.props;
+console.log(orders);
         if (orders.length) {
             return orders.map( order => {
-                console.log(order);
+
                 let product = order.products[0];
+                let date = order.date.date.split(' ');
+console.log(product, date);
                 return (
                     <CardComponent
+                        key={order.ID}
                         style={componentStyle}
                     >
                         <View style={imageContainer}>
                             <Image
                                 resizeMode={'contain'}
                                 style={imageStyle}
-                                source={{uri: product.photo}}
+                                source={{uri: product.details.photo}}
                             />
                         </View>
                         <View style={textContainer}>
                             <TextComponent
+                                date={date[0]}
                                 title={product.name}
                                 isPresent
                             />
                             <ButtonComponent
                                 onPress={Actions.ordering}
                                 price={
-                                    product.price || 0
+                                    product.details.price || 0
                                 }
                                 bonuses={
-                                    product.bonus_price || 0
+                                    product.details.bonus_price || 0
                                 }
                             />
                         </View>
@@ -102,7 +107,6 @@ class ListComponent extends Component {
     }
 
     render() {
-console.log(this.props)
         return (
             <MainCard>
                 <Header burger goToMain={DEVICE_OS == iOS ? true : false}>
@@ -164,12 +168,12 @@ const styles = {
     }
 }
 
-const mapStateToProps = ({auth, store}) => {
+const mapStateToProps = ({auth, store, basket, history}) => {
     return {
-        loading: store.loading,
+        loading: history.loading,
         user: auth.user,
-        basket: store.basket,
-        orders: store.orders
+        basket: basket.basket,
+        orders: history.orders
     }
 }
 

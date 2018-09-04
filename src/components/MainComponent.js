@@ -19,38 +19,38 @@ import {
 import ImageSlider from 'react-native-image-slider';
 import {BottomMenuItem} from "./common/BottomMenuItem";
 import {Actions} from 'react-native-router-flux';
-import {connect} from 'react-redux';
-import {setUserFromSession, updateStatus} from '../Actions/AuthAction';
 import {getSliderImages, getBonusesWog} from '../Actions/CitiesBrands';
 import {countMessages} from '../Actions/MessagesActions';
 
+import {connect} from 'react-redux';
+
 class MainComponent extends Component {
 
-    componentWillMount() {
-        AsyncStorage.getItem('user').then((user) => {
-            const userObj = JSON.parse(user);
-            this.props.setUserFromSession(userObj)
-            this.props.getSliderImages(userObj.token)
-            this.props.countMessages(userObj.token)
-            this.props.getBonusesWog(userObj.token)
-        })
+    componentDidMount() {
+        console.log('componentDidMount', this.props);
     }
 
-    renderImageSlide( item) {
-console.log(item);
-        return (
-            <TouchableOpacity key={item.index} style={{flex: 1}}>
-                <Image source={{ uri: item.item }} style={{flex: 1, width: "100%", height: "100%"}} />
-            </TouchableOpacity>
-        )
+    shouldComponentUpdate(nextProps) {
+        console.log('shouldComponentUpdate', nextProps, this.props);
+        return true;
+    }
+
+    componentWillReceiveProps() {
+        if (this.props.user && this.props.images.length < 1) {
+            console.log('componentWillReceiveProps', this.props);
+            let {token} = this.props.user;
+            this.props.getSliderImages(token)
+            this.props.countMessages(token)
+            this.props.getBonusesWog(token)
+        }
     }
 
     render() {
+console.log('render Main Component');
         const images = [];
         this.props.images.map( image => {
             images.push(image.url)
         })
-console.log(images, this.props.images);
         return (
             <MainCard>
                 <Header burger >
@@ -111,8 +111,10 @@ console.log(images, this.props.images);
 }
 
 const mapStateToProps = ({auth, citiesBrands, messages}) => {
+    console.log(auth);
     return {
         // token: auth.user.token,
+        user: auth.user,
         bonus: auth.user ? auth.user.bonus : 0,
         bonus_wog: auth.user ? citiesBrands.bonuses_wog : 0,
         images: citiesBrands.sliderImages,
@@ -120,4 +122,5 @@ const mapStateToProps = ({auth, citiesBrands, messages}) => {
     }
 }
 
-export default connect(mapStateToProps, {setUserFromSession, getSliderImages, countMessages, getBonusesWog})(MainComponent);
+export default connect(mapStateToProps, { getSliderImages, getBonusesWog,
+    countMessages})(MainComponent);

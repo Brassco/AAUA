@@ -1,10 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import {
-    MainCard,
-    CardItem,
-    Header,
-    CardComponent,
     Icon,
     ButtonRoundet} from '../common';
 import {WIDTH_RATIO, RATIO} from '../../styles/constants';

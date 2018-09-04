@@ -4,17 +4,14 @@ import {
     MainCard,
     CardItem,
     Header,
-    CardComponent,
-    Icon,
-    CheckBox} from '../common';
+    Spiner,
+   } from '../common';
 import {WIDTH_RATIO, RATIO} from '../../styles/constants';
 import GoodsComponent from './GoodsComponent';
 import {Actions} from 'react-native-router-flux';
 import {getProductsByCategoriesId, addToBasket, checkFilters, getFilteredProduct, setSelectedSorting} from '../../Actions/StoreAction';
 import {connect} from 'react-redux';
 import Filters from './Filters';
-import Modal from 'react-native-modalbox';
-import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button'
 import FiltersModal from './modals/FiltersModal';
 import OrderingModal from "./modals/OrderingModal";
 
@@ -25,13 +22,14 @@ class GoodsListComponent extends Component {
         isOrdersOpen: false,
     };
 
-    componentWillMount() {
+    componentDidMount() {
+        console.log('***STORE GOODS LIST componentDidMount', this.props.products);
         let {token, phone, category, checkedBrands} = this.props;
 
         if (checkedBrands.length) {
             this.props.getFilteredProduct(token, phone, checkedBrands)
         } else {
-            this.props.getProductsByCategoriesId(token, phone, category.id)
+            this.props.getProductsByCategoriesId(token, phone, category.id, 'cheap')
         }
     }
 
@@ -49,7 +47,6 @@ class GoodsListComponent extends Component {
 
     onFiltering() {
         let {token, phone, checkedBrands} = this.props;
-        console.log('onFiltering', token, phone, checkedBrands);
         this.props.getFilteredProduct(token, phone, checkedBrands)
         this.setState({isFiltersOpen: false})
     }
@@ -67,7 +64,7 @@ class GoodsListComponent extends Component {
             return (
                 <GoodsComponent
                     key={item.id+item.name}
-                    onPress={() => Actions.detail({productId: item.id, category: this.props.category})}
+                    onPress={() => Actions.detail({productId: item.id, category: this.props.category, product: item})}
                     addToBasket={this.addToBasket.bind(this, item)}
                     imageSrc={{uri:item.photo}}
                     price={item.price}
@@ -91,7 +88,6 @@ class GoodsListComponent extends Component {
             i = i+2;
         }
         return rows.map( (row, index) => {
-            console.log(row.length);
             return (
                 <CardItem
                     key={row[0].id}
@@ -105,6 +101,7 @@ class GoodsListComponent extends Component {
     }
 
     renderContent() {
+        console.log('*** GOODS LIST render content ***', this.props)
         const {loading} = this.props
         if (!loading) {
             return (
@@ -125,7 +122,7 @@ class GoodsListComponent extends Component {
     render() {
         return (
             <MainCard>
-                <Header back basket countBasket={this.props.countBasket}>
+                <Header back basket>
                     {this.props.category.name}
                 </Header>
                 <Filters
@@ -207,14 +204,15 @@ const styles = {
     }
 }
 
-const mapStateToProps = ({auth, store, basket}) => {
+const mapStateToProps = ({auth, store}) => {
     return {
         phone: auth.user.profile.phone,
         token: auth.user.token,
         products: store.products,
         filters: store.filters,
+        // loading: store.loading,
         checkedBrands: store.checkedBrands,
-        countBasket: basket.countBasket,
+        // countBasket: store.countBasket,
         selectedSorting: store.selectedSorting
     }
 }

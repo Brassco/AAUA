@@ -27,9 +27,11 @@ import {
     changeNPSkald,
     selectCity,
     changeComment,
-    changePhone
+    changePhone,
+    selectPaymentType
 } from '../../Actions/StoreAction';
 import {getCities, getNPCities, getNPsklads} from '../../Actions/CitiesBrands';
+import {showAlert} from '../Modals'
 
 let listHeight = 0;
 
@@ -106,8 +108,9 @@ console.log('onChangeDelivery', value);
         }
     }
 
-    onSelect() {
-        console.log(' on select')
+    onSelect(index, value) {
+        this.props.selectPaymentType(index);
+        console.log(' on select', index, value)
     }
 
     onChangeAddress(address) {
@@ -115,13 +118,43 @@ console.log('onChangeDelivery', value);
     }
 
     onSubmit() {
+        console.log(this.props);
         let productIds = []
         this.props.basket.map(product => {
             productIds.push(product.id)
         });
-        console.log('***Make order***', this.props);
-        let {user, makeOrder} = this.props;
-        makeOrder(user, productIds);
+        let {user, makeOrder,
+            address, city, comment,
+            delivery, phone, NPskald,
+            paymentType, basketBonusSum} = this.props;
+        let orderData = {
+            address: address,
+            comment: comment,
+            city: city,
+            delivery: delivery,
+            phone: phone,
+            NPskald: NPskald
+        }
+        let orderType = paymentType == 1 ? 'booking' : ''
+        if (paymentType == 1) {
+            if (user.bonus < basketBonusSum) {
+                showAlert(
+                    '',
+                    'На Вашем счету недостаточно бонусов для оплаты',
+                    'Закрыть'
+                )
+            } else {
+                console.log('***Make order***', this.props);
+                showAlert(
+                    '',
+                    'С Вашего счета будет списано '+basketBonusSum+' (сумма товара) бонусов.',
+                    'Оплатить',
+                    makeOrder(user, productIds, orderData, orderType)
+                )
+            }
+        } else {
+            makeOrder(user, productIds, orderData, orderType);
+        }
     }
 
     setDefaultSkladToStore(address) {
@@ -150,12 +183,6 @@ console.log('onChangeDelivery', value);
             />
         )
     }
-
-//     componentWillMount() {
-// console.log('ordering component will mount');
-//         this.props.getCities();
-//         this.props.getNPCities();
-//     }
 
     render() {
 console.log('render ordering component', this.props.delivery);
@@ -297,7 +324,7 @@ console.log('render ordering component', this.props.delivery);
                         // backgroundColor: '#289',
                     }}>
                         <RadioGroup
-                            selectedIndex={0}
+                            selectedIndex={this.props.paymentType}
                             color='#423486'
                             style={{
                                 marginRight: 47 * WIDTH_RATIO,
@@ -321,14 +348,16 @@ console.log('render ordering component', this.props.delivery);
                         </RadioGroup>
                         <View style={{flex:1}}>
                             <Text style={amountText}>
-                                1785 грн.
+                                {this.props.basketSum} грн.
                             </Text>
                             <View style={{
                                 marginTop: 17,
                                 flexDirection: 'row',
                                 alignItems:'flex-end'
                             }}>
-                                <Text style={amountText}> 1785 </Text>
+                                <Text style={amountText}>
+                                    {this.props.basketBonusSum}
+                                </Text>
                                 <Text style={[amountText, {fontSize: 14}]}>
                                     бонусов
                                 </Text>
@@ -382,7 +411,8 @@ const styles = {
     amountText: {
         fontFamily: 'SFUIText-Bold',
         fontSize: 19,
-        color: '#423486'
+        color: '#423486',
+        marginLeft: 5
     },
     footerWrapper: {
         height: 40,
@@ -391,8 +421,7 @@ const styles = {
     }
 }
 
-const mapStateToProps = ({ordering, citiesBrands, store, auth}) => {
-console.log(auth);
+const mapStateToProps = ({ordering, citiesBrands, store, auth, basket}) => {
     return {
         user: auth.user,
         showCities: ordering.showCities,
@@ -406,12 +435,15 @@ console.log(auth);
         comment: store.comment,
         address: store.address,
         city: store.city,
+        paymentType: store.paymentType,
 
         NPsklads: citiesBrands.NPsklads,
         NPcities: citiesBrands.NPcities,
         cities: citiesBrands.cities,
 
-        basket: store.basket
+        basket: basket.basket,
+        basketBonusSum: basket.basketBonusSum,
+        basketSum: basket.basketSum,
     }
 }
 
@@ -429,5 +461,6 @@ export default connect(
         makeOrder,
         selectCity,
         changeNPSkald,
-        changePhone
+        changePhone,
+        selectPaymentType
     })(OrderingComponent);

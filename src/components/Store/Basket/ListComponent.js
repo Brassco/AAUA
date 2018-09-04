@@ -15,14 +15,16 @@ import TextComponent from './TextComponent';
 import ButtonComponent from './ButtonComponent';
 import {RATIO} from '../../../styles/constants';
 import {connect} from 'react-redux';
-import {deleteFromBasket, addToBasket} from '../../../Actions/StoreAction';
-import _ from 'lodash';
+import {deleteFromBasket, addToBasket, onPaymentSuccess} from '../../../Actions/StoreAction';
+import {showAlert} from '../../Modals'
 
 class ListComponent extends Component {
-
-    state = {
-        sumPrice: 0,
-        sumBonusPrice: 0
+    constructor() {
+        super();
+        this.state = {
+            sumPrice: 0,
+            sumBonusPrice: 0
+        };
     }
 
     onDeleteItem(id) {
@@ -35,6 +37,23 @@ class ListComponent extends Component {
 
     onAddToBasket(product) {
         this.props.addToBasket(product)
+    }
+
+    onBackToStore() {
+        this.props.onPaymentSuccess();
+        Actions.reset('drawer');
+    }
+
+    componentDidMount() {
+        console.log('componentDidMount ', this.props)
+        if (this.props.isPaymentSuccess) {
+            showAlert(
+                'Спасибо,',
+                'Ваш заказ отправлен в обработку. Наш менеджер свяжется с Вами.',
+                'Закрыть',
+                this.onBackToStore.bind(this)
+            )
+        }
     }
 
     renderList() {
@@ -229,7 +248,8 @@ const mapStateToProps = ({basket}) => {
         basket: basket.basket,
         basketSum: basket.basketSum,
         basketBonusSum: basket.basketBonusSum,
+        countBasket: basket.countBasket,
     }
 }
 
-export default connect(mapStateToProps, {deleteFromBasket, addToBasket})(ListComponent);
+export default connect(mapStateToProps, {deleteFromBasket, addToBasket, onPaymentSuccess})(ListComponent);

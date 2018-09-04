@@ -23,7 +23,12 @@ import {
     STORE_GET_DETAILS_SUCCESS,
     STORE_CHECK_FILTER,
     STORE_GET_BRANDS_SUCCESS,
-    STORE_SET_SELECTED_SORTING
+    STORE_SET_SELECTED_SORTING,
+    STORE_PHONE_CHANGE,
+    STORE_SET_BASKET_DATA_FROM_STORAGE,
+    STORE_PAYMENT_SUCCESS,
+    STORE_ADD_BASKET_DATA_TO_STORAGE,
+    STORE_SET_PAYMENT_TYPE
 } from '../Actions/types';
 import {
     STORE_CATEGORIES_URL,
@@ -37,7 +42,7 @@ import {
     STORE_FILTER_URL
 } from './constants';
 import axios from 'axios';
-import md5 from 'js-md5'
+import {Actions} from 'react-native-router-flux';
 import {encode} from 'base-64';
 
 /*
@@ -131,23 +136,6 @@ export const getProductById = (token, phone, productId) => {
             .catch((error) => {
                 console.log(error)
             })
-        /*let product = {
-            "id":"60",
-            "name":"Woo Logo",
-            "photo":"http://wp.dev/wp-content/uploads/2013/06/hoodie_6_front.jpg",
-            "price":"35",
-            "bonus_price":"",
-            "views": "1",
-            "gallery":[
-                "http://wp.dev/wp-content/uploads/2013/06/hoodie_6_back.jpg"
-            ],
-            "status":"instock",
-            "categories":{
-                "id":171,
-                "name":"Hoodies"
-            }
-        }
-        onGetProductSuccess(dispatch, product)*/
     }
 }
 
@@ -195,7 +183,7 @@ export const increseCounter = (token, phone, productId) => {
     }
 }
 
-export const makeOrder = (user, products) => {
+export const makeOrder = (user, products, orderData, orderType) => {
     return () => {
         let signatureString = user.token+":"+user.profile.phone;
         const signature = encode(signatureString);
@@ -203,10 +191,17 @@ export const makeOrder = (user, products) => {
         const obj = {
             "products":products, // Array of product's ID
             "userID": user.profile.id, // User ID (string or integer)
-            "orderType": ''// booking - will make create order without payment step, if empty will set status "Pending payment"
+            "shipping": {
+                "city": orderData.city,
+                "address": orderData.address,
+                "type": orderData.delivery == 2 ? 'Courier' : 'Nova Poshta', // Courier || Nova Poshta
+                "nova_poshta": orderData.delivery < 2 ? orderData.NPskald : null, // department of Nova Poshta. Empty or absent if delivery by Courier
+                "notes": orderData.comment
+            },
+            "orderType": orderType// booking - will make create order without payment step, if empty will set status "Pending payment"
         };
         const data = JSON.stringify(obj);
-
+console.log(STORE_MAKE_ORDER_URL, data);
         axios.post(STORE_MAKE_ORDER_URL, data, {
                 headers: {
                     'Signature' : signature,
@@ -214,10 +209,18 @@ export const makeOrder = (user, products) => {
                 }
             }
         )
-            .then(response => console.log(response))
+            .then(response => onMakeOrderSuccess(response.data))
             .catch((error) => {
                 console.log(error)
             })
+    }
+}
+
+const onMakeOrderSuccess = (response) => {
+console.log(response);
+    if (response.code == 200) {
+       Actions.payment({url: response.payment_url})
+       // Actions.payment({url: 'http://aauaecommerce.mapplix.com/checkout-2/order-received/77/?key=wc_order_5b7582c52da4b'})
     }
 }
 
@@ -409,5 +412,41 @@ console.log('setSelectedSorting', sortingId);
     return {
         type: STORE_SET_SELECTED_SORTING,
         payload: sortingId
+    }
+}
+
+export const changePhone = (phone) => {
+    return {
+        type: STORE_PHONE_CHANGE,
+        payload: phone
+    }
+}
+
+export const setBasketFromStorage = (data) => {
+    console.log('setBasketFromStorage')
+    return {
+        type: STORE_SET_BASKET_DATA_FROM_STORAGE,
+        payload: data
+    }
+}
+
+export const addBasketToStorage = () => {
+console.log('ACTION addBasketToStorage')
+    return {
+        type: STORE_ADD_BASKET_DATA_TO_STORAGE,
+    }
+}
+
+export const onPaymentSuccess = () => {
+    return {
+        type: STORE_PAYMENT_SUCCESS,
+    }
+}
+
+export const selectPaymentType = (type) => {
+console.log('ACTION selectPaymentType')
+    return {
+        type: STORE_SET_PAYMENT_TYPE,
+        payload: type
     }
 }

@@ -20,22 +20,13 @@ import {connect} from 'react-redux';
 
 class DetailsComponent extends Component {
 
-    componentWillMount() {
-        let {token, phone, productId} = this.props;
-        this.props.getProductById(token, phone, productId)
-    }
-
     addToBascket() {
         let {addToBasket, product} = this.props;
         addToBasket(product);
     }
 
-    componentWillReceiveProps(nextProps){
-        let {increseCounter, token, phone, product} = nextProps;
-        // increseCounter(token, phone, product.id)
-    }
-
     render() {
+        console.log('DETAILS render', this.props);
 let {product} = this.props;
         const {
             sliderContainer,
@@ -55,7 +46,7 @@ let {product} = this.props;
         if (product) {
             return (
                 <MainCard>
-                    <Header back basket countBasket={this.props.countBasket}>
+                    <Header back basket>
                         {
                             this.props.category.name
                         }
@@ -254,7 +245,7 @@ const mapStateToProps = ({auth, store}) => {
     return {
         phone: auth.user.profile.phone,
         token: auth.user.token,
-        product: store.product,
+        // product: store.product,
         basket: store.basket,
         countBasket: store.countBasket
     }

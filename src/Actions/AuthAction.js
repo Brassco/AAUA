@@ -182,18 +182,20 @@ const onLoginSuccess = (dispatch, user) => {
 console.log('id_token', user);
 
 saveItem('id_token', user.token);
-saveItem('user', JSON.stringify(user));
-    if (user.error == 0) {
-        dispatch({
-            type: LOGIN_USER_SUCCESS,
-            payload: user
-        })
-    } else if (user.error >= 1) {
-        dispatch({
-            type: LOGIN_USER_FAIL,
-            payload: 'Неверный логин или пароль'
-        })
-    }
+saveItem('user', JSON.stringify(user))
+    .then(response => {
+        if (user.error == 0) {
+            dispatch({
+                type: LOGIN_USER_SUCCESS,
+                payload: user
+            })
+        } else if (user.error >= 1) {
+            dispatch({
+                type: LOGIN_USER_FAIL,
+                payload: 'Неверный логин или пароль'
+            })
+        }
+    });
 }
 
 export const logOut = (token) => {

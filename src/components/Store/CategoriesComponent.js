@@ -14,14 +14,18 @@ import Item from './Item';
 import {Actions} from 'react-native-router-flux';
 import {getCategories} from '../../Actions/StoreAction';
 import {connect} from 'react-redux';
-import {getImageByStoreCategoryId} from '../../Helpers/ImageHelper';
+import _ from 'lodash';
 
 class CategoriesComponent extends Component {
 
-    componentWillMount() {
-        console.log('***STORE CATEGORIES componentWillMount')
+    componentDidMount() {
+        console.log('***STORE CATEGORIES componentDidMount', this.props.categories)
         let {phone, token} = this.props;
         this.props.getCategories(token, phone)
+    }
+
+    shouldComponentUpdate(nextProps) {
+        return !_.isEqual(nextProps.categories, this.props.categories);
     }
 
     openStoreCategories(category) {
@@ -104,7 +108,7 @@ class CategoriesComponent extends Component {
         console.log('***STORE CATEGORIES RENDER')
         return (
             <MainCard>
-                <Header burger basket countBasket={this.props.countBasket}>
+                <Header burger basket>
                     Магазин
                 </Header>
                 {
@@ -115,12 +119,12 @@ class CategoriesComponent extends Component {
     }
 }
 
-const mapStateToProps = ({auth, store, basket}) => {
+const mapStateToProps = ({auth, store}) => {
+    console.log(auth);
     return {
         phone: auth.user.profile.phone,
         token: auth.user.token,
-        categories: store.categories,
-        countBasket: basket.countBasket,
+        categories: store.categories
     }
 }
 

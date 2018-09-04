@@ -204,6 +204,11 @@ export const STORE_CHECK_FILTER = 'store_check_filter';
 export const STORE_CHECK_ORDER = 'store_check_order';
 export const STORE_GET_BRANDS_SUCCESS = 'store_get_brands_success';
 export const STORE_SET_SELECTED_SORTING = 'store_set_selecting_sorting';
-
+export const STORE_PHONE_CHANGE = 'store_phone_change';
+export const STORE_SET_BASKET_DATA_FROM_STORAGE = 'store_set_basket_data_from_storage';
+export const STORE_ADD_BASKET_DATA_TO_STORAGE = 'store_add_basket_data_to_storage';
+export const STORE_ORDER_SUCCESS = 'store_order_success';
+export const STORE_PAYMENT_SUCCESS = 'store_payment_success';
+export const STORE_SET_PAYMENT_TYPE = 'store_set_payment_type';
 
 export const WOG_BONUSES_LOADED = 'wog_bonuses_loaded';

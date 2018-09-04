@@ -5,16 +5,12 @@ import {
     ADD_CARD_FAIL,
     ORDER_AAUA_CARD_SUCCESS,
     ORDER_AAUA_CARD_FAIL,
-    PHONE_CHANGE,
-    CITY_CHANGE,
     NP_CITY_CHANGE,
-    COUNTRY_CHANGE,
     DELIVERY_CHANGE,
     ADDRESS_CHANGE,
     COMMENT_CHANGE,
     DELETE_AAUA_CARD,
     ADD_AAUA_CARD,
-    CARD_NUMBER_CHANGE,
     MY_AAUA_CARD,
     AAUA_CARD_NUMBER_CHANGE,
     MY_AAUA_CARD_LOADED,
@@ -248,8 +244,8 @@ console.log('getCardSuccess', card);
     if (card.error == 0) {
         dispatch({
             type: MY_AAUA_CARD_LOADED,
-            payload: card.data.card
-            // payload: null
+            // payload: card.data.card
+            payload: '12345678954'
         })
     } else if (card.error >= 1) {
         dispatch({

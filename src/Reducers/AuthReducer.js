@@ -34,7 +34,8 @@ export default (state = INITIAL_STATE, action) => {
 console.log(TOKEN_GET_SUCCESS, action.payload)
             return {...state, pushToken: action.payload}
         case LOGIN_USER_SUCCESS:
-            Actions.reset('drawer')
+            Actions.reset('drawer');
+            console.log('LOGIN_USER_SUCCESS', action.payload)
             return {...state, user: action.payload, error: '', loading: false};
         case LOGIN_USER_FAIL:
             return {...state, password: '', loginError: action.payload, loading: false};

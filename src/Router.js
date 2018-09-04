@@ -1,5 +1,13 @@
 import React, {Component} from 'react';
-import {Dimensions, ActivityIndicator, AsyncStorage, Platform, BackHandler} from 'react-native';
+import {
+    Dimensions,
+    ActivityIndicator,
+    AsyncStorage,
+    Platform,
+    BackHandler,
+    AppState,
+    Linking
+} from 'react-native';
 import {Router, Scene, Stack, Drawer, Tabs, Actions} from 'react-native-router-flux';
 
 {/* AUTH */}
@@ -22,6 +30,7 @@ import DetailsComponent from './components/Store/DetailComponent';
 import GoodsListComponent from './components/Store/GoodsListComponent';
 import SpecialOfferComponent from './components/Store/SpecialOfferComponent';
 import BasketListComponent from './components/Store/Basket/ListComponent';
+import PaymentComponent from './components/Store/PaymentComponent';
 
 import OnroadCategoriesComponent from './components/Onroad_support/CategoriesComponent';
 import OnroadCategoriesDetailsComponent from './components/Onroad_support/CategoryDetailsComponent';
@@ -56,8 +65,9 @@ import SettingsComponent from './components/Settings';
 import MenuIcon from './images/icons/bar.png';
 
 import {connect} from 'react-redux';
-import {getBrands, getCities, getNPCities, getNPsklads} from './Actions/CitiesBrands';
+import {getBrands, getCities, getNPCities, getNPsklads, getSliderImages, getBonusesWog} from './Actions/CitiesBrands';
 import {getPushToken} from './Actions/AuthAction';
+import Querystring from 'querystring';
 
 import FCM, { FCMEvent,
     NotificationType,
@@ -66,6 +76,9 @@ import FCM, { FCMEvent,
 import {CHECK_TOKEN_URL, SECRET_KEY} from './Actions/constants'
 import axios from 'axios';
 import md5 from 'js-md5';
+import {setBasketFromStorage, deleteFromBasket, addBasketToStorage} from './Actions/StoreAction';
+import {setUserFromSession} from './Actions/AuthAction';
+import {countMessages} from './Actions/MessagesActions';
 
 /*Firebase Notificaion*/
 FCM.on(FCMEvent.Notification, async (notif) => {
@@ -111,11 +124,12 @@ class RouterComponent extends Component {
         this.state = {
             hasToken: false,
             isLoaded: false,
-            hasCard: false,
+            // hasCard: false,
             latitude: null,
             longitude: null,
             error: null,
         };
+        this._handleAppStateChange = this._handleAppStateChange.bind(this)
     }
 
     componentWillMount() {
@@ -123,88 +137,125 @@ class RouterComponent extends Component {
         this.props.getCities();
     }
 
-    componentDidMount() {
-        /*Check if User logged in*/
-        AsyncStorage.getItem('user')
-            .then((obj) => {
-                const user = JSON.parse(obj);
-                if (user !== null) {
-console.log('user from store', user);
-                    const obj = {
-                        "token": user.token,
-                        "phone" : user.profile.phone,
-                    }
+    componentWillUnmount(){
+        AppState.removeEventListener('change', this._handleAppStateChange);
+    }
 
-                    const data = JSON.stringify(obj);
-                    const signature = md5(SECRET_KEY + data)
-                    axios.post(CHECK_TOKEN_URL, data, {
-                            headers: {
-                                'Signature' : signature,
-                                'Content-Type': 'application/json',
-                            }
+    componentDidMount() {
+        console.log('componentDidMount');
+        AppState.addEventListener('change', this._handleAppStateChange);
+        /*Check if User logged in*/
+        this.props.getPushToken();
+        let str = AsyncStorage.multiGet(['user', '@basketInfo']);
+        str.then((stores, error) => {
+            return stores.map( data => {
+                console.log('*** ROUTE *** startApp', data[0]);
+                if(data[0] == "user") {
+                    const user = JSON.parse(data[1]);
+                    if (user !== null) {
+                        console.log('user from store', user);
+                        const obj = {
+                            "token": user.token,
+                            "phone" : user.profile.phone,
                         }
-                    )
+
+                        const data = JSON.stringify(obj);
+                        const signature = md5(SECRET_KEY + data)
+                        axios.post(CHECK_TOKEN_URL, data, {
+                                headers: {
+                                    'Signature' : signature,
+                                    'Content-Type': 'application/json',
+                                }
+                            }
+                        )
                         .then( res => {
-                        console.log(res);
+                            console.log(res);
                             if (res.data.error == 0) {
+                                console.log('user is checked', res.data, res.data.data == 1)
                                 if (res.data.data == 1) {
-                                    this.setState({
-                                        hasToken: user.token !== null,
-                                        hasCard: user.card !== null,
-                                        isLoaded: true
-                                    })
+                                    console.log('user is valid', user);
+                                    return user;
                                 } else {
                                     AsyncStorage.removeItem('user');
                                     this.setState({
                                         hasToken: false,
-                                        hasCard: false,
+                                        // hasCard: false,
                                         isLoaded: true
                                     })
                                 }
                             } else {
                                 this.setState({
                                     hasToken: false,
-                                    hasCard: false,
+                                    // hasCard: false,
                                     isLoaded: true
                                 })
+                                return res.data.error
                             }
                         })
-                } else {
-                    this.setState({
-                        hasToken: false,
-                        hasCard: false,
-                        isLoaded: true
-                    })
+                        .then( user => {
+                            console.log(user);
+                            this.props.setUserFromSession(user);
+                            return user;
+                        })
+                        .then((user, err) => {
+                            // console.log(user);
+                            this.props.getSliderImages(user.token)
+                            return user;
+                        }).then( (user, err)=> {
+                            // console.log(user);
+                            this.props.countMessages(user.token)
+                            return user;
+                        }).then( (user, err) => {
+                            // console.log(user);
+                            this.props.getBonusesWog(user.token)
+                            this.setState({
+                                hasToken: user.token !== null,
+                                // hasCard: user.card !== null,
+                                isLoaded: true
+                            })
+                        })
+                            .catch( error => {
+                                console.log(error);
+                            })
+                    } else {
+                        this.setState({
+                            hasToken: false,
+                            // hasCard: false,
+                            isLoaded: true
+                        })
+                    }
+                }
+                if (data[0] == "@basketInfo") {
+                    let basketInfo = JSON.parse(data[1]);
+                    this.props.setBasketFromStorage(basketInfo);
                 }
             })
-            .catch( error =>
-                console.log('Error: ' + error.message)
-            )
+        })
+    }
 
-        /*Firebase*/
-        this.notificationListener = FCM.on(FCMEvent.Notification, async (notif) => {
-            // optional, do some component related stuff
-        });
-        FCM.getInitialNotification().then(notif => {
-            console.log(notif)
-        });
+    _handleAppStateChange(nextAppState) {
 
-        this.props.getPushToken();
+        if (nextAppState.match(/inactive|background/)) {
+            this.props.addBasketToStorage();
+        }
     }
 
     onBackPress() {
         if (Actions.state.index === 0) {
-            let routs = ['QRcode', 'subscription', 'AAUA_main', 'my_aaua_cards', 'onroadCategories', 'tabs', 'discontCards', 'messagesList', 'history']
+            let routs = ['QRcode', 'subscription', 'AAUA_main',
+                'my_aaua_cards', 'onroadCategories', 'tabs',
+                'discontCards', 'messagesList', 'history',
+                'categories', 'wallet', 'feedback'
+            ]
+            console.log('router ', Actions.currentScene);
             if (Actions.currentScene == 'mainScreen') {
                 BackHandler.exitApp();
-            }
-           if (routs.includes(Actions.currentScene)) {
+            } else if (routs.includes(Actions.currentScene)) {
                 Actions.mainScreen()
-            }
-            if (Actions.currentScene == 'message') {
+            } else if (Actions.currentScene == 'message') {
                 Actions.push('messagesList');
-            }
-            else {
+            } else {
+console.log('router else')
                 Actions.pop();
             }
             return true;
@@ -217,8 +268,8 @@ console.log('user from store', user);
             return (
                 <ActivityIndicator />
             )
-        } else {
         }
+        console.log('***ROUTER RENDER')
         return (
             <Router
                 backAndroidHandler={
@@ -288,6 +339,7 @@ console.log('user from store', user);
                                 <Scene hideNavBar key="specialOffer" component={SpecialOfferComponent}/>
                                 <Scene hideNavBar key="basketList" component={BasketListComponent}/>
                                 <Scene hideNavBar key="basketOrdering" component={OrderingComponent} title="Goods"/>
+                                <Scene hideNavBar key="payment" component={PaymentComponent} />
                             </Stack>
                             <Stack hideNavBar key="AAUA_card">
                                 <Scene
@@ -342,8 +394,19 @@ console.log('user from store', user);
     }
 }
 
-const mapStateToProps = () => {
-    return {}
+const mapStateToProps = ({basket}) => {
+    return {
+        // basket: basket.basket,
+        // countBasket: basket.countBasket,
+        // basketSum: basket.basketSum,
+        // basketBonusSum: basket.basketBonusSum,
+    }
 }
 
-export default connect(mapStateToProps,{getCities, getBrands, getNPCities, getNPsklads, getPushToken})(RouterComponent);
+export default connect(
+    mapStateToProps,
+    {getCities, getBrands, getNPCities,
+        getNPsklads, getPushToken, setBasketFromStorage,
+        setUserFromSession, getSliderImages, getBonusesWog,
+        countMessages, deleteFromBasket, addBasketToStorage
+    })(RouterComponent);
