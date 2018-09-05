@@ -66,7 +66,7 @@ const INITIAL_STATE = {
     checkedBrands: [],
     brands: [],
     selectedSorting: 0,
-    paymentType: 1
+    paymentType: 0
 }
 
 export default (state = INITIAL_STATE, action) => {

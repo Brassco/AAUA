@@ -21,6 +21,10 @@ console.log(navState.url, index);
         }
     }
 
+    componentDidMount() {
+        console.log('payment webview did mount', this.props);
+    }
+
     render() {
 console.log('render webview');
         return (

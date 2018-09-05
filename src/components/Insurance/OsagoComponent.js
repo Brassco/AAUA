@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {View, Text, Linking} from 'react-native';
+import {View, Text, Linking, TouchableOpacity, Image} from 'react-native';
 import {connect} from 'react-redux';
 import {
     MainCard,
@@ -25,6 +25,7 @@ import {
 import {getCities} from '../../Actions/CitiesBrands';
 import {Actions} from 'react-native-router-flux';
 import {showAlert} from '../Modals';
+import Modal from 'react-native-modalbox';
 
 class OsagoComponent extends Component {
 
@@ -35,7 +36,8 @@ class OsagoComponent extends Component {
             searchedCities: [],
             rowHeight: 2,
             cityId: null,
-            carType: 1
+            carType: 1,
+            isOpen: false
         };
     };
 
@@ -269,12 +271,65 @@ class OsagoComponent extends Component {
                                 borderColor:'#FFC200'
                             }}
                             textStyle={{color:'#1B1B1B'}}
-                            onPress={() => Linking.openURL('https://aiwa-platform.firebaseapp.com/d/6VzKDxmKj5/t/Qnp0xWdPBq')}
+                            // onPress={() => Linking.openURL('https://aiwa-platform.firebaseapp.com/d/6VzKDxmKj5/t/Qnp0xWdPBq')}
+                            onPress={() => this.setState({isOpen: true})}
                         >
                             Купить онлайн
                         </ButtonRoundet>
                     </View>
                 </CardItem>
+                <Modal style={{
+                    height: 270,
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    backgroundColor: '#fff'
+                }}
+                       position={"center"}
+                       ref={"modal"}
+                       isOpen={this.state.isOpen} onClosed={() => this.setState({isOpen: false})}
+                >
+                    <View style={{
+                        flex:1
+                    }}>
+                        <TouchableOpacity
+                            style={{
+                                flex:1,
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}
+                            onPress={() => Linking.openURL('https://aiwa-platform.firebaseapp.com/d/6VzKDxmKj5/t/Qnp0xWdPBq')}
+                        >
+                            <Image
+                                style={{
+                                    width: 200,
+                                    height: 100,
+                                }}
+                                resizeMode="contain"
+                                source={require('../../images/arsenal.png')}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{
+                                flex:1,
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}
+                            onPress={() => Linking.openURL('https://shop.upsk.com.ua/site-upsk/commonOsago.html')}
+                        >
+                            <Image
+                                style={{
+                                    width: 200,
+                                    height: 100,
+                                }}
+                                resizeMode="contain"
+                                source={require('../../images/upsk.png')}
+                            />
+                        </TouchableOpacity>
+                    </View>
+
+                </Modal>
             </MainCard>
         )
     }

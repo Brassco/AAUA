@@ -126,7 +126,8 @@ console.log('onChangeDelivery', value);
         let {user, makeOrder,
             address, city, comment,
             delivery, phone, NPskald,
-            paymentType, basketBonusSum} = this.props;
+            paymentType, basketBonusSum,
+            basket} = this.props;
         let orderData = {
             address: address,
             comment: comment,
@@ -137,23 +138,29 @@ console.log('onChangeDelivery', value);
         }
         let orderType = paymentType == 1 ? 'booking' : ''
         if (paymentType == 1) {
-            if (user.bonus < basketBonusSum) {
-                showAlert(
-                    '',
-                    'На Вашем счету недостаточно бонусов для оплаты',
-                    'Закрыть'
-                )
-            } else {
-                console.log('***Make order***', this.props);
+            // if (user.bonus < basketBonusSum) {
+            //     showAlert(
+            //         '',
+            //         'На Вашем счету недостаточно бонусов для оплаты',
+            //         'Закрыть'
+            //     )
+            // } else {
                 showAlert(
                     '',
                     'С Вашего счета будет списано '+basketBonusSum+' (сумма товара) бонусов.',
                     'Оплатить',
-                    makeOrder(user, productIds, orderData, orderType)
+                    () => makeOrder(user, basket, orderData, orderType)
                 )
-            }
+                // Alert.alert(
+                //     '',
+                //     'С Вашего счета будет списано '+basketBonusSum+' (сумма товара) бонусов.',
+                //     [
+                //         {text: 'Оплатить', onPress: () => makeOrder(user, basket, orderData, orderType)},
+                //     ],
+                // )
+            // }
         } else {
-            makeOrder(user, productIds, orderData, orderType);
+            makeOrder(user, basket, orderData, orderType);
         }
     }
 
@@ -185,7 +192,16 @@ console.log('onChangeDelivery', value);
     }
 
     render() {
-console.log('render ordering component', this.props.delivery);
+        let bonusSum = this.props.basketBonusSum;
+        let sum = this.props.basketSum;
+console.log('render ordering component', this.props.repeatOrder);
+        if (this.props.repeatOrder) {
+            bonusSum = this.props.repeatOrder.bonus_price;
+            sum = this.props.repeatOrder.price;
+
+        }
+
+        console.log('render ordering component', this.props.repeatOrder, bonusSum, sum);
         const {textStyle, radiobuttonContainer, amountText} = styles;
         return (
             <MainCard>
@@ -348,7 +364,7 @@ console.log('render ordering component', this.props.delivery);
                         </RadioGroup>
                         <View style={{flex:1}}>
                             <Text style={amountText}>
-                                {this.props.basketSum} грн.
+                                {sum} грн.
                             </Text>
                             <View style={{
                                 marginTop: 17,
@@ -356,7 +372,7 @@ console.log('render ordering component', this.props.delivery);
                                 alignItems:'flex-end'
                             }}>
                                 <Text style={amountText}>
-                                    {this.props.basketBonusSum}
+                                    {bonusSum}
                                 </Text>
                                 <Text style={[amountText, {fontSize: 14}]}>
                                     бонусов

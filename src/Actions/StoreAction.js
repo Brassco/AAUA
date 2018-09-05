@@ -183,11 +183,14 @@ export const increseCounter = (token, phone, productId) => {
     }
 }
 
-export const makeOrder = (user, products, orderData, orderType) => {
+export const makeOrder = (user, basket, orderData, orderType) => {
     return () => {
         let signatureString = user.token+":"+user.profile.phone;
         const signature = encode(signatureString);
-
+        let products = []
+        basket.map(product => {
+            products.push({product: product.id, qty: product.counter})
+        });
         const obj = {
             "products":products, // Array of product's ID
             "userID": user.profile.id, // User ID (string or integer)
@@ -201,7 +204,7 @@ export const makeOrder = (user, products, orderData, orderType) => {
             "orderType": orderType// booking - will make create order without payment step, if empty will set status "Pending payment"
         };
         const data = JSON.stringify(obj);
-console.log(STORE_MAKE_ORDER_URL, data);
+console.log(STORE_MAKE_ORDER_URL,signature, data);
         axios.post(STORE_MAKE_ORDER_URL, data, {
                 headers: {
                     'Signature' : signature,
@@ -448,5 +451,33 @@ console.log('ACTION selectPaymentType')
     return {
         type: STORE_SET_PAYMENT_TYPE,
         payload: type
+    }
+}
+
+export const repeatOrder = (token, phone, productId) => {
+    return (dispatch) => {
+
+        dispatch({
+            type: STORE_GET_PRODUCT_BY_ID
+        })
+
+        let signatureString = token+":"+phone;
+        const signature = encode(signatureString);
+        console.log('STORE get product by ID- ', signature, STORE_PRODUCT_BY_ID_URL+productId);
+        axios.get(STORE_PRODUCT_BY_ID_URL+productId, {
+                headers: {
+                    'Signature' : signature,
+                }
+            }
+        )
+            .then(product => {
+                if (product) {
+                    console.log('get product success', product.data.product)
+                    Actions.ordering({repeatOrder: product.data.product})
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 }

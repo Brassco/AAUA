@@ -15,7 +15,7 @@ import TextComponent from './TextComponent';
 import ButtonComponent from './ButtonComponent';
 import {RATIO} from '../../styles/constants';
 import {DEVICE_OS, iOS, Android} from '../../Actions/constants';
-import {getHistory, getOrderDetails} from '../../Actions/StoreAction';
+import {getHistory, getOrderDetails, repeatOrder} from '../../Actions/StoreAction';
 import {connect} from 'react-redux';
 
 class ListComponent extends Component {
@@ -33,6 +33,13 @@ class ListComponent extends Component {
         Actions.basketList();
     }
 
+    addToBasket(productId) {
+        let {user, repeatOrder} = this.props;
+        console.log('repeat order', productId, user);
+        repeatOrder(user.token, user.profile.phone, productId);
+        // Actions.repeatOrder(productId)
+    }
+
     renderItem() {
         const {imageStyle, imageContainer, textContainer,componentStyle} = styles;
         let {orders} = this.props;
@@ -40,39 +47,41 @@ console.log(orders);
         if (orders.length) {
             return orders.map( order => {
 
-                let product = order.products[0];
-                let date = order.date.date.split(' ');
-console.log(product, date);
-                return (
-                    <CardComponent
-                        key={order.ID}
-                        style={componentStyle}
-                    >
-                        <View style={imageContainer}>
-                            <Image
-                                resizeMode={'contain'}
-                                style={imageStyle}
-                                source={{uri: product.details.photo}}
-                            />
-                        </View>
-                        <View style={textContainer}>
-                            <TextComponent
-                                date={date[0]}
-                                title={product.name}
-                                isPresent
-                            />
-                            <ButtonComponent
-                                onPress={Actions.ordering}
-                                price={
-                                    product.details.price || 0
-                                }
-                                bonuses={
-                                    product.details.bonus_price || 0
-                                }
-                            />
-                        </View>
-                    </CardComponent>
-                )
+                if (order.status == "completed") {
+                    let product = order.products[0];
+                    let date = order.date.date.split(' ');
+                    console.log(product)
+                    return (
+                        <CardComponent
+                            key={order.ID}
+                            style={componentStyle}
+                        >
+                            <View style={imageContainer}>
+                                <Image
+                                    resizeMode={'contain'}
+                                    style={imageStyle}
+                                    source={{uri: product.details.photo}}
+                                />
+                            </View>
+                            <View style={textContainer}>
+                                <TextComponent
+                                    date={date[0]}
+                                    title={product.name}
+                                    isPresent
+                                />
+                                <ButtonComponent
+                                    onPress={this.addToBasket.bind(this, product.id)}
+                                    price={
+                                        product.details.price || 0
+                                    }
+                                    bonuses={
+                                        product.details.bonus_price || 0
+                                    }
+                                />
+                            </View>
+                        </CardComponent>
+                    )
+                }
             })
         }
     }
@@ -177,4 +186,4 @@ const mapStateToProps = ({auth, store, basket, history}) => {
     }
 }
 
-export default connect(mapStateToProps, {getHistory, getOrderDetails})(ListComponent);
+export default connect(mapStateToProps, {getHistory, getOrderDetails, repeatOrder})(ListComponent);

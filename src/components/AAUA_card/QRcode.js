@@ -5,6 +5,7 @@ import QRCode from 'react-native-qrcode';
 import {connect} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import DeviceBrightness from 'react-native-device-brightness';
+import {WIDTH, HEIGHT} from '../../styles/constants';
 
 class QRcode extends Component {
     state = {
@@ -20,7 +21,7 @@ class QRcode extends Component {
     }
 
     render() {
-
+console.log(WIDTH)
         const {container, text} = styles;
         const {card} = this.props;
         return (
@@ -79,7 +80,7 @@ class QRcode extends Component {
                         >
                             <QRCode
                                 value={card}
-                                size={250}
+                                size={WIDTH*0.65}
                                 bgColor='#000'
                                 fgColor='white'/>
                         </View>
@@ -100,20 +101,26 @@ class QRcode extends Component {
                         {card}
                     </Text>
                 </CardItem>
-                <CardItem
+                <View
                     style={{
-                        backgroundColor: '#FFF',
+                        // backgroundColor: '#758',
                         justifyContent: 'center',
                         alignItems: 'center',
                         marginBottom: 5,
                         flex: 2,
-                        paddingLeft: 15,
-                        paddingRight: 10,
                     }}>
-                    <Text style={text}>
-                        В данный момент QR код не работает по техническим причинам. Мы скоро исправим эту проблему
-                    </Text>
-                </CardItem>
+                    <View style={{
+                        flex:1,
+                        // backgroundColor: '#158',
+                        width: WIDTH*0.65
+                    }}>
+                        <Text style={[text, {
+                            fontSize: 17
+                        }]}>
+                            В данный момент QR код не работает по техническим причинам. Мы скоро исправим эту проблему
+                        </Text>
+                    </View>
+                </View>
             </MainCard>
         )
     }
