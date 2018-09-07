@@ -212,18 +212,21 @@ console.log(STORE_MAKE_ORDER_URL,signature, data);
                 }
             }
         )
-            .then(response => onMakeOrderSuccess(response.data))
+            .then(response => onMakeOrderSuccess(response.data, orderType))
             .catch((error) => {
                 console.log(error)
             })
     }
 }
 
-const onMakeOrderSuccess = (response) => {
+const onMakeOrderSuccess = (response, orderType) => {
 console.log(response);
     if (response.code == 200) {
-       Actions.payment({url: response.payment_url})
-       // Actions.payment({url: 'http://aauaecommerce.mapplix.com/checkout-2/order-received/77/?key=wc_order_5b7582c52da4b'})
+        if (orderType == 'booking') {
+            Actions.basketList({isPaymentSuccess: true});
+        } else {
+            Actions.payment({url: response.payment_url})
+        }
     }
 }
 
