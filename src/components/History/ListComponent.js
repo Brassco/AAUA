@@ -47,7 +47,7 @@ console.log(orders);
         if (orders.length) {
             return orders.map( order => {
 
-                if (order.status == "completed") {
+                if (order.status == "completed" || order.status == "processing") {
                     let product = order.products[0];
                     let date = order.date.date.split(' ');
                     console.log(product)

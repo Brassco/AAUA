@@ -27,17 +27,24 @@ import {connect} from 'react-redux';
 class MainComponent extends Component {
 
     componentDidMount() {
-        console.log('componentDidMount', this.props);
+        console.log(' MainComponent componentDidMount', this.props);
+        if (this.props.user) {
+            console.log('MainComponent componentWillReceiveProps', this.props);
+            let {token} = this.props.user;
+            this.props.getSliderImages(token)
+            this.props.countMessages(token)
+            this.props.getBonusesWog(token)
+        }
     }
 
     shouldComponentUpdate(nextProps) {
-        console.log('shouldComponentUpdate', nextProps, this.props);
+        console.log('MainComponent shouldComponentUpdate', nextProps, this.props);
         return true;
     }
 
     componentWillReceiveProps() {
         if (this.props.user && this.props.images.length < 1) {
-            console.log('componentWillReceiveProps', this.props);
+            console.log('MainComponent componentWillReceiveProps', this.props);
             let {token} = this.props.user;
             this.props.getSliderImages(token)
             this.props.countMessages(token)
@@ -46,7 +53,7 @@ class MainComponent extends Component {
     }
 
     render() {
-console.log('render Main Component');
+console.log('render MainComponent');
         const images = [];
         this.props.images.map( image => {
             images.push(image.url)
@@ -111,11 +118,10 @@ console.log('render Main Component');
 }
 
 const mapStateToProps = ({auth, citiesBrands, messages}) => {
-    console.log(auth);
     return {
         // token: auth.user.token,
         user: auth.user,
-        bonus: auth.user ? auth.user.bonus : 0,
+        bonus: auth.user ? citiesBrands.bonuses : 0,
         bonus_wog: auth.user ? citiesBrands.bonuses_wog : 0,
         images: citiesBrands.sliderImages,
         messagesCounter: messages.messagesCounter

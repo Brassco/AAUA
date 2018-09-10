@@ -244,8 +244,8 @@ console.log('getCardSuccess', card);
     if (card.error == 0) {
         dispatch({
             type: MY_AAUA_CARD_LOADED,
-            // payload: card.data.card
-            payload: '12345678954'
+            payload: card.data.card
+            // payload: '12345678954'
         })
     } else if (card.error >= 1) {
         dispatch({

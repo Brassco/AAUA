@@ -244,14 +244,14 @@ console.log(WOG_BONUSES_URL, data, signature);
         )
             .then(bonuses => {
 console.log(bonuses);
-                onBonusesLoaded(dispatch, bonuses.data.data)
+                onBonusesLoaded(dispatch, bonuses.data)
             })
     }
 }
 
-const onBonusesLoaded = (dispatch, bonuses) => {
+const onBonusesLoaded = (dispatch, data) => {
     dispatch({
         type:WOG_BONUSES_LOADED,
-        payload: bonuses
+        payload: data
     })
 }

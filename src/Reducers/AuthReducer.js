@@ -13,6 +13,8 @@ import {
 import {Actions} from 'react-native-router-flux';
 
 const INITIAL_STATE = {
+    // phone: '+380968266485',
+    // password: 'xjHPV',
     phone: '',
     password: '',
     sms: '',

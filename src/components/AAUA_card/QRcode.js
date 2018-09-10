@@ -88,11 +88,12 @@ console.log(WIDTH)
                 </CardItem>
                 <CardItem
                     style={{
-                        backgroundColor: '#FFF',
+                        backgroundColor: '#fff',
                         flexDirection: 'column',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        flex: 1
+                        flex: 0,
+                        height: 22
                     }}
                 >
                     <Text
@@ -115,7 +116,7 @@ console.log(WIDTH)
                         width: WIDTH*0.65
                     }}>
                         <Text style={[text, {
-                            fontSize: 17
+                            fontSize: 16
                         }]}>
                             В данный момент QR код не работает по техническим причинам. Мы скоро исправим эту проблему
                         </Text>
