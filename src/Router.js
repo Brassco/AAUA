@@ -195,25 +195,30 @@ class RouterComponent extends Component {
                         .then( user => {
                             console.log(user);
                             this.props.setUserFromSession(user);
-                            return user;
-                        })
-                        .then((user, err) => {
-                            // console.log(user);
-                            this.props.getSliderImages(user.token)
-                            return user;
-                        }).then( (user, err)=> {
-                            // console.log(user);
-                            this.props.countMessages(user.token)
-                            return user;
-                        }).then( (user, err) => {
-                            // console.log(user);
-                            this.props.getBonusesWog(user.token)
+                            // return user;
                             this.setState({
                                 hasToken: user.token !== null,
                                 // hasCard: user.card !== null,
                                 isLoaded: true
                             })
                         })
+                        // .then((user, err) => {
+                        //     // console.log(user);
+                        //     this.props.getSliderImages(user.token)
+                        //     return user;
+                        // }).then( (user, err)=> {
+                        //     // console.log(user);
+                        //     this.props.countMessages(user.token)
+                        //     return user;
+                        // }).then( (user, err) => {
+                        //     // console.log(user);
+                        //     this.props.getBonusesWog(user.token)
+                        //     this.setState({
+                        //         hasToken: user.token !== null,
+                        //         // hasCard: user.card !== null,
+                        //         isLoaded: true
+                        //     })
+                        // })
                             .catch( error => {
                                 console.log(error);
                             })

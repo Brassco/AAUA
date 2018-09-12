@@ -43,14 +43,13 @@ class ListComponent extends Component {
     renderItem() {
         const {imageStyle, imageContainer, textContainer,componentStyle} = styles;
         let {orders} = this.props;
-console.log(orders);
         if (orders.length) {
             return orders.map( order => {
 
                 if (order.status == "completed" || order.status == "processing") {
+console.log(order.ID, order.products.length)
                     let product = order.products[0];
                     let date = order.date.date.split(' ');
-                    console.log(product)
                     return (
                         <CardComponent
                             key={order.ID}
@@ -72,10 +71,10 @@ console.log(orders);
                                 <ButtonComponent
                                     onPress={this.addToBasket.bind(this, product.id)}
                                     price={
-                                        product.details.price || 0
+                                        product.details.price * product.qty || 0
                                     }
                                     bonuses={
-                                        product.details.bonus_price || 0
+                                        product.details.bonus_price * product.qty || 0
                                     }
                                 />
                             </View>

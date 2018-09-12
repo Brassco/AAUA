@@ -137,28 +137,22 @@ console.log('onChangeDelivery', value);
             NPskald: NPskald
         }
         let orderType = paymentType == 1 ? 'booking' : ''
+        console.log(orderType, basket, orderData)
         if (paymentType == 1) {
-            // if (user.bonus < basketBonusSum) {
-            //     showAlert(
-            //         '',
-            //         'На Вашем счету недостаточно бонусов для оплаты',
-            //         'Закрыть'
-            //     )
-            // } else {
+            if (user.bonus < basketBonusSum) {
+                showAlert(
+                    '',
+                    'На Вашем счету недостаточно бонусов для оплаты',
+                    'Закрыть'
+                )
+            } else {
                 showAlert(
                     '',
                     'С Вашего счета будет списано '+basketBonusSum+' (сумма товара) бонусов.',
                     'Оплатить',
                     () => makeOrder(user, basket, orderData, orderType)
                 )
-                // Alert.alert(
-                //     '',
-                //     'С Вашего счета будет списано '+basketBonusSum+' (сумма товара) бонусов.',
-                //     [
-                //         {text: 'Оплатить', onPress: () => makeOrder(user, basket, orderData, orderType)},
-                //     ],
-                // )
-            // }
+            }
         } else {
             makeOrder(user, basket, orderData, orderType);
         }
