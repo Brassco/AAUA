@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
-import {View, Text, Image, ScrollView, TouchableOpacity} from 'react-native';
+import {View, Text, Image,
+    ScrollView, TouchableOpacity,
+    FlatList
+} from 'react-native';
 import {
     MainCard,
-    CardItem,
     CardComponent,
-    ButtonRoundet,
-    LabelOnInput,
-    ModalCard,
     Spiner,
     Header
 } from '../common';
@@ -40,54 +39,56 @@ class ListComponent extends Component {
         // Actions.repeatOrder(productId)
     }
 
-    renderItem() {
+    renderItem({item}) {
         const {imageStyle, imageContainer, textContainer,componentStyle} = styles;
-        let {orders} = this.props;
-        if (orders.length) {
-            return orders.map( order => {
-
+        // let {orders} = this.props;
+        // if (orders.length) {
+        //     return orders.map( order => {
+// console.log(item);
+        let order = item;
                 if (order.status == "completed" || order.status == "processing") {
-console.log(order.ID, order.products.length)
-                    let product = order.products[0];
                     let date = order.date.date.split(' ');
-                    return (
-                        <CardComponent
-                            key={order.ID}
-                            style={componentStyle}
-                        >
-                            <View style={imageContainer}>
-                                <Image
-                                    resizeMode={'contain'}
-                                    style={imageStyle}
-                                    source={{uri: product.details.photo}}
-                                />
-                            </View>
-                            <View style={textContainer}>
-                                <TextComponent
-                                    date={date[0]}
-                                    title={product.name}
-                                    isPresent
-                                />
-                                <ButtonComponent
-                                    onPress={this.addToBasket.bind(this, product.id)}
-                                    price={
-                                        product.details.price * product.qty || 0
-                                    }
-                                    bonuses={
-                                        product.details.bonus_price * product.qty || 0
-                                    }
-                                />
-                            </View>
-                        </CardComponent>
-                    )
-                }
-            })
+                    return order.products.map( product => {
+                        return (
+                            <CardComponent
+                                key={order.ID+product.id}
+                                style={componentStyle}
+                            >
+                                <View style={imageContainer}>
+                                    <Image
+                                        resizeMode={'contain'}
+                                        style={imageStyle}
+                                        source={{uri: product.details.photo}}
+                                    />
+                                </View>
+                                <View style={textContainer}>
+                                    <TextComponent
+                                        date={date[0]}
+                                        title={product.name}
+                                        isPresent
+                                    />
+                                    <ButtonComponent
+                                        onPress={this.addToBasket.bind(this, product)}
+                                        price={
+                                            product.details.price * product.qty || 0
+                                        }
+                                        bonuses={
+                                            product.details.bonus_price * product.qty || 0
+                                        }
+                                    />
+                                </View>
+                            </CardComponent>
+                        )
+                    })
+                    // let product = order.products[0];
+            //     }
+            // })
         }
     }
 
     renderList() {
         return (
-            <ScrollView style={{
+            /*<ScrollView style={{
                 paddingLeft: 13,
                 paddingRight: 14,
                 marginTop: 21
@@ -101,7 +102,17 @@ console.log(order.ID, order.products.length)
                 {
                     this.renderItem()
                 }
-            </ScrollView>
+            </ScrollView>*/
+            <FlatList
+                    style={{
+                        paddingLeft: 13,
+                        paddingRight: 14,
+                        marginTop: 21
+                    }}
+                data={this.props.orders}
+                renderItem={this.renderItem.bind(this)}
+                keyExtractor={item => item.ID}
+            />
         )
     }
 

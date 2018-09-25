@@ -101,7 +101,6 @@ class GoodsListComponent extends Component {
     }
 
     renderContent() {
-        console.log('*** GOODS LIST render content ***', this.props)
         const {loading} = this.props
         if (!loading) {
             return (

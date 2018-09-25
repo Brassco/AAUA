@@ -28,7 +28,8 @@ import {
     STORE_SET_BASKET_DATA_FROM_STORAGE,
     STORE_PAYMENT_SUCCESS,
     STORE_ADD_BASKET_DATA_TO_STORAGE,
-    STORE_SET_PAYMENT_TYPE
+    STORE_SET_PAYMENT_TYPE,
+    STORE_UPDATE_BASKET_DATA
 } from '../Actions/types';
 import {
     STORE_CATEGORIES_URL,
@@ -39,7 +40,8 @@ import {
     STORE_HISTORY_URL,
     STORE_ORDER_DETAILS_URL,
     STORE_BRANDS_FOR_FILTERS_URL,
-    STORE_FILTER_URL
+    STORE_FILTER_URL,
+    STORE_PRODUCT_UPDATE
 } from './constants';
 import axios from 'axios';
 import {Actions} from 'react-native-router-flux';
@@ -303,7 +305,7 @@ export const getHistory = (user) => {
 
         let signatureString = user.token+":"+user.phone;
         const signature = encode(signatureString);
-        console.log('STORE get products - ', signature, STORE_HISTORY_URL+user.profile.id);
+        console.log('STORE get history - ', signature, STORE_HISTORY_URL+user.profile.id);
         axios.get(STORE_HISTORY_URL+user.profile.id, {
                 headers: {
                     'Signature' : signature,
@@ -457,30 +459,93 @@ console.log('ACTION selectPaymentType')
     }
 }
 
-export const repeatOrder = (token, phone, productId) => {
+export const repeatOrder = (token, phone, product) => {
     return (dispatch) => {
 
-        dispatch({
-            type: STORE_GET_PRODUCT_BY_ID
-        })
-
-        let signatureString = token+":"+phone;
+        // dispatch({
+        //     type: STORE_GET_PRODUCT_BY_ID
+        // })
+        //
+        /*let signatureString = token+":"+phone;
         const signature = encode(signatureString);
-        console.log('STORE get product by ID- ', signature, STORE_PRODUCT_BY_ID_URL+productId);
-        axios.get(STORE_PRODUCT_BY_ID_URL+productId, {
+        console.log('STORE get product by ID- ', signature, STORE_PRODUCT_BY_ID_URL+product.id);
+        axios.get(STORE_PRODUCT_BY_ID_URL+product.id, {
                 headers: {
                     'Signature' : signature,
                 }
             }
         )
-            .then(product => {
-                if (product) {
-                    console.log('get product success', product.data.product)
-                    Actions.ordering({repeatOrder: product.data.product})
+            .then(response => {
+                if (response) {
+                    // response.data.product.price = response.data.product.price*product.qty;
+                    // response.data.product.bonus_price = response.data.product.bonus_price*product.qty;
+            console.log('get product success', product, response.data)
+                    // Actions.ordering({repeatOrder: response.data.product})
                 }
             })
             .catch((error) => {
                 console.log(error)
+            })*/
+        console.log(product)
+        dispatch({
+            type: ADD_TO_BASKET ,
+            payload: product.details
+        })
+        Actions.basketList({isPaymentSuccess: false});
+    }
+}
+
+export const updateBasketInfo = (token, phone, basket) => {
+    return (dispatch) => {
+        let productIds = [];
+        basket.map( product => {
+            productIds.push(product.id);
+        })
+        console.log(productIds);
+        const obj = {
+            "products": productIds
+        }
+        const data = JSON.stringify(obj);
+        let signatureString = token+":"+phone;
+        const signature = encode(signatureString);
+        // let url = brandIds.length > 0 ? STORE_FILTER_URL : STORE_GET_PRODUCTS_BY_CATEGORY_ID+categoryId
+console.log('STORE_PRODUCT_UPDATE', signature, data, STORE_PRODUCT_UPDATE)
+        axios.post(STORE_PRODUCT_UPDATE, data, {
+                headers: {
+                    'Signature' : signature,
+                    'Content-Type': 'application/json',
+                }
+            }
+        )
+            .then(result => onUpdateInfoSuccess(dispatch, result.data, basket))
+            .catch((error) => {
+                console.log(error)
             })
     }
+}
+
+const onUpdateInfoSuccess = (dispatch, data, basket) => {
+    console.log(data, basket);
+    let basketSum = 0;
+    let basketBonusSum = 0;
+    basket.map(product => {
+        data.products.find( obj => {
+            if (obj.id == product.id) {
+                basketSum += obj.price * product.counter;
+                basketBonusSum += obj.bonus_price * product.counter;
+                product.product.price = obj.price;
+                product.product.bonus_price = obj.bonus_price;
+            }
+        })
+    })
+    console.log(basket, basketSum, basketBonusSum);
+    let basketObj = {
+        basket: basket,
+        basketSum: basketSum,
+        basketBonusSum: basketBonusSum,
+    }
+    dispatch({
+        type: STORE_UPDATE_BASKET_DATA,
+        payload: basketObj
+    })
 }

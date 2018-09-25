@@ -210,5 +210,6 @@ export const STORE_ADD_BASKET_DATA_TO_STORAGE = 'store_add_basket_data_to_storag
 export const STORE_ORDER_SUCCESS = 'store_order_success';
 export const STORE_PAYMENT_SUCCESS = 'store_payment_success';
 export const STORE_SET_PAYMENT_TYPE = 'store_set_payment_type';
+export const STORE_UPDATE_BASKET_DATA = 'store_update_basket_data';
 
 export const WOG_BONUSES_LOADED = 'wog_bonuses_loaded';

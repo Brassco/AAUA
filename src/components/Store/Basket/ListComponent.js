@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, Image, ScrollView} from 'react-native';
+import {View, Text, Image, ScrollView, FlatList} from 'react-native';
 import {
     MainCard,
     CardItem,
@@ -15,7 +15,7 @@ import TextComponent from './TextComponent';
 import ButtonComponent from './ButtonComponent';
 import {RATIO} from '../../../styles/constants';
 import {connect} from 'react-redux';
-import {deleteFromBasket, addToBasket, onPaymentSuccess} from '../../../Actions/StoreAction';
+import {deleteFromBasket, addToBasket, onPaymentSuccess, updateBasketInfo} from '../../../Actions/StoreAction';
 import {showAlert} from '../../Modals'
 
 class ListComponent extends Component {
@@ -44,8 +44,12 @@ class ListComponent extends Component {
         Actions.reset('drawer');
     }
 
+    componentWillMount() {
+        let {token, profile} = this.props.user;
+        this.props.updateBasketInfo(token, profile.phone, this.props.basket)
+    }
+
     componentDidMount() {
-        console.log('componentDidMount ', this.props)
         if (this.props.isPaymentSuccess) {
             showAlert(
                 'Спасибо,',
@@ -62,38 +66,52 @@ class ListComponent extends Component {
             imageContainer,
             textContainer,
             componentStyle} = styles;
-        if (this.props.basket.length) {
-            return this.props.basket.map(row => {
-                let product = row.product;
-                return (
-                    <CardComponent
-                        key={row.id}
-                        style={componentStyle}
-                    >
-                        <View style={imageContainer}>
-                            <Image
-                                resizeMode={'contain'}
-                                style={imageStyle}
-                                source={{uri: product.photo}}
-                            />
-                        </View>
-                        <View style={textContainer}>
-                            <TextComponent
-                                onDelete={this.onClearBasket.bind(this, product)}
-                                title={product.name}
-                                isPresent={product.status == "instock"}
-                            />
-                            <ButtonComponent
-                                count={row.counter}
-                                onAdd={this.onAddToBasket.bind(this, product)}
-                                onDelete={this.onDeleteItem.bind(this, product)}
-                                price={product.price || 0}
-                                bonuses={product.bonus_price || 0}
-                            />
-                        </View>
-                    </CardComponent>
-                )
-            })
+        if (this.props.loading) {
+            return <Spiner />
+        } else {
+            return (
+                <FlatList
+                    style={{
+                        paddingLeft: 13,
+                        paddingRight: 14,
+                        marginTop: 21,
+                        marginBottom: 60,
+                    }}
+                    data={this.props.basket}
+                    renderItem={({item}) => {
+                        let {product} = item;
+                        return (
+                            <CardComponent
+                                key={item.id}
+                                style={componentStyle}
+                            >
+                                <View style={imageContainer}>
+                                    <Image
+                                        resizeMode={'contain'}
+                                        style={imageStyle}
+                                        source={{uri: product.photo}}
+                                    />
+                                </View>
+                                <View style={textContainer}>
+                                    <TextComponent
+                                        onDelete={this.onClearBasket.bind(this, product)}
+                                        title={product.name}
+                                        isPresent={product.status == "instock"}
+                                    />
+                                    <ButtonComponent
+                                        count={item.counter}
+                                        onAdd={this.onAddToBasket.bind(this, product)}
+                                        onDelete={this.onDeleteItem.bind(this, product)}
+                                        price={product.price || 0}
+                                        bonuses={product.bonus_price || 0}
+                                    />
+                                </View>
+                            </CardComponent>
+                        )
+                    }}
+                    keyExtractor={item => item.id}
+                />
+            )
         }
     }
 
@@ -103,6 +121,7 @@ class ListComponent extends Component {
             priceText,
             bonusText,
             buttonText} = styles;
+console.log(this.props.loading, this.props.basket.length)
         if (this.props.basket.length) {
             return (
                 <View style={fixedFooterStyle}>
@@ -139,22 +158,9 @@ class ListComponent extends Component {
                 <Header burger >
                     корзина
                 </Header>
-                <ScrollView style={{
-                    paddingLeft: 13,
-                    paddingRight: 14,
-                    marginTop: 21,
-                    marginBottom: 60,
-                    }}
-                    contentContainerStyle={{
-                        flexDirection: 'column',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center',
-                    }}
-                >
                     {
                         this.renderList()
                     }
-                </ScrollView>
                 { this.renderFooter()}
             </MainCard>
         )
@@ -243,13 +249,16 @@ const styles = {
     },
 }
 
-const mapStateToProps = ({basket}) => {
+const mapStateToProps = ({basket, auth}) => {
     return {
+        user: auth.user,
         basket: basket.basket,
         basketSum: basket.basketSum,
         basketBonusSum: basket.basketBonusSum,
         countBasket: basket.countBasket,
+        loading: basket.loading
     }
 }
 
-export default connect(mapStateToProps, {deleteFromBasket, addToBasket, onPaymentSuccess})(ListComponent);
+export default connect(mapStateToProps,
+    {deleteFromBasket, addToBasket, onPaymentSuccess, updateBasketInfo})(ListComponent);

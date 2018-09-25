@@ -137,8 +137,8 @@ console.log('onChangeDelivery', value);
             NPskald: NPskald
         }
         let orderType = paymentType == 1 ? 'booking' : ''
-        console.log(orderType, basket, orderData)
         if (paymentType == 1) {
+            console.log(user.bonus < basketBonusSum, user.bonus, basketBonusSum)
             if (user.bonus < basketBonusSum) {
                 showAlert(
                     '',

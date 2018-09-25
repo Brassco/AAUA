@@ -21,6 +21,7 @@ import {
     removeItem
 } from './constants';
 import {AsyncStorage, Platform, Alert} from 'react-native';
+import Querystring from 'querystring';
 
 import FCM, { FCMEvent,
     NotificationType,

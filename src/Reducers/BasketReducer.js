@@ -5,6 +5,7 @@ import {
     STORE_SET_BASKET_DATA_FROM_STORAGE,
     STORE_PAYMENT_SUCCESS,
     STORE_ADD_BASKET_DATA_TO_STORAGE,
+    STORE_UPDATE_BASKET_DATA
 } from '../Actions/types';
 
 const INITIAL_STATE = {
@@ -12,7 +13,8 @@ const INITIAL_STATE = {
     countBasket: 0,
     basketSum: 0,
     basketBonusSum: 0,
-    isPayedSuccess: false
+    isPayedSuccess: false,
+    loading: true
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -124,6 +126,16 @@ console.log('DELETE_FROM_BASKET', counter)
                 basketSum: 0,
                 basketBonusSum: 0,
                 isPayedSuccess: true
+            }
+        case STORE_UPDATE_BASKET_DATA:
+console.log('STORE_UPDATE_BASKET_DATA', action.payload)
+            return {
+                ...state,
+                basket: action.payload.basket,
+                basketSum: action.payload.basketSum,
+                basketBonusSum: action.payload.basketBonusSum,
+                isPayedSuccess: false,
+                loading: false
             }
         default: return state;
     }
