@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     ScrollView,
     Alert,
+    FlatList,
     ImageBackground} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import {LeftBarMenuItem, RightBarMenuItem, ButtonRoundet} from './common';
@@ -14,7 +15,38 @@ import {connect} from 'react-redux';
 import {logOut} from '../Actions/AuthAction';
 import {getData} from '../Actions/SubscriptionAction'
 
+// let images = {
+import wallet from '../images/icons/wallet.png';
+import subscription from '../images/icons/subscription.png';
+import store from '../images/icons/store.png';
+import card from '../images/icons/card.png';
+import onroad from '../images/icons/onroad.png';
+import discounts from '../images/icons/discounts.png';
+import insurance from '../images/icons/insurance.png';
+import history from '../images/icons/history.png';
+import AnQ from '../images/icons/AnQ.png';
+import feedback from '../images/icons/feedback.png';
+// }
+
 class LeftBarComponent extends Component {
+
+    constructor(props){
+        super(props);
+        this.state = {
+            menuItems: [
+                {id: 1, title: 'Кошелек', img: wallet, onPress: Actions.wallet},
+                {id: 2, title: 'Годовая подписка', img: subscription, onPress: Actions.subscription},
+                {id: 3, title: 'Магазин', img: store, onPress: Actions.store},
+                {id: 4, title: 'Карта AAUA', img: card, onPress: Actions.AAUA_card},
+                {id: 5, title: 'Поддержка на дороге', img: onroad, onPress: Actions.onroadCategories},
+                {id: 6, title: 'Дисконты', img: discounts, onPress: Actions.discontCards},
+                {id: 7, title: 'Страхование', img: insurance, onPress: Actions.insurance},
+                {id: 8, title: 'История заказов', img: history, onPress: Actions.history},
+                {id: 9, title: 'Вопрос/Ответ', img: AnQ, onPress: Actions.AnQ},
+                {id: 10, title: 'Обратная связь', img: feedback, onPress: Actions.feedback}
+            ]
+        }
+    }
 
      onExit() {
         Alert.alert(
@@ -88,7 +120,24 @@ class LeftBarComponent extends Component {
                             }
                         </View>
                     </View>
-                    <ScrollView
+                    <FlatList
+                        // style={{
+                        //     paddingLeft: 13,
+                        //     paddingRight: 14,
+                        //     marginTop: 21
+                        // }}
+                        style={linksContainer}
+                        data={this.state.menuItems}
+                        renderItem={({item}) => {
+                            return (<LeftBarMenuItem
+                                title={item.title}
+                                image={item.img}
+                                onPress={item.onPress}
+                            />)
+                        }}
+                        keyExtractor={item => item.id}
+                    />
+                    {/*<ScrollView
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={{
                             flexDirection: 'column',
@@ -98,55 +147,55 @@ class LeftBarComponent extends Component {
                         style={linksContainer}>
                         <LeftBarMenuItem
                             title={'Кошелек'}
-                            image={require('../images/icons/wallet.png')}
+                            image={wallet}
                             onPress={Actions.wallet}
                         />
                         <LeftBarMenuItem
                             title={'Годовая подписка'}
-                            image={require('../images/icons/subscription.png')}
+                            image={subscription}
                             onPress={Actions.subscription}
                         />
                         <LeftBarMenuItem
                             title={'Магазин'}
-                            image={require('../images/icons/store.png')}
+                            image={store}
                             onPress={Actions.store}
                         />
                         <LeftBarMenuItem
                             title={'Карта AAUA'}
-                            image={require('../images/icons/card.png')}
+                            image={card}
                             onPress={Actions.AAUA_card}
                         />
                         <LeftBarMenuItem
                             title={'Поддержка на дороге'}
-                            image={require('../images/icons/onroad.png')}
+                            image={onroad}
                             onPress={Actions.onroadCategories}
                         />
                         <LeftBarMenuItem
                             title={'Дисконты'}
-                            image={require('../images/icons/discounts.png')}
+                            image={discounts}
                             onPress={Actions.discontCards}
                         />
                         <LeftBarMenuItem
                             title={'Страхование'}
-                            image={require('../images/icons/insurance.png')}
+                            image={insurance}
                             onPress={Actions.insurance}
                         />
                         <LeftBarMenuItem
                             title={'История заказов'}
-                            image={require('../images/icons/history.png')}
+                            image={history}
                             onPress={Actions.history}
                         />
                         <LeftBarMenuItem
                             title={'Вопрос/Ответ'}
-                            image={require('../images/icons/AnQ.png')}
+                            image={AnQ}
                             onPress={Actions.AnQ}
                         />
                         <LeftBarMenuItem
                             title={'Обратная связь'}
-                            image={require('../images/icons/feedback.png')}
+                            image={feedback}
                             onPress={Actions.feedback}
                         />
-                    </ScrollView>
+                    </ScrollView>*/}
                 </View>
             <View style={rightContainer}>
                     <TouchableOpacity onPress={Actions.drawerClose}>

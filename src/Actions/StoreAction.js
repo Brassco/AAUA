@@ -383,10 +383,11 @@ console.log('onGetBrandsSuccess', brands);
     })
 }
 
-export const getFilteredProduct = (token, phone, brandIds) => {
+export const getFilteredProduct = (token, phone, brandIds, categoryId) => {
     return (dispatch) => {
         const obj = {
             "brands": brandIds,
+            "category": [categoryId]
         }
 
         const data = JSON.stringify(obj);
@@ -519,7 +520,16 @@ console.log('STORE_PRODUCT_UPDATE', signature, data, STORE_PRODUCT_UPDATE)
         )
             .then(result => onUpdateInfoSuccess(dispatch, result.data, basket))
             .catch((error) => {
-                console.log(error)
+                console.log(error, basket)
+                let basketObj = {
+                    basket: basket,
+                    basketSum: 0,
+                    basketBonusSum: 0,
+                }
+                dispatch({
+                    type: STORE_UPDATE_BASKET_DATA,
+                    payload: basketObj
+                })
             })
     }
 }

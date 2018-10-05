@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+import {View, Text, ScrollView, TouchableOpacity, FlatList} from 'react-native';
 import {
     MainCard,
     CardItem,
@@ -23,7 +23,7 @@ class GoodsListComponent extends Component {
     };
 
     componentDidMount() {
-        console.log('***STORE GOODS LIST componentDidMount', this.props.products);
+console.log('***STORE GOODS LIST componentDidMount', this.props.products);
         let {token, phone, category, checkedBrands} = this.props;
 
         if (checkedBrands.length) {
@@ -47,7 +47,7 @@ class GoodsListComponent extends Component {
 
     onFiltering() {
         let {token, phone, checkedBrands} = this.props;
-        this.props.getFilteredProduct(token, phone, checkedBrands)
+        this.props.getFilteredProduct(token, phone, checkedBrands, this.props.category.id)
         this.setState({isFiltersOpen: false})
     }
 
@@ -59,57 +59,39 @@ class GoodsListComponent extends Component {
         this.setState({isOrdersOpen: true})
     }
 
-    renderRowItems(row) {
-        return row.map( (item, index) => {
-            return (
-                <GoodsComponent
-                    key={item.id+item.name}
-                    onPress={() => Actions.detail({productId: item.id, category: this.props.category, product: item})}
-                    addToBasket={this.addToBasket.bind(this, item)}
-                    imageSrc={{uri:item.photo}}
-                    price={item.price}
-                    bonus_price={item.bonus_price}
-                    isPresent={item.status == "instock"}
-                >
-                    {
-                        item.name
-                    }
-                </GoodsComponent>
-            )
-        })
-    }
-
-    renderRows() {
-        const products = [...this.props.products];
-        var i=0;
-        var rows = [];
-        while (i < products.length) {
-            rows.push(products.slice(i, i+2))
-            i = i+2;
-        }
-        return rows.map( (row, index) => {
-            return (
-                <CardItem
-                    key={row[0].id}
-                    style={[styles.cardItemStyle, {justifyContent: row.length == 1 ? 'flex-start' : 'space-around'}]}>
-                    {
-                        this.renderRowItems(row)
-                    }
-                </CardItem>
-            )
-        })
-    }
-
     renderContent() {
         const {loading} = this.props
         if (!loading) {
             return (
-                <ScrollView style={{
-                    paddingLeft: 22,
-                    paddingRight: 22,
-                }}>
-                    {this.renderRows()}
-                </ScrollView>
+                <FlatList
+                    horizontal={false}
+                    numColumns={2}
+                    columnWrapperStyle={{
+                        flex: 1,
+                        justifyContent: 'flex-start',
+
+                    }}
+                    keyExtractor={item => item.id}
+                    data={this.props.products}
+                    renderItem={({item}) => {
+                        return (
+                            <GoodsComponent
+                                key={item.id+item.name}
+                                onPress={() => Actions.detail({productId: item.id, category: this.props.category, product: item})}
+                                addToBasket={this.addToBasket.bind(this, item)}
+                                imageSrc={{uri:item.photo}}
+                                price={item.price}
+                                bonus_price={item.bonus_price}
+                                isPresent={item.status == "instock"}
+                            >
+                                {
+                                    item.name
+                                }
+                            </GoodsComponent>
+                        )
+                    }}
+                />
+
             )
         } else {
             return (
@@ -128,9 +110,15 @@ class GoodsListComponent extends Component {
                     showFilters={this.showFilters.bind(this)}
                     showOrders={this.showOrders.bind(this)}
                 />
+                <View style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
                 {
                     this.renderContent()
                 }
+                </View>
                 <FiltersModal
                     isOpen={this.state.isFiltersOpen}
                     closeModal={() => this.setState({isFiltersOpen: false})}

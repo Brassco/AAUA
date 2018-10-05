@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import {
     View,
     Text,
-    ScrollView
+    ScrollView,
+    FlatList
 } from 'react-native';
 import {
     MainCard,
@@ -29,7 +30,6 @@ class CategoriesComponent extends Component {
     }
 
     openStoreCategories(category) {
-        console.log(category);
         if (category.id == 17) { // if this is Specail offers category
             Actions.specialOffer({subcategories: category.sub_categories})
         } else {
@@ -62,26 +62,46 @@ class CategoriesComponent extends Component {
 
     renderRows() {
         const categories = [...this.props.categories];
-        var i=0;
-        var rows = [];
-        while (i < categories.length) {
-            rows.push(categories.slice(i, i+3))
-            i = i+3;
-        }
-        return rows.map( (row, index) => {
-
+        // var i=0;
+        // var rows = [];
+        // while (i < categories.length) {
+        //     rows.push(categories.slice(i, i+3))
+        //     i = i+3;
+        // }
+        // return rows.map( (row, index) => {
+        //
+        //     return (
+        //         <CardItem
+        //             key={row[0].id}
+        //             style={{
+        //             flexDirection: 'row',
+        //             justifyContent: 'space-around',
+        //             alignItems: 'flex-start'
+        //         }}>
+        //             {
+        //                 this.renderRowItems(row)
+        //             }
+        //         </CardItem>
+        //     )
+        // })
+        return categories.map( item => {
             return (
-                <CardItem
-                    key={row[0].id}
+                <View
+                    key={item.id}
                     style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-around',
-                    alignItems: 'flex-start'
-                }}>
-                    {
-                        this.renderRowItems(row)
-                    }
-                </CardItem>
+                        // flex: 1,
+                        margin: 1,
+                    }}
+                >
+                    <Item
+                        onPress={() => this.openStoreCategories(item)}
+                        imageSrc={{uri: item.image}}
+                    >
+                        {
+                            item.name
+                        }
+                    </Item>
+                </View>
             )
         })
     }
@@ -90,12 +110,36 @@ class CategoriesComponent extends Component {
         const {loading} = this.props
         if (!loading) {
             return (
-                <ScrollView style={{
-                    paddingLeft: 22,
-                    paddingRight: 22,
-                }}>
-                    {this.renderRows()}
-                </ScrollView>
+                <FlatList
+                    horizontal={false}
+                    numColumns={3}
+                    columnWrapperStyle={{
+                        flex: 1,
+                        justifyContent: 'space-around',
+
+                    }}
+                    data={this.props.categories}
+                    renderItem={({item}) => {
+                        return (
+                            <View
+                                key={item.id}
+                                style={{
+                                    // flex: 1,
+                                    margin: 1,
+                                }}
+                            >
+                                <Item
+                                    onPress={() => this.openStoreCategories(item)}
+                                    imageSrc={{uri: item.image}}
+                                >
+                                    {
+                                        item.name
+                                    }
+                                </Item>
+                            </View>)
+                    }}
+                    keyExtractor={item => item.id}
+                />
             )
         } else {
             return (
@@ -105,7 +149,7 @@ class CategoriesComponent extends Component {
     }
 
     render() {
-        console.log('***STORE CATEGORIES RENDER')
+        console.log('***STORE CATEGORIES RENDER', this.props)
         return (
             <MainCard>
                 <Header burger basket>
@@ -120,11 +164,11 @@ class CategoriesComponent extends Component {
 }
 
 const mapStateToProps = ({auth, store}) => {
-    console.log(auth);
     return {
         phone: auth.user.profile.phone,
         token: auth.user.token,
-        categories: store.categories
+        categories: store.categories,
+        loading: store.loading,
     }
 }
 
