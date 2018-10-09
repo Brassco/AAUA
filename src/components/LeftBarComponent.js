@@ -38,10 +38,10 @@ class LeftBarComponent extends Component {
                 {id: 2, title: 'Годовая подписка', img: subscription, onPress: Actions.subscription},
                 {id: 3, title: 'Магазин', img: store, onPress: Actions.store},
                 {id: 4, title: 'Карта AAUA', img: card, onPress: Actions.AAUA_card},
-                {id: 5, title: 'Поддержка на дороге', img: onroad, onPress: Actions.onroadCategories},
+                {id: 5, title: 'Поддержка на дороге', img: onroad, onPress: Actions.onroadSupport},
                 {id: 6, title: 'Дисконты', img: discounts, onPress: Actions.discontCards},
                 {id: 7, title: 'Страхование', img: insurance, onPress: Actions.insurance},
-                {id: 8, title: 'История заказов', img: history, onPress: Actions.history},
+                {id: 8, title: 'История заказов', img: history, onPress: Actions.historyStack},
                 {id: 9, title: 'Вопрос/Ответ', img: AnQ, onPress: Actions.AnQ},
                 {id: 10, title: 'Обратная связь', img: feedback, onPress: Actions.feedback}
             ]
@@ -121,11 +121,6 @@ class LeftBarComponent extends Component {
                         </View>
                     </View>
                     <FlatList
-                        // style={{
-                        //     paddingLeft: 13,
-                        //     paddingRight: 14,
-                        //     marginTop: 21
-                        // }}
                         style={linksContainer}
                         data={this.state.menuItems}
                         renderItem={({item}) => {
@@ -168,7 +163,7 @@ class LeftBarComponent extends Component {
                         <LeftBarMenuItem
                             title={'Поддержка на дороге'}
                             image={onroad}
-                            onPress={Actions.onroadCategories}
+                            onPress={Actions.onroadSupport}
                         />
                         <LeftBarMenuItem
                             title={'Дисконты'}
@@ -183,7 +178,7 @@ class LeftBarComponent extends Component {
                         <LeftBarMenuItem
                             title={'История заказов'}
                             image={history}
-                            onPress={Actions.history}
+                            onPress={Actions.historyStack}
                         />
                         <LeftBarMenuItem
                             title={'Вопрос/Ответ'}
