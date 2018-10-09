@@ -369,7 +369,7 @@ console.log('router else')
                                 <Scene hideNavBar key="onroadDetails" component={OnroadCategoriesDetailsComponent}/>
                                 <Scene hideNavBar key="orderOnRoadSupport" component={OrderSupport}/>
                             </Stack>
-                            <Stack key="discontCards">
+                            <Stack hideNavBar key="discontCards">
                                 <Scene initial hideNavBar key="tabs" component={TabsComponent}/>
                                 <Scene hideNavBar key="discontCard" component={DiscontCardComponent}/>
                                 <Scene hideNavBar key="discontsMap" component={DiscontMapComponent}/>
@@ -380,7 +380,7 @@ console.log('router else')
                                 <Scene hideNavBar key="kaskoComponent" component={KaskoComponent}/>
                                 <Scene hideNavBar key="osagoComponent" component={OsagoComponent}/>
                             </Stack>
-                            <Stack>
+                            <Stack hideNavBar key="historyStack">
                                 <Scene hideNavBar key="history" component={HistoryComponent}/>
                                 <Scene hideNavBar key="ordering" component={OrderingComponent}/>
                             </Stack>
