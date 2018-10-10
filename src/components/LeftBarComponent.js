@@ -36,7 +36,7 @@ class LeftBarComponent extends Component {
             menuItems: [
                 {id: 1, title: 'Кошелек', img: wallet, onPress: Actions.wallet},
                 {id: 2, title: 'Годовая подписка', img: subscription, onPress: Actions.subscription},
-                {id: 3, title: 'Магазин', img: store, onPress: Actions.store},
+                {id: 3, title: 'Магазин', img: store, onPress: Actions.categories},
                 {id: 4, title: 'Карта AAUA', img: card, onPress: Actions.AAUA_card},
                 {id: 5, title: 'Поддержка на дороге', img: onroad, onPress: Actions.onroadSupport},
                 {id: 6, title: 'Дисконты', img: discounts, onPress: Actions.discontCards},

@@ -337,7 +337,7 @@ console.log('router else')
                             <Scene hideNavBar key="wallet" component={WalletComponent} title="Кошелек"/>
                             <Scene hideNavBar key="subscription" component={SubscriptionComponent}
                                    title="Годовая подписка"/>
-                            <Stack hideNavBar key="store">
+                            {/*<Stack hideNavBar key="store">*/}
                                 <Scene hideNavBar key="categories" component={CategoriesComponent} title="Store"/>
                                 <Scene hideNavBar key="detail" component={DetailsComponent} title="Details"/>
                                 <Scene hideNavBar key="goods" component={GoodsListComponent} title="Goods"/>
@@ -345,7 +345,7 @@ console.log('router else')
                                 <Scene hideNavBar key="basketList" component={BasketListComponent}/>
                                 <Scene hideNavBar key="basketOrdering" component={OrderingComponent} title="Goods"/>
                                 <Scene hideNavBar key="payment" component={PaymentComponent} />
-                            </Stack>
+                            {/*</Stack>*/}
                             <Stack hideNavBar key="AAUA_card">
                                 <Scene
                                     hideNavBar
