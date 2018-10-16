@@ -41,68 +41,47 @@ class ListComponent extends Component {
 
     renderItem({item}) {
         const {imageStyle, imageContainer, textContainer,componentStyle} = styles;
-        // let {orders} = this.props;
-        // if (orders.length) {
-        //     return orders.map( order => {
-// console.log(item);
+
         let order = item;
-                if (order.status == "completed" || order.status == "processing") {
-                    let date = order.date.date.split(' ');
-                    return order.products.map( product => {
-                        return (
-                            <CardComponent
-                                key={order.ID+product.id}
-                                style={componentStyle}
-                            >
-                                <View style={imageContainer}>
-                                    <Image
-                                        resizeMode={'contain'}
-                                        style={imageStyle}
-                                        source={{uri: product.details.photo}}
-                                    />
-                                </View>
-                                <View style={textContainer}>
-                                    <TextComponent
-                                        date={date[0]}
-                                        title={product.name}
-                                        isPresent
-                                    />
-                                    <ButtonComponent
-                                        onPress={this.addToBasket.bind(this, product)}
-                                        price={
-                                            product.details.price * product.qty || 0
-                                        }
-                                        bonuses={
-                                            product.details.bonus_price * product.qty || 0
-                                        }
-                                    />
-                                </View>
-                            </CardComponent>
-                        )
-                    })
-                    // let product = order.products[0];
-            //     }
-            // })
+        if (order.status == "completed" || order.status == "processing") {
+            let date = order.date.date.split(' ');
+            return order.products.map( product => {
+                return (
+                    <CardComponent
+                        key={order.ID+product.id}
+                        style={componentStyle}
+                    >
+                        <View style={imageContainer}>
+                            <Image
+                                resizeMode={'contain'}
+                                style={imageStyle}
+                                source={{uri: product.details.photo}}
+                            />
+                        </View>
+                        <View style={textContainer}>
+                            <TextComponent
+                                date={date[0]}
+                                title={product.name}
+                                isPresent
+                            />
+                            <ButtonComponent
+                                onPress={this.addToBasket.bind(this, product)}
+                                price={
+                                    product.details.price * product.qty || 0
+                                }
+                                bonuses={
+                                    product.details.bonus_price * product.qty || 0
+                                }
+                            />
+                        </View>
+                    </CardComponent>
+                )
+            })
         }
     }
 
     renderList() {
         return (
-            /*<ScrollView style={{
-                paddingLeft: 13,
-                paddingRight: 14,
-                marginTop: 21
-            }}
-                        contentContainerStyle={{
-                            flexDirection: 'column',
-                            justifyContent: 'flex-start',
-                            alignItems: 'center',
-                        }}
-            >
-                {
-                    this.renderItem()
-                }
-            </ScrollView>*/
             <FlatList
                     style={{
                         paddingLeft: 13,

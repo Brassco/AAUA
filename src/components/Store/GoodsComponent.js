@@ -104,9 +104,10 @@ const styles = {
     iconStyle: {
         // marginLeft: 24 * WIDTH_RATIO,
         // marginRight: 22 * WIDTH_RATIO,
-        marginTop: 19 * RATIO,
+        // marginTop: 10 * RATIO,
         width: 114 * WIDTH_RATIO,
-        height: 114 * RATIO
+        height: 114 * RATIO,
+        // backgroundColor:'#157'
     },
     titleContainer: {
         flex:1,

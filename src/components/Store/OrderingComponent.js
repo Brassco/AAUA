@@ -13,7 +13,7 @@ import {
 } from '../common'
 import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button'
 import {RATIO, WIDTH_RATIO} from '../../styles/constants';
-import {CITIES} from '../../Actions/constants';
+import {CITIES, DEFAULT_CITY} from '../../Actions/constants';
 import {DELIVERY_CURIER,
     DELIVERY_NP
 } from '../../Actions/types';
@@ -51,6 +51,10 @@ class OrderingComponent extends Component {
 console.log('onChangeDelivery', value);
 
         this.props.changeDelivery(value);
+        if (value == DELIVERY_NP) {
+            this.props.getNPsklads(DEFAULT_CITY);
+        }
+        this.props.selectCity(DEFAULT_CITY);
     }
 
     onPhoneChange(phone) {
@@ -92,12 +96,12 @@ console.log('onChangeDelivery', value);
                 this.searchedItems(title);
             }
         }
-        console.log(this.props);
         this.props.changeCity(title);
         // this.refs._scrollView.scrollToEnd({animated: true})
     }
 
     onSelectCity(cityObj){
+        console.log('onSelectCity', cityObj, this.props.delivery);
         this.setState({searchedItems: []});
         this.props.getNPCities('.');
         if (this.props.delivery == DELIVERY_NP) {
@@ -163,6 +167,7 @@ console.log('onChangeDelivery', value);
     }
 
     renderAddresses () {
+
         if (this.props.delivery == DELIVERY_NP && this.props.city && this.props.NPsklads.length) {
             return (
                 <DropDown
@@ -178,7 +183,7 @@ console.log('onChangeDelivery', value);
         return (
             <LabelOnInput
                 label={'Адрес'}
-                placeholder={'введите адрес'}
+                placeholder={'Введите адрес'}
                 onChangeText={this.onChangeAddress.bind(this)}
                 value={this.props.address}
             />
@@ -188,14 +193,14 @@ console.log('onChangeDelivery', value);
     render() {
         let bonusSum = this.props.basketBonusSum;
         let sum = this.props.basketSum;
-console.log('render ordering component', this.props.repeatOrder);
+
         if (this.props.repeatOrder) {
             bonusSum = this.props.repeatOrder.bonus_price;
             sum = this.props.repeatOrder.price;
 
         }
 
-        console.log('render ordering component', this.props.repeatOrder, bonusSum, sum);
+console.log('render ordering component', this.props.city);
         const {textStyle, radiobuttonContainer, amountText} = styles;
         return (
             <MainCard>
@@ -283,7 +288,7 @@ console.log('render ordering component', this.props.repeatOrder);
                     }}>
                     <LabelOnInput
                         label={'Коментарий'}
-                        placeholder={'введите Коментарий'}
+                        placeholder={'Введите коментарий'}
                         onChangeText={this.onChangeComment.bind(this)}
                         value={this.props.comment}
                     />
@@ -345,10 +350,10 @@ console.log('render ordering component', this.props.repeatOrder);
                             <RadioButton value={'1'} >
                                 <Icon
                                     style={{
-                                        width: 69,
-                                        height: 14
+                                        width: 70,
+                                        height: 25
                                     }}
-                                    imageSrc={require('../../images/liqpay.png')}
+                                    imageSrc={require('../../images/master_card.jpg')}
                                 />
                             </RadioButton>
 
