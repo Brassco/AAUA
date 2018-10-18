@@ -48,7 +48,7 @@ const INITIAL_STATE = {
     npCity: null,
     NPskald: null,
     NPskalds: [],
-    city: null,
+    city: "",
     cityId: null,
     delivery: DELIVERY_CURIER,
     country: 'Украина',

@@ -87,3 +87,5 @@ export const STORE_PRODUCT_UPDATE = STORE_API_URL + 'wp-json/aaua/api/products/u
 
 export const STORE_ORDER_URL = STORE_API_URL + 'wp-json/aaua/api/orders'; // POST - make order | PUT - update order | GET - get order by id
 export const STORE_USER_ORDERS_URL = STORE_API_URL + 'wp-json/aaua/api/orders/history/'; // GET
+
+export const DEFAULT_CITY = "Київ";
