@@ -463,30 +463,6 @@ console.log('ACTION selectPaymentType')
 export const repeatOrder = (token, phone, product) => {
     return (dispatch) => {
 
-        // dispatch({
-        //     type: STORE_GET_PRODUCT_BY_ID
-        // })
-        //
-        /*let signatureString = token+":"+phone;
-        const signature = encode(signatureString);
-        console.log('STORE get product by ID- ', signature, STORE_PRODUCT_BY_ID_URL+product.id);
-        axios.get(STORE_PRODUCT_BY_ID_URL+product.id, {
-                headers: {
-                    'Signature' : signature,
-                }
-            }
-        )
-            .then(response => {
-                if (response) {
-                    // response.data.product.price = response.data.product.price*product.qty;
-                    // response.data.product.bonus_price = response.data.product.bonus_price*product.qty;
-            console.log('get product success', product, response.data)
-                    // Actions.ordering({repeatOrder: response.data.product})
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            })*/
         console.log(product)
         dispatch({
             type: ADD_TO_BASKET ,
