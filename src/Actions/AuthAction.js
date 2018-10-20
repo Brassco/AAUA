@@ -27,6 +27,7 @@ import FCM, { FCMEvent,
     NotificationType,
     WillPresentNotificationResult,
     RemoteNotificationResult } from 'react-native-fcm';
+import {Actions} from "react-native-router-flux";
 
 export const changePass = (pass) => {
     return {
@@ -200,11 +201,12 @@ saveItem('user', JSON.stringify(user))
 }
 
 export const logOut = (token) => {
-removeItem('id_token');
-removeItem('user');
-removeItem('sliderImages');
-removeItem('NPcities');
-removeItem('cities');
+// removeItem('id_token');
+// removeItem('user');
+// removeItem('sliderImages');
+// removeItem('NPcities');
+// removeItem('cities');
+    AsyncStorage.clear();
     return {
         type: LOGOUT,
     }

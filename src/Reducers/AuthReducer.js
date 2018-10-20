@@ -42,7 +42,7 @@ console.log(TOKEN_GET_SUCCESS, action.payload)
         case LOGIN_USER_FAIL:
             return {...state, password: '', loginError: action.payload, loading: false};
         case LOGOUT:
-            Actions.reset('auth');
+            // Actions.reset('auth');
             return {...state, user: null, loginError: false, loading: false};
         case UPDATE_USER_SUBSCRIPTION:
             const user = {...state.user, subscription: action.payload}

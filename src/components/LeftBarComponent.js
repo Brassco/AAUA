@@ -46,23 +46,32 @@ class LeftBarComponent extends Component {
                 {id: 10, title: 'Обратная связь', img: feedback, onPress: Actions.feedback}
             ]
         }
+        this.goToAuth = this.goToAuth.bind(this);
     }
 
      onExit() {
+         // Actions.reset('auth');
         Alert.alert(
             'Подтверждение',
             'Вы точно хотите выйти?',
             [
-                {text: 'Да', onPress: () => {
-                    console.log(this.props);
-                    this.props.logOut(this.props.token);
-                }},
+                // {text: 'Да', onPress: () => {
+                //     console.log(this.props);
+                //     this.props.logOut(this.props.token);
+                // }},
+                {text: 'Да', onPress: this.goToAuth},
                 {text: 'Закрыть', onPress: () => {console.log('close alert')}},
             ],
         )
     }
 
+    goToAuth() {
+        Actions.reset('auth');
+        this.props.logOut(this.props.token);
+    }
+
     componentWillReceiveProps(nextProps) {
+        console.log('componentWillReceiveProps0', nextProps.token );
         if (nextProps.token != this.props.token && !this.props.bought_at) {
             this.props.getData(nextProps.token);
         }
@@ -132,65 +141,7 @@ class LeftBarComponent extends Component {
                         }}
                         keyExtractor={item => item.id}
                     />
-                    {/*<ScrollView
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{
-                            flexDirection: 'column',
-                            justifyContent: 'flex-start',
-                            alignItems: 'flex-start'
-                        }}
-                        style={linksContainer}>
-                        <LeftBarMenuItem
-                            title={'Кошелек'}
-                            image={wallet}
-                            onPress={Actions.wallet}
-                        />
-                        <LeftBarMenuItem
-                            title={'Годовая подписка'}
-                            image={subscription}
-                            onPress={Actions.subscription}
-                        />
-                        <LeftBarMenuItem
-                            title={'Магазин'}
-                            image={store}
-                            onPress={Actions.store}
-                        />
-                        <LeftBarMenuItem
-                            title={'Карта AAUA'}
-                            image={card}
-                            onPress={Actions.AAUA_card}
-                        />
-                        <LeftBarMenuItem
-                            title={'Поддержка на дороге'}
-                            image={onroad}
-                            onPress={Actions.onroadSupport}
-                        />
-                        <LeftBarMenuItem
-                            title={'Дисконты'}
-                            image={discounts}
-                            onPress={Actions.discontCards}
-                        />
-                        <LeftBarMenuItem
-                            title={'Страхование'}
-                            image={insurance}
-                            onPress={Actions.insurance}
-                        />
-                        <LeftBarMenuItem
-                            title={'История заказов'}
-                            image={history}
-                            onPress={Actions.historyStack}
-                        />
-                        <LeftBarMenuItem
-                            title={'Вопрос/Ответ'}
-                            image={AnQ}
-                            onPress={Actions.AnQ}
-                        />
-                        <LeftBarMenuItem
-                            title={'Обратная связь'}
-                            image={feedback}
-                            onPress={Actions.feedback}
-                        />
-                    </ScrollView>*/}
+
                 </View>
             <View style={rightContainer}>
                     <TouchableOpacity onPress={Actions.drawerClose}>
