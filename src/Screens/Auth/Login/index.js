@@ -65,9 +65,15 @@ const Login = () => {
     // );
   };
 
+  useEffect(() => {
+    if (user !== null) {
+      Actions.drawer();
+    }
+  }, [user]);
+
   const onLogin = () => {
     if (phone && password) {
-      setIsLoading(true)
+      setIsLoading(true);
       dispatch(loginUser(phone, password, pushToken));
     } else {
       showAlert();
@@ -112,10 +118,7 @@ const Login = () => {
       </View>
 
       <View style={inputsWrapper}>
-        <PhoneInput
-          value={phone}
-          onChangeText={onPhoneChange}
-        />
+        <PhoneInput value={phone} onChangeText={onPhoneChange} />
         <PasswordInput
           label={t('labels.password')}
           placeholder={t('labels.password')}
@@ -133,7 +136,7 @@ const Login = () => {
           </TouchableOpacity>
         </View>
         <View style={[linkStyle, {alignItems: 'flex-end'}]}>
-          <TouchableOpacity onPress={() => Actions.register()}>
+          <TouchableOpacity onPress={Actions.register}>
             <Text style={linkText}>{t('login_screen.registration')}</Text>
           </TouchableOpacity>
         </View>

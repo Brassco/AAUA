@@ -1,15 +1,7 @@
-import {
-  PHONE_CHANGE,
-  PASSWORD_CHANGE,
-  LOGIN_USER,
-  LOGIN_USER_SUCCESS,
-  LOGIN_USER_FAIL,
-  LOGOUT,
-  TOKEN_GET_SUCCESS,
-  UPDATE_STATUS_SUCCESS,
-} from './types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import md5 from 'js-md5';
+
 import {
   SECRET_KEY,
   DEVICE_OS,
@@ -20,22 +12,29 @@ import {
   getToken,
   removeItem,
 } from './constants';
-import {AsyncStorage, Platform, Alert} from 'react-native';
-import Querystring from 'querystring';
 
-export const changePass = pass => {
-  return {
-    type: PASSWORD_CHANGE,
-    payload: pass,
-  };
-};
+import {
+  PHONE_CHANGE,
+  PASSWORD_CHANGE,
+  LOGIN_USER_SUCCESS,
+  LOGIN_USER_FAIL,
+  LOGOUT,
+  TOKEN_GET_SUCCESS,
+} from './types';
 
-export const changePhone = phone => {
-  return {
-    type: PHONE_CHANGE,
-    payload: phone,
-  };
-};
+// export const changePass = pass => {
+//   return {
+//     type: PASSWORD_CHANGE,
+//     payload: pass,
+//   };
+// };
+
+// export const changePhone = phone => {
+//   return {
+//     type: PHONE_CHANGE,
+//     payload: phone,
+//   };
+// };
 
 export const getPushToken = () => {
   return dispatch => {
@@ -83,55 +82,29 @@ export const loginUser = (phone, password, fireBaseToken) => {
       password: md5(password),
     };
 
-    // const data = JSON.stringify(obj);
-
-    // const userProfileSignature = md5(SECRET_KEY + data);
-
-    // console.log('==get user Profile - ', {
-    //   data: obj,
-    //   jsonData: SECRET_KEY + data,
-    //   signature: userProfileSignature,
-    // });
-
-    //Get User Profile
+    /*Get User Profile*/
     const userProfile = await axios.post(AUTH_URL, obj);
 
     const profile = userProfile.data;
-    console.log('user profile - ', profile);
+    
     if (profile.error === 0) {
       const userToken = {
         token: profile.token,
       };
-      // const cardSignature = md5(SECRET_KEY + userToken);
 
-      // console.log('==get user cards - ', {
-      //   data: profile.token,
-      //   jsonData: SECRET_KEY + userToken,
-      //   signature: cardSignature,
-      // });
-
-      //Get User's cards
+      /*Get user's cards*/
       const userCardResponse = await axios.post(MY_AAUA_CARD_URL, userToken);
-
-      console.log('userCardResponse', userCardResponse);
-
+      
       const card = userCardResponse.data;
-
       const userObject = {...profile};
-      userObject.card = card.data.card;
-
-      // const subscriptionData = JSON.stringify({
-      //   token: userObject.token,
-      // });
-      // const signature = md5(SECRET_KEY + subscriptionData);
-
-      // console.log(SUBSCRIPTION_URL, subscriptionData, signature);
-
-      //Get User's subscriptions
+      
+      /*Get user's subscriptions*/ 
       const subscription = await axios.post(SUBSCRIPTION_URL, userToken);
+
+      userObject.card = card.data.card;
       userObject.status =
         subscription.data.data.bought_at != null ? 'active' : 'inactive';
-      console.log('===subscription', subscription, userObject);
+      
       onLoginSuccess(dispatch, userObject);
     } else {
       dispatch({
@@ -139,65 +112,6 @@ export const loginUser = (phone, password, fireBaseToken) => {
         payload: 'Невірний логін або пароль',
       });
     }
-
-    // const  signature = md5(SECRET_KEY + data);
-    // axios
-    //   .post(AUTH_URL, data, {
-    //     headers: {
-    //       Signature: signature,
-    //       'Content-Type': 'application/json',
-    //     },
-    //   })
-    //   .then(user => {
-    //     console.log(user.data);
-    //     if (user.data.error == 0) {
-    //       const data = JSON.stringify({
-    //         token: user.data.token,
-    //       });
-    //       const signature = md5(SECRET_KEY + data);
-    //       console.log(MY_AAUA_CARD_URL, data, signature);
-    //       axios
-    //         .post(MY_AAUA_CARD_URL, data, {
-    //           headers: {
-    //             Signature: signature,
-    //             'Content-Type': 'application/json',
-    //           },
-    //         })
-    //         .then(card => {
-    //           const userObject = {...user.data};
-    //           userObject.card = card.data.data.card;
-
-    //           const data = JSON.stringify({
-    //             token: userObject.token,
-    //           });
-    //           const signature = md5(SECRET_KEY + data);
-    //           console.log(SUBSCRIPTION_URL, data, signature);
-    //           axios
-    //             .post(SUBSCRIPTION_URL, data, {
-    //               headers: {
-    //                 Signature: signature,
-    //                 'Content-Type': 'application/json',
-    //               },
-    //             })
-    //             .then(subscription => {
-    //               userObject.status =
-    //                 subscription.data.data.bought_at != null
-    //                   ? 'active'
-    //                   : 'inactive';
-    //               console.log('subscription', subscription, userObject);
-    //               onLoginSuccess(dispatch, userObject);
-    //             });
-    //         });
-    //     } else {
-    //       dispatch({
-    //         type: LOGIN_USER_FAIL,
-    //         payload: 'Невірний логін або пароль',
-    //       });
-    //     }
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
   };
 };
 
@@ -232,7 +146,7 @@ const setUserFromSessionSucces = (dispatch, user) => {
 };
 
 const onLoginSuccess = (dispatch, user) => {
-  console.log('id_token', user);
+  console.log(' === onLoginSuccess', user);
 
   saveItem('id_token', user.token);
   saveItem('user', JSON.stringify(user)).then(response => {
