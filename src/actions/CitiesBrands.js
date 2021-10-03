@@ -191,38 +191,31 @@ export const getSliderImages = token => {
             (cachedImages) => {
                 if (cachedImages == null) {*/
 
-    const obj = {
+    const data = {
       token: token,
     };
 
-    const data = JSON.stringify(obj);
-    const signature = md5(SECRET_KEY + data);
-    console.log(IMAGES_LOAD_URL, data, signature);
-    axios
-      .post(IMAGES_LOAD_URL, data, {
-        headers: {
-          Signature: signature,
-          'Content-Type': 'application/json',
-        },
-      })
-      .then(images => {
-        let imagesArray = [];
-        var index = 0;
-        for (var image in images.data.data) {
-          imagesArray.push({
-            id: index,
-            url: BASE_URL + images.data.data[image].pic,
-            title: images.data.data[image].title,
-            is_content: images.data.data[image].is_content,
-            content: images.data.data[image].content,
-          });
-          index++;
-        }
+    // const data = JSON.stringify(obj);
+    // const signature = md5(SECRET_KEY + data);
+    console.log(IMAGES_LOAD_URL, data);
+    axios.post(IMAGES_LOAD_URL, data).then(images => {
+      let imagesArray = [];
+      var index = 0;
+      for (var image in images.data.data) {
+        imagesArray.push({
+          id: index,
+          url: BASE_URL + images.data.data[image].pic,
+          title: images.data.data[image].title,
+          is_content: images.data.data[image].is_content,
+          content: images.data.data[image].content,
+        });
+        index++;
+      }
 
-        // saveItem('sliderImages', JSON.stringify(imagesArray));
-        console.log(imagesArray);
-        onImagesLoaded(dispatch, imagesArray);
-      });
+      // saveItem('sliderImages', JSON.stringify(imagesArray));
+      console.log(imagesArray);
+      onImagesLoaded(dispatch, imagesArray);
+    });
     /*} else {
                     onImagesLoaded(dispatch, JSON.parse(cachedImages))
                 }
@@ -239,24 +232,17 @@ const onImagesLoaded = (dispatch, images) => {
 
 export const getBonusesWog = token => {
   return dispatch => {
-    const obj = {
+    const data = {
       token: token,
     };
 
-    const data = JSON.stringify(obj);
-    const signature = md5(SECRET_KEY + data);
-    console.log(WOG_BONUSES_URL, data, signature);
-    axios
-      .post(WOG_BONUSES_URL, data, {
-        headers: {
-          Signature: signature,
-          'Content-Type': 'application/json',
-        },
-      })
-      .then(bonuses => {
-        console.log(bonuses);
-        onBonusesLoaded(dispatch, bonuses.data);
-      });
+    // const data = JSON.stringify(obj);
+    // const signature = md5(SECRET_KEY + data);
+    console.log(WOG_BONUSES_URL, data);
+    axios.post(WOG_BONUSES_URL, data).then(bonuses => {
+      console.log(bonuses);
+      onBonusesLoaded(dispatch, bonuses.data);
+    });
   };
 };
 

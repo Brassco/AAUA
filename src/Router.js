@@ -39,7 +39,8 @@ import LicenceComponent from './components/Auth/Register/LicenceComponent';
 import CitiesScreen from './components/Auth/Register/CitiesScreen';
 import CarsScreen from './components/Auth/Register/CarsScreen';
 import LeftBarComponent from './components/LeftBarComponent';
-import MainComponent from './components/MainComponent';
+// import MainComponent from './components/MainComponent';
+import HomeScreen from '@aaua/Screens/Home';
 import ImageContent from './components/ImageContent';
 import WalletComponent from './components/Wallet/';
 import SubscriptionComponent from './components/Subscription/';
@@ -349,7 +350,7 @@ class RouterComponent extends React.Component {
               <Scene
                 hideNavBar
                 key="mainScreen"
-                component={MainComponent}
+                component={HomeScreen}
                 title="main_screen"
               />
               <Scene hideNavBar key="imageContent" component={ImageContent} />
