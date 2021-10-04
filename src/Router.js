@@ -42,7 +42,7 @@ import LeftBarComponent from './components/LeftBarComponent';
 // import MainComponent from './components/MainComponent';
 import HomeScreen from '@aaua/Screens/Home';
 import ImageContent from './components/ImageContent';
-import WalletComponent from './components/Wallet/';
+import WalletComponent from '@aaua/Screens/Valet/';
 import SubscriptionComponent from './components/Subscription/';
 import CategoriesComponent from './components/Store/CategoriesComponent';
 import DetailsComponent from './components/Store/DetailComponent';
@@ -53,10 +53,11 @@ import PaymentComponent from './components/Store/PaymentComponent';
 import OnroadCategoriesComponent from './components/Onroad_support/CategoriesComponent';
 import OnroadCategoriesDetailsComponent from './components/Onroad_support/CategoryDetailsComponent';
 import OrderSupport from './components/Onroad_support/OrderSupport';
-import MarkerInfo from './components/Disconts/MarkerInfo';
-import DiscontMapComponent from './components/Disconts/MapComponent';
-import TabsComponent from './components/Disconts/TabsComponent';
-import DiscontCardComponent from './components/Disconts/discontsCard/DiscontCardComponent';
+import MarkerInfo from './components/Discounts/MarkerInfo';
+import DiscontMapComponent from './components/Discounts/MapComponent';
+// import TabsComponent from './components/Disconts/TabsComponent';
+import TabsComponent from '@aaua/Screens/Discounts/Tabs';
+import DiscontCardComponent from './components/Discounts/discontsCard/DiscontCardComponent';
 import InsuranceComponent from './components/Insurance/CategoriesComponent';
 import KaskoComponent from './components/Insurance/KaskoComponent';
 import OsagoComponent from './components/Insurance/OsagoComponent';
@@ -163,22 +164,15 @@ class RouterComponent extends React.Component {
           const user = JSON.parse(data[1]);
           if (user !== null) {
             console.log('-1- ROUTER user from store', user);
-            const obj = {
+            const data = {
               token: user.token,
               phone: user.profile.phone,
             };
 
-            const data = JSON.stringify(obj);
-            const signature = md5(SECRET_KEY + data);
             axios
-              .post(CHECK_TOKEN_URL, data, {
-                headers: {
-                  Signature: signature,
-                  'Content-Type': 'application/json',
-                },
-              })
+              .post(CHECK_TOKEN_URL, data)
               .then(res => {
-                console.log(res);
+                console.log('CHECK_TOKEN_URL res ', res);
                 if (res.data.error == 0) {
                   console.log('user is checked', res.data, res.data.data == 1);
                   if (res.data.data == 1) {
@@ -202,7 +196,7 @@ class RouterComponent extends React.Component {
                 }
               })
               .then(user => {
-                console.log(user);
+                console.log({user});
                 this.props.setUserFromSession(user);
                 // return user;
                 this.setState({
