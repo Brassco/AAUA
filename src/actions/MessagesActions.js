@@ -23,24 +23,14 @@ export const loadMessages = (token, offset = 0) => {
     dispatch({
       type: MESSAGES_LOAD,
     });
-    const obj = {
+    const data = {
       token: token,
       limit: MSG_LIMIT,
       offset: offset,
     };
 
-    const data = JSON.stringify(obj);
-    const signature = md5(SECRET_KEY + data);
-
-    console.log(MESSAGES_LOADING_URL, data, obj, signature);
-
     axios
-      .post(MESSAGES_LOADING_URL, data, {
-        headers: {
-          Signature: signature,
-          'Content-Type': 'application/json',
-        },
-      })
+      .post(MESSAGES_LOADING_URL, data)
       .then(messages => {
         console.log('messages loaded success', messages);
         let messagesAraay = [];
@@ -74,23 +64,13 @@ export const getMessage = (token, messageId) => {
     dispatch({
       type: MESSAGE_LOAD,
     });
-    const obj = {
+    const data = {
       token: token,
       message_id: messageId,
     };
 
-    const data = JSON.stringify(obj);
-    const signature = md5(SECRET_KEY + data);
-
-    console.log(MESSAGE_LOADING_URL, data, obj, signature);
-
     axios
-      .post(MESSAGE_LOADING_URL, data, {
-        headers: {
-          Signature: signature,
-          'Content-Type': 'application/json',
-        },
-      })
+      .post(MESSAGE_LOADING_URL, data)
       .then(message => {
         console.log('message info loaded success', message);
 
@@ -129,16 +109,9 @@ export const countMessages = (token, offset = 0) => {
       only_not_views: 1,
     };
 
-    // const data = JSON.stringify(obj);
-    // const signature = md5(SECRET_KEY + data);
-
-    console.log(MESSAGES_LOADING_URL, data);
-
     axios
       .post(MESSAGES_LOADING_URL, data)
       .then(messages => {
-        console.log('messages count success', messages);
-
         onMessageCountLoaded(dispatch, messages.data);
       })
       .catch(error => {
@@ -148,7 +121,6 @@ export const countMessages = (token, offset = 0) => {
 };
 
 const onMessageCountLoaded = (dispatch, messages) => {
-  console.log('messages count success', messages);
   var counter = 0;
   if (messages.error == 0 && messages.data) {
     counter = messages.data.length;

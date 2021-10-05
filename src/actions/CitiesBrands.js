@@ -106,33 +106,23 @@ const onCitiesLoaded = (dispatch, cities) => {
 /*GET NP CITIES*/
 export const getNPCities = city => {
   return dispatch => {
-    const obj = {
+    const data = {
       city: city,
     };
 
-    const data = JSON.stringify(obj);
-    const signature = md5(SECRET_KEY + data);
+    console.log('getNPCities', NP_CITIES_URL, data);
+    axios.post(NP_CITIES_URL, data).then(cities => {
+      let citiesAraay = [];
+      for (var city in cities.data.data) {
+        citiesAraay.push({
+          id: city,
+          title: cities.data.data[city],
+        });
+      }
+      // saveItem('NPcities', JSON.stringify(citiesAraay));
 
-    console.log('getNPCities', NP_CITIES_URL, data, signature);
-    axios
-      .post(NP_CITIES_URL, data, {
-        headers: {
-          Signature: signature,
-          'Content-Type': 'application/json',
-        },
-      })
-      .then(cities => {
-        let citiesAraay = [];
-        for (var city in cities.data.data) {
-          citiesAraay.push({
-            id: city,
-            title: cities.data.data[city],
-          });
-        }
-        // saveItem('NPcities', JSON.stringify(citiesAraay));
-
-        onNPCitiesLoaded(dispatch, citiesAraay);
-      });
+      onNPCitiesLoaded(dispatch, citiesAraay);
+    });
   };
 };
 
@@ -148,32 +138,22 @@ const onNPCitiesLoaded = (dispatch, cities) => {
 export const getNPsklads = city => {
   console.log('getNPsklads', city);
   return dispatch => {
-    const obj = {
+    const data = {
       city: city,
     };
 
-    const data = JSON.stringify(obj);
-    const signature = md5(SECRET_KEY + data);
-
-    console.log(NP_SKLADS_URL, data, signature);
-    axios
-      .post(NP_SKLADS_URL, data, {
-        headers: {
-          Signature: signature,
-          'Content-Type': 'application/json',
-        },
-      })
-      .then(sklads => {
-        let skladsArray = [];
-        for (var sklad in sklads.data.data) {
-          skladsArray.push({
-            id: sklad,
-            title: sklads.data.data[sklad],
-          });
-        }
-        console.log('sklads loaded', skladsArray);
-        onNPSkladsLoaded(dispatch, skladsArray);
-      });
+    console.log(NP_SKLADS_URL, data);
+    axios.post(NP_SKLADS_URL, data).then(sklads => {
+      let skladsArray = [];
+      for (var sklad in sklads.data.data) {
+        skladsArray.push({
+          id: sklad,
+          title: sklads.data.data[sklad],
+        });
+      }
+      console.log('sklads loaded', skladsArray);
+      onNPSkladsLoaded(dispatch, skladsArray);
+    });
   };
 };
 
@@ -187,17 +167,10 @@ const onNPSkladsLoaded = (dispatch, sklads) => {
 /*GET SLIDER IMAGES*/
 export const getSliderImages = token => {
   return dispatch => {
-    /*AsyncStorage.getItem('sliderImages').then(
-            (cachedImages) => {
-                if (cachedImages == null) {*/
-
     const data = {
       token: token,
     };
 
-    // const data = JSON.stringify(obj);
-    // const signature = md5(SECRET_KEY + data);
-    console.log(IMAGES_LOAD_URL, data);
     axios.post(IMAGES_LOAD_URL, data).then(images => {
       let imagesArray = [];
       var index = 0;
@@ -212,14 +185,8 @@ export const getSliderImages = token => {
         index++;
       }
 
-      // saveItem('sliderImages', JSON.stringify(imagesArray));
-      console.log(imagesArray);
       onImagesLoaded(dispatch, imagesArray);
     });
-    /*} else {
-                    onImagesLoaded(dispatch, JSON.parse(cachedImages))
-                }
-            })*/
   };
 };
 
@@ -236,11 +203,7 @@ export const getBonusesWog = token => {
       token: token,
     };
 
-    // const data = JSON.stringify(obj);
-    // const signature = md5(SECRET_KEY + data);
-    console.log(WOG_BONUSES_URL, data);
     axios.post(WOG_BONUSES_URL, data).then(bonuses => {
-      console.log(bonuses);
       onBonusesLoaded(dispatch, bonuses.data);
     });
   };

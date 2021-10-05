@@ -86,7 +86,7 @@ export const loginUser = (phone, password, fireBaseToken) => {
     const userProfile = await axios.post(AUTH_URL, obj);
 
     const profile = userProfile.data;
-    
+
     if (profile.error === 0) {
       const userToken = {
         token: profile.token,
@@ -94,17 +94,17 @@ export const loginUser = (phone, password, fireBaseToken) => {
 
       /*Get user's cards*/
       const userCardResponse = await axios.post(MY_AAUA_CARD_URL, userToken);
-      
+
       const card = userCardResponse.data;
       const userObject = {...profile};
-      
-      /*Get user's subscriptions*/ 
+
+      /*Get user's subscriptions*/
       const subscription = await axios.post(SUBSCRIPTION_URL, userToken);
 
       userObject.card = card.data.card;
       userObject.status =
         subscription.data.data.bought_at != null ? 'active' : 'inactive';
-      
+
       onLoginSuccess(dispatch, userObject);
     } else {
       dispatch({
@@ -117,23 +117,15 @@ export const loginUser = (phone, password, fireBaseToken) => {
 
 export const setUserFromSession = user => {
   return dispatch => {
-    const data = JSON.stringify({
+    const data = {
       token: user.token,
+    };
+    axios.post(SUBSCRIPTION_URL, data).then(subscription => {
+      const status =
+        subscription.data.data.bought_at != null ? 'active' : 'inactive';
+      user.status = status;
+      setUserFromSessionSucces(dispatch, user);
     });
-    const signature = md5(SECRET_KEY + data);
-    axios
-      .post(SUBSCRIPTION_URL, data, {
-        headers: {
-          Signature: signature,
-          'Content-Type': 'application/json',
-        },
-      })
-      .then(subscription => {
-        const status =
-          subscription.data.data.bought_at != null ? 'active' : 'inactive';
-        user.status = status;
-        setUserFromSessionSucces(dispatch, user);
-      });
   };
 };
 
@@ -164,12 +156,7 @@ const onLoginSuccess = (dispatch, user) => {
   });
 };
 
-export const logOut = token => {
-  // removeItem('id_token');
-  // removeItem('user');
-  // removeItem('sliderImages')
-  // removeItem('NPcities');
-  // removeItem('cities');
+export const logOut = () => {
   AsyncStorage.clear();
   return {
     type: LOGOUT,

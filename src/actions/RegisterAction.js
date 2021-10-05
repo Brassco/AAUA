@@ -139,21 +139,12 @@ export const sendSms = phone => {
       type: SEND_SMS,
     });
 
-    const obj = {
+    const data = {
       phone: phone,
     };
 
-    const data = JSON.stringify(obj);
-    const signature = md5(SECRET_KEY + data);
-
-    console.log(phone, signature);
     axios
-      .post(SMS_CODE_URL, data, {
-        headers: {
-          Signature: signature,
-          'Content-Type': 'application/json',
-        },
-      })
+      .post(SMS_CODE_URL, data)
       .then(user => onSMSSuccess(dispatch, user.data))
       .catch(error => {
         onSMSFail(dispatch, error);
@@ -187,7 +178,7 @@ export const sendStep1 = userData => {
       type: SEND_STEP_1,
     });
 
-    const obj = {
+    const data = {
       device: userData.device,
       phone: userData.phone,
       sms_code: userData.sms_code,
@@ -195,16 +186,8 @@ export const sendStep1 = userData => {
       y: userData.y,
     };
 
-    const data = JSON.stringify(obj);
-    const signature = md5(SECRET_KEY + data);
-    console.log(userData, obj, data);
     axios
-      .post(REGISTER_1_URL, data, {
-        headers: {
-          Signature: signature,
-          'Content-Type': 'application/json',
-        },
-      })
+      .post(REGISTER_1_URL, data)
       .then(user => onStep1Success(dispatch, user.data))
       .catch(error => {
         console.log(error);
@@ -239,7 +222,7 @@ export const sendStep2 = userData => {
     });
 
     const {token, name, city_id, email, year, brand_id, password} = userData;
-    const obj = {
+    const data = {
       token: token,
       name: name,
       city_id: city_id,
@@ -249,16 +232,8 @@ export const sendStep2 = userData => {
       password: md5(password),
     };
 
-    const data = JSON.stringify(obj);
-    const signature = md5(SECRET_KEY + data);
-    console.log(obj, signature);
     axios
-      .post(REGISTER_2_URL, data, {
-        headers: {
-          Signature: signature,
-          'Content-Type': 'application/json',
-        },
-      })
+      .post(REGISTER_2_URL, data)
       .then(user =>
         loginUser(
           userData.phone,
@@ -284,61 +259,37 @@ const onStep2Fail = dispatch => {
 const loginUser = (phone, password, pushToken, response, dispatch) => {
   console.log('login user after registration', phone, password, response);
 
-  const obj = {
+  const data = {
     device: DEVICE_OS,
     username: phone,
     push_token: pushToken,
     password: md5(password),
   };
 
-  const data = JSON.stringify(obj);
-  const signature = md5(SECRET_KEY + data);
-  console.log(AUTH_URL, data, signature);
   axios
-    .post(AUTH_URL, data, {
-      headers: {
-        Signature: signature,
-        'Content-Type': 'application/json',
-      },
-    })
+    .post(AUTH_URL, data)
     .then(user => {
       console.log('login success, getting aaua card', user);
       if (user.data.error == 0) {
-        const data = JSON.stringify({
+        const data = {
           token: user.data.token,
-        });
-        const signature = md5(SECRET_KEY + data);
-        console.log(MY_AAUA_CARD_URL, data, signature);
-        axios
-          .post(MY_AAUA_CARD_URL, data, {
-            headers: {
-              Signature: signature,
-              'Content-Type': 'application/json',
-            },
-          })
-          .then(card => {
-            console.log('get card success, getting subscription', card);
-            const userObject = user.data;
-            userObject.card = card.data.data.card;
+        };
 
-            const data = JSON.stringify({
-              token: userObject.token,
-            });
-            const signature = md5(SECRET_KEY + data);
-            console.log(data, signature);
-            axios
-              .post(SUBSCRIPTION_URL, data, {
-                headers: {
-                  Signature: signature,
-                  'Content-Type': 'application/json',
-                },
-              })
-              .then(subscription => {
-                userObject.subscription = subscription.data.data;
-                console.log('subscription', subscription, userObject);
-                onLoginSuccess(dispatch, userObject);
-              });
+        axios.post(MY_AAUA_CARD_URL, data).then(card => {
+          console.log('get card success, getting subscription', card);
+          const userObject = user.data;
+          userObject.card = card.data.data.card;
+
+          const data = {
+            token: userObject.token,
+          };
+
+          axios.post(SUBSCRIPTION_URL, data).then(subscription => {
+            userObject.subscription = subscription.data.data;
+            console.log('subscription', subscription, userObject);
+            onLoginSuccess(dispatch, userObject);
           });
+        });
       } else {
         console.log(user.data.error);
       }
