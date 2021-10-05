@@ -7,4 +7,13 @@ export default StyleSheet.create({
   bottomButton: {
     justifyContent: 'center',
   },
+  scrollContainer: {
+    paddingLeft: 22,
+    paddingRight: 22,
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
 });

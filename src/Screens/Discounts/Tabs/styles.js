@@ -2,10 +2,8 @@ import {StyleSheet} from 'react-native';
 
 export default StyleSheet.create({
   container: {
-    height: 300,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#61c9eb',
+    height: 50,
+    flex: 0,
   },
   tabText: {
     fontFamily: 'SFUIText-Medium',

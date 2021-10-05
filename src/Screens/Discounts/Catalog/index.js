@@ -1,31 +1,38 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {ScrollView} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
+import {Actions} from 'react-native-router-flux';
 
-import {CardItem, Spiner} from '@aaua/components/common';
+import {CardItem} from '@aaua/components/common';
 import Item from '@aaua/components/Discounts/Item';
 
-import {loadCategories, selectCategory} from '@aaua/actions/DiscountsAction';
+import {selectCategory} from '@aaua/actions/DiscountsAction';
 
 import {getImageByCategoryId} from '@aaua/helpers/ImageHelper';
 
-const CategoriesScreen = props => {
+import styles from './styles';
 
-  const dispatch = useDispatch();
+const CategoriesScreen = props => {
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const {auth, discounts} = useSelector(state => state);
   const {token} = auth.user;
-  const {categories, loadingCategories: loading} = discounts;
+  // const {selectedCategory} = discounts;
+  const {categories} = props;
 
-  useEffect(() => {
-    if (token) {
-      console.log('----CategoriesScreen', token);
-      dispatch(loadCategories(token));
-    }
-  }, []);
+  const dispatch = useDispatch();
+
+  const {scrollContainer, itemContainer} = styles;
+
+  // useEffect( () => {
+  //   if (selectedCategory) {
+  //     Actions.discontsMap();
+  //   }
+  // }, [selectedCategory])
 
   const openDiscountCategory = category => {
-    selectCategory(token, category);
+    setSelectedCategory(category);
+    Actions.discontsMap({selectedCategory: category});
   };
 
   const renderRows = () => {
@@ -38,13 +45,7 @@ const CategoriesScreen = props => {
     }
     return rows.map((row, index) => {
       return (
-        <CardItem
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-          }}
-          key={index}>
+        <CardItem style={itemContainer} key={index}>
           <Item
             onPress={() => openDiscountCategory(row[0])}
             imageSrc={getImageByCategoryId(row[0].id)}>
@@ -69,35 +70,7 @@ const CategoriesScreen = props => {
     });
   };
 
-  const renderContent = () => {
-    if (!loading) {
-      return (
-        <ScrollView
-          style={{
-            paddingLeft: 22,
-            paddingRight: 22,
-          }}>
-          {renderRows()}
-        </ScrollView>
-      );
-    } else {
-      return <Spiner />;
-    }
-  };
-
-  return renderContent();
+  return <ScrollView style={scrollContainer}>{renderRows()}</ScrollView>;
 };
-
-// const mapStateToProps = ({ auth, discounts }) => {
-//   return {
-//     token: auth.user.token,
-//     categories: discounts.categories,
-//     loading: discounts.loadingCategories,
-//   };
-// };
-
-// export default connect(mapStateToProps, { loadCategories, selectCategory })(
-//   CategoriesScreen
-// );
 
 export default CategoriesScreen;

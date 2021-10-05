@@ -1,51 +1,70 @@
-import React, {Component, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View} from 'react-native';
 import Tabs from 'react-native-tabs';
+import {useSelector, useDispatch} from 'react-redux';
 
 import {useTranslation} from 'react-i18next';
 
-import {MainCard, CardItem, Header} from '@aaua/components/common';
+import {MainCard, CardItem, Header, Spiner} from '@aaua/components/common';
 import CategoriesTab from '../Catalog';
 import DiscountsListTab from '../DiscountsList';
-import {DEVICE_OS, iOS, Android} from '@aaua/actions/constants';
+
+import {DEVICE_OS, iOS} from '@aaua/actions/constants';
+import {loadCategories, loadCards} from '@aaua/actions/DiscountsAction';
 
 import styles from './styles';
 
 const TabsComponent = () => {
   const {t} = useTranslation();
+  const dispatch = useDispatch();
+
   const [page, setPage] = useState('1');
+
+  const {
+    discounts,
+    auth: {user},
+  } = useSelector(state => state);
+
+  const {categories, loadingCategories: loading, discountsCards} = discounts;
+
+  useEffect(() => {
+    if (user) {
+      const {token} = user;
+      dispatch(loadCategories(token));
+      dispatch(loadCards(token));
+    }
+  }, [user]);
 
   const renderTabs = () => {
     console.log('renderTabs', page);
+    if (loading) {
+      return <Spiner />;
+    }
     switch (page) {
       case '1':
-        return <CategoriesTab />;
+        return <CategoriesTab categories={categories} />;
       case '2':
-        return <DiscountsListTab />;
-        default:
-          return <CategoriesTab />;
+        return <DiscountsListTab discountsCards={discountsCards}/>;
+      default:
+        return <Spiner />;
     }
   };
 
-  const {tabText, selectedTabText, selectedTab} = styles;
+  const {container, tabText, selectedTabText, selectedTab} = styles;
 
   return (
     <MainCard>
       <Header burger goToMain={DEVICE_OS == iOS ? true : false}>
         {t('discounts_screen.screen_header')}
       </Header>
-      <CardItem
-        style={{
-          flex: 0,
-          height: 50,
-        }}>
+      <CardItem style={container}>
         <Tabs
           selected={page}
           style={{
             top: 0,
           }}
           selectedStyle={selectedTabText}
-          onSelect={el => setPage(el.props.nam)}>
+          onSelect={el => setPage(el.props.name)}>
           <Text selectedIconStyle={selectedTab} style={tabText} name="1">
             {t('discounts_screen.catalog')}
           </Text>
