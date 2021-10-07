@@ -114,7 +114,14 @@ const Login = () => {
   return (
     <MainCard>
       <View style={imageWrapper}>
-        <Image style={imageStyle} source={require('@aaua/images/logo.png')} />
+        <View>
+          <Image style={imageStyle} source={require('@aaua/images/logo.png')} />
+        </View>
+        <View>
+          <Text>{t('login_screen.asociation')}</Text>
+          <Text>{t('login_screen.driwers')}</Text>
+          <Text>{t('login_screen.ukraine')}</Text>
+        </View>
       </View>
 
       <View style={inputsWrapper}>

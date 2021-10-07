@@ -2,9 +2,9 @@ import React, {useEffect} from 'react';
 import {Spiner} from '@aaua/components/common';
 import {getMyCard, orderCard} from '@aaua/actions/AAUA_CardAction';
 import {useSelector, useDispatch} from 'react-redux';
-import ButtonsScreen from './ButtonsScreen';
-import QRcode from './QRcode';
-import AZSListScreen from './AZSListScreen';
+import ButtonsScreen from '@aaua/Screens/Fuel/AauaCardVariants';
+import QRcode from '@aaua/components/AAUA_card/QRcode';
+import AZSListScreen from '@aaua/components/AAUA_card/AZSListScreen';
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -17,8 +17,9 @@ const Main = () => {
 
   useEffect(() => {
     dispatch(getMyCard(token));
-  }, []);
+  }, [token]);
 
+  console.log('--- render Fuel --', {token, myCards, loading});
   if (loading) {
     return <Spiner size={'large'} />;
   } else {

@@ -41,9 +41,9 @@ export default StyleSheet.create({
     flex: 3,
     height: 270,
     paddingTop: 47,
-    flexDirection: 'column',
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     // backgroundColor: '#794',
   },
   imageStyle: {

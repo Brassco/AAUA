@@ -40,7 +40,6 @@ const Map = ({selectedCategory}) => {
   const [latitude, setLatitude] = useState(50.447662);
   const [longitude, setLongitude] = useState(30.474047);
   const [error, setError] = useState(null);
-  const modalRef = useRef(null);
 
   const {auth, discounts} = useSelector(state => state);
   const {token} = auth.user;
@@ -102,7 +101,6 @@ const Map = ({selectedCategory}) => {
         console.log('You can use the geolocation');
         watchId = Geolocation.watchPosition(
           position => {
-            console.log('position-----', position);
             setLatitude(position.coords.latitude);
             setLongitude(position.coords.longitude);
             setError(null);
@@ -149,14 +147,6 @@ const Map = ({selectedCategory}) => {
     //     },
     // );
   };
-
-  // componentDidMount() {
-  //   this.requestPermission();
-  // }
-
-  // componentWillUnmount() {
-  //   Geolocation.clearWatch(this.watchId);
-  // }
 
   const renderContent = () => {
     const {container, map, mapSettings} = styles;

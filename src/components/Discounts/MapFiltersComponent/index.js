@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
 
+import {useTranslation} from 'react-i18next';
+
 import {ModalCard, MapButton} from '@aaua/components/common';
 
 import styles from './styles';
@@ -11,6 +13,8 @@ const MapFiltersComponent = ({
   selectCategory,
   onCloseModal,
 }) => {
+  const {t} = useTranslation();
+
   const [category, setCategory] = useState(selectedCategory);
 
   const {
@@ -48,8 +52,9 @@ const MapFiltersComponent = ({
     });
   };
 
-  const {modalCard, modalRow} = styles;
-  
+  const {modalCard, modalRow, buttonContainer, buttonText, buttonTextBold} =
+    styles;
+
   return (
     <ModalCard style={modalCard}>
       <View style={styles.modalRow}>{renderRows()}</View>
@@ -62,36 +67,12 @@ const MapFiltersComponent = ({
             marginBottom: 12,
           },
         ]}>
-        <TouchableOpacity
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          onPress={onCloseModal}>
-          <Text
-            style={{
-              fontFamily: 'SFUIText-Regular',
-              color: '#423486',
-              fontSize: 16,
-            }}>
-            Закрыть
-          </Text>
+        <TouchableOpacity style={buttonContainer} onPress={onCloseModal}>
+          <Text style={buttonText}>{t('map_screen.modal.close')}</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          onPress={applyFilters}>
-          <Text
-            style={{
-              fontFamily: 'SFUIText-Semibold',
-              color: '#423486',
-              fontSize: 16,
-            }}>
-            Применить
+        <TouchableOpacity style={buttonContainer} onPress={applyFilters}>
+          <Text style={[buttonText, buttonTextBold]}>
+            {t('map_screen.modal.apply')}
           </Text>
         </TouchableOpacity>
       </View>
