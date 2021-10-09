@@ -8,68 +8,35 @@ import {
   MainCard,
   CardItem,
   ButtonRoundet,
-  //   LabelOnInput,
   Header,
-  Autocomplete,
-  DropDown,
   ClickableTextRow,
 } from '@aaua/components/common';
 import TextInput from '@aaua/components/common/Inputs/TextInput';
 import {
-  changeYear,
-  changeCar,
-  changeCarBrand,
   orderKasko,
-  selectBrand,
   getCarModel,
-  selectModel,
   resetData,
 } from '@aaua/actions/InsuranceAction';
 import {DEVICE_OS, iOS} from '@aaua/actions/constants';
-import {getBrands} from '@aaua/actions/CitiesBrands';
 import {showAlert} from '@aaua/components/Modals';
 
 import styles from './styles';
 
 const Kasko = props => {
   const {t} = useTranslation();
-  //   constructor(props) {
-  //     super(props);
-
-  //     this.state = {
-  //       enableScrollViewScroll: true,
-  //       searchedCities: [],
-  //       searchedBrands: [],
-  //       rowHeight: DEVICE_OS == iOS ? 1 : 2,
-  //       carPrice: 0,
-  //     };
-
-  //     this.onChangeCarPrice = this.onChangeCarPrice.bind(this);
-  //     this.onOrder = this.onOrder.bind(this);
-  //   }
 
   const {
     auth: {
       user: {token},
     },
-    insurance: {
-    //   car,
-      //   carBrand,
-    //   carBrandId,
-    //   year,
-    //   carModels,
-    //   carModel,
-      kaskoOrderSuccess,
-    },
+    insurance: {kaskoOrderSuccess},
     citiesBrands: {brands},
-    // carPrice: insurance.carPrice,
   } = useSelector(state => state);
 
   const dispatch = useDispatch();
 
   const {textInputWrapper, buttonStyle} = styles;
 
-  const [enableScrollViewScroll, setEnableScrollViewScroll] = useState(true);
   const [carPrice, setCarPrice] = useState('0');
   const [carBrand, setCarBrand] = useState('');
   const [carYear, setCarYear] = useState();
@@ -91,25 +58,12 @@ const Kasko = props => {
     }
   }, [selectedBrand]);
 
-//   const onChangeCar = itemValue => {
-//     changeCar(itemValue);
-//   };
-
   const onSelectBrand = brand => {
-    // this.setState({searchedBrands: [], rowHeight: 2});
-    // setSearchedBrands([]);
-    // selectBrand(brand);
-    // console.log('----onSelectBrand----', brand);
     setSelectedBrand(brand);
     dispatch(getCarModel(brand.id));
   };
 
-//   const onChangeYear = year => {
-//     changeYear(year);
-//   };
-
   const onChangeCarModel = model => {
-    console.log('--- KASKO onChangeCarModel', model);
     setSelectedCarModel(model);
   };
 
