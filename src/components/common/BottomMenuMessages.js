@@ -30,7 +30,7 @@ class BottomMenuMessages extends Component {
         <View
           style={{
             height: 50,
-            // backgroundColor: '#16ff11',
+            backgroundColor: '#16ff11',
           }}>
           {this.renderCounter()}
         </View>
@@ -43,8 +43,9 @@ const styles = {
   textContainer: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
+    // backgroundColor: '#193',s
   },
   textStyle: {
     fontFamily: 'SFUIText-Regular',

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View} from 'react-native';
 
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import {MainCard, Header} from '@aaua/components/common';
 import {PhoneInput} from '@aaua/components/common/Inputs';
@@ -12,7 +12,6 @@ import {sendData} from '@aaua/actions/ForgotPassAction';
 import styles from './styles';
 
 const ForgotPassword = props => {
-  const {t} = useTranslation();
 
   const [phone, setPhone] = useState('');
 
@@ -28,13 +27,13 @@ const ForgotPassword = props => {
 
   return (
     <MainCard>
-      <Header back>{t('screen_headers.restore_pass')}</Header>
+      <Header back>{I18n.t('screen_headers.restore_pass')}</Header>
       <View style={inputWrapper}>
         <PhoneInput value={phone} onChangeText={onPhoneChange} />
       </View>
       <View style={buttonWrapper}>
         <ButtonRoundet onPress={() => onSubmit()}>
-          {t('buttons.restore_pass')}
+          {I18n.t('buttons.restore_pass')}
         </ButtonRoundet>
       </View>
     </MainCard>

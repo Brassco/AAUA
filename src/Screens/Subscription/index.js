@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import {getData, buySubscription} from '@aaua/actions/SubscriptionAction';
 import {showAlert} from '@aaua/components/Modals';
@@ -33,8 +33,6 @@ const bannerHeight = width * 0.61;
 const imgBanner = require('@aaua/images/subscription_banner.png');
 
 const Subscription = () => {
-
-  const {t} = useTranslation();
 
   const {
     subscription: {price_month, price, bought_at, loading},
@@ -75,7 +73,7 @@ const Subscription = () => {
     if (loading == false) {
       return (
         <View style={amountContainer}>
-          <Text style={amountStyle}>{price} грн/год</Text>
+          <Text style={amountStyle}>{price} грн/рік</Text>
         </View>
       );
     }
@@ -91,7 +89,7 @@ const Subscription = () => {
     if (loading == false) {
       return (
         <View style={amountContainer}>
-          <Text style={amountStyle}>{price_month} грн/месяц</Text>
+          <Text style={amountStyle}>{price_month} грн/місяць</Text>
         </View>
       );
     }
@@ -112,7 +110,7 @@ const Subscription = () => {
         type={type}
       />
       <Header burger goToMain={DEVICE_OS == iOS ? true : false}>
-      {t('subscription_screen.screen_header')}
+        {I18n.t('subscription_screen.screen_header')}
       </Header>
       <ScrollView>
         <CardItem style={imageContainer}>
@@ -150,7 +148,7 @@ const Subscription = () => {
               height: 45,
             }}
             onPress={() => onShowModalNumber(false)}>
-            {t('buttons.buy')}
+            {I18n.t('buttons.buy')}
           </ButtonRoundet>
         </CardItem>
         <CardItem
@@ -177,42 +175,32 @@ const Subscription = () => {
               height: 45,
             }}
             onPress={() => onShowModalNumber(true)}>
-            {t('buttons.buy')}
+            {I18n.t('buttons.buy')}
           </ButtonRoundet>
         </CardItem>
         <CardItem style={checkboxesContainer}>
-          <Text style={textStyle}>{t('subscription_screen.description_header')}</Text>
+          <Text style={textStyle}>
+            {I18n.t('subscription_screen.description_header')}
+          </Text>
           <DetailsItem>
-          {t('subscription_screen.description_tech_asist')}
+            {I18n.t('subscription_screen.description_tech_asist')}
           </DetailsItem>
           <DetailsItem>
-          {t('subscription_screen.description_legal_asist')}
+            {I18n.t('subscription_screen.description_legal_asist')}
           </DetailsItem>
           <DetailsItem>
-          {t('subscription_screen.description_insurance_asist')}
+            {I18n.t('subscription_screen.description_insurance_asist')}
           </DetailsItem>
-          <DetailsItem>{t('subscription_screen.description_bonus_system')}</DetailsItem>
-          <DetailsItem>{t('subscription_screen.description_services')}</DetailsItem>
-          {/*
-                    <DetailsItem >
-                        Первичные консультации в случае ДТП.
-                    </DetailsItem>
-                    <DetailsItem >
-                        Доступ к базе образцов документов.
-                    </DetailsItem>
-                    <DetailsItem >
-                        Консультации по вопросам выплат и взаимодействия со страховыми компаниями.
-                    </DetailsItem>
-                    <DetailsItem >
-                        Консьерж-сервис 24/7
-                    </DetailsItem>
-                    */}
+          <DetailsItem>
+            {I18n.t('subscription_screen.description_bonus_system')}
+          </DetailsItem>
+          <DetailsItem>
+            {I18n.t('subscription_screen.description_services')}
+          </DetailsItem>
         </CardItem>
         <CardItem>
           <TouchableOpacity
-            onPress={() => {
-              Actions.SubscriptionDetailsComponent();
-            }}
+            onPress={Actions.SubscriptionDetailsComponent}
             style={{
               width: '100%',
               height: 50,
@@ -225,7 +213,7 @@ const Subscription = () => {
                 fontSize: 15,
                 fontWeight: '600',
               }}>
-              {t('subscription_screen.description_details')}
+              {I18n.t('subscription_screen.description_details')}
             </Text>
           </TouchableOpacity>
         </CardItem>
@@ -243,7 +231,7 @@ const Subscription = () => {
                 color: '#423486',
                 fontSize: 15,
               }}>
-              {t('subscription_screen.description_contract')}
+              {I18n.t('subscription_screen.description_contract')}
             </Text>
           </TouchableOpacity>
         </CardItem>
@@ -251,6 +239,5 @@ const Subscription = () => {
     </MainCard>
   );
 };
-
 
 export default Subscription;

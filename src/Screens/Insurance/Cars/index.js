@@ -1,14 +1,13 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
 
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import {MainCard, Header} from '@aaua/components/common';
 import AutocompleteScreen from '@aaua/components/common/AutocompleteScreen';
 import {DEVICE_OS, iOS} from '@aaua/actions/constants';
 
 const CarsScreen = ({onSelectBrand}) => {
-  const {t} = useTranslation();
 
   const defaultSearchedCars = [
     {id: '7', title: 'Audi'},
@@ -25,13 +24,13 @@ const CarsScreen = ({onSelectBrand}) => {
   return (
     <MainCard>
       <Header goToMain={DEVICE_OS == iOS ? true : false}>
-        {t('insurance_screen.kasko.select_car_brand_header')}
+        {I18n.t('insurance_screen.kasko.select_car_brand_header')}
       </Header>
       <AutocompleteScreen
         defaultList={defaultSearchedCars}
         data={brands}
         onSelect={onSelectBrand}
-        textInputPlacehokder={t('insurance_screen.kasko.select_car_brand')}
+        textInputPlaceholder={I18n.t('insurance_screen.kasko.select_car_brand')}
       />
     </MainCard>
   );

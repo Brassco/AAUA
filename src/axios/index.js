@@ -9,11 +9,13 @@ axios.defaults.baseURL = API_URL;
 
 axios.interceptors.request.use(
   function (config) {
-    console.log(' --- axios.interceptors ---', config)
+    console.log('---axios.interceptors.request---', config.url.indexOf('wp-json'));
     if (config.data) {
-      const jsonData = JSON.stringify(config.data);
-      const signature = md5(SECRET_KEY + jsonData);
-      config.headers.Signature = signature;
+      if (config.url.indexOf('wp-json') < 1) {
+        const jsonData = JSON.stringify(config.data);
+        const signature = md5(SECRET_KEY + jsonData);
+        config.headers.Signature = signature;
+      }
     }
     return config;
   },

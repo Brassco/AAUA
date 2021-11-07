@@ -7,11 +7,11 @@ import {getBrandsForFilters} from '../../../actions/StoreAction';
 
 class FiltersModal extends React.Component {
 
-    componentWillMount() {
-        let {getBrandsForFilters, phone, token} = this.props;
-console.log(phone, token);
-        getBrandsForFilters(token, phone);
-    }
+//     componentWillMount() {
+//         let {getBrandsForFilters, phone, token} = this.props;
+// console.log(phone, token);
+//         getBrandsForFilters(token, phone);
+//     }
 
     onCheckFilter(filterId) {
         let {checkFilters} = this.props;

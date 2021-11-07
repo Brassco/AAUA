@@ -1,19 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {
-  Text,
-  View,
-  Image,
-  TouchableHighlight,
-  Platform,
-  BackHandler,
-  TouchableOpacity,
-} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {View, Image, TouchableOpacity} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import ImageSlider from 'react-native-image-slider';
-import {connect, useSelector, useDispatch} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import {BottomMenuItem} from '@aaua/components/common/BottomMenuItem';
 import {getSliderImages, getBonusesWog} from '@aaua/actions/CitiesBrands';
@@ -30,7 +21,6 @@ import {
 } from '@aaua/components/common';
 
 const HomeScreen = props => {
-  const {t} = useTranslation();
   const {auth, citiesBrands, messages} = useSelector(state => state);
   const user = auth.user;
   const bonus = auth.user ? citiesBrands.bonuses : 0;
@@ -38,7 +28,7 @@ const HomeScreen = props => {
   const images = citiesBrands.sliderImages;
   const messagesCounter = messages.messagesCounter;
 
-  const {sliderImageWrapper, bottomButton} = styles;
+  const {sliderImageWrapper, bottomButton, customSlide, customImage} = styles;
 
   const dispatch = useDispatch();
 
@@ -54,41 +44,56 @@ const HomeScreen = props => {
   return (
     <MainCard>
       <Header burger>{'AAUA'}</Header>
-      <CardItem style={sliderImageWrapper}>
+      <View
+        style={{
+          flex: 1,
+        }}>
         <ImageSlider
-          onPress={image => {
-            console.log('ON PRESS IMAGE', image);
-            Actions.imageContent({
-              images: images,
-              index: image.index,
-            });
-          }}
           images={images}
           autoPlayWithInterval={4000}
+          customSlide={({index, item, style, width}) => {
+            return (
+              <TouchableOpacity
+                onPress={item => {
+                  Actions.imageContent({
+                    images: images,
+                    index: index,
+                  });
+                }}
+                key={index}
+                style={[style, customSlide]}>
+                <Image source={{uri: item.url}} style={customImage} />
+              </TouchableOpacity>
+            );
+          }}
         />
-      </CardItem>
-      <CardItem>
+      </View>
+      <View
+        style={{
+          height: 70,
+          // backgroundColor: '#193'
+        }}>
         <BottomMenu>
           <BottomMenuItem
             style={bottomButton}
             counter={bonus_wog}
             imageSrc={require('@aaua/images/icons/wog.png')}>
-            {t('bottomMenu.bonus_wog')}
+            {I18n.t('bottomMenu.bonus_wog')}
           </BottomMenuItem>
           <BottomMenuItem
             style={bottomButton}
             counter={bonus}
             imageSrc={require('@aaua/images/icons/aaua.png')}>
-            {t('bottomMenu.bonus_aaua')}
+            {I18n.t('bottomMenu.bonus_aaua')}
           </BottomMenuItem>
           <BottomMenuMessages
             counter={messagesCounter}
             onPress={Actions.messages}
             imageSrc={require('@aaua/images/icons/mail.png')}>
-            {t('bottomMenu.messages')}
+            {I18n.t('bottomMenu.messages')}
           </BottomMenuMessages>
         </BottomMenu>
-      </CardItem>
+      </View>
     </MainCard>
   );
 };

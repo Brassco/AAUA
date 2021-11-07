@@ -15,7 +15,7 @@ const AutocompleteScreen = ({
   defaultList,
   data,
   onSelect,
-  textInputPlacehokder,
+  textInputPlaceholder,
 }) => {
   // const {t} = useTranslation();
 
@@ -55,7 +55,7 @@ const AutocompleteScreen = ({
   };
 
   const onChangeCar = title => {
-    if (title.length >= 2) {
+    if (title.length >= 1) {
       searchingItems(title);
     }
     setText(title);
@@ -92,7 +92,7 @@ const AutocompleteScreen = ({
           style={textInputStyle}
           autoCorrect={false}
           placeholderTextColor={'#414244'}
-          placeholder={textInputPlacehokder}
+          placeholder={textInputPlaceholder}
           onChangeText={onChangeCar}
           value={text}
         />

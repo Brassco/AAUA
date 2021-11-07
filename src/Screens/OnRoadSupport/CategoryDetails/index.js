@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {Actions} from 'react-native-router-flux';
 import {useSelector, useDispatch} from 'react-redux';
 
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import {
   MainCard,
@@ -23,7 +23,6 @@ import {
 } from '@aaua/actions/OnRoadActions';
 
 const CategoryDetails = ({category}) => {
-  const {t} = useTranslation();
 
   const {
     onRoad: {loading, details, orderSupportMessage, orderError},
@@ -46,16 +45,16 @@ const CategoryDetails = ({category}) => {
   useEffect(() => {
     if (orderSupportMessage != null) {
       showAlert(
-        t('on_road_support_screen.details.thanks'),
+        I18n.t('on_road_support_screen.details.thanks'),
         orderSupportMessage,
-        t('on_road_support_screen.details.close'),
+        I18n.t('on_road_support_screen.details.close'),
         () => {
           Actions.reset('drawer');
         },
       );
     }
     if (orderError != null) {
-      showAlert(t('on_road_support_screen.details.error'), orderError, 'OK');
+      showAlert(I18n.t('on_road_support_screen.details.error'), orderError, 'OK');
     }
   }, [orderSupportMessage, orderError]);
 
@@ -107,7 +106,7 @@ const CategoryDetails = ({category}) => {
               alignItems: 'flex-start',
             }}>
             <ButtonRoundet onPress={onSubmit} style={buttonStyle}>
-              Заказать
+              {I18n.t('on_road_support_screen.details.order')}
             </ButtonRoundet>
           </CardItem>
         </MainCard>

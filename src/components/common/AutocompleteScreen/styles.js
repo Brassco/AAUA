@@ -43,5 +43,8 @@ export default StyleSheet.create({
     width: '100%',
     borderBottomColor: '#414244',
     borderBottomWidth: 1,
+    fontFamily: 'SFUIText-Medium',
+    fontSize: 14,
+    color: '#222',
   },
 });

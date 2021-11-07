@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
 
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import {ModalCard, MapButton} from '@aaua/components/common';
 
@@ -13,7 +13,6 @@ const MapFiltersComponent = ({
   selectCategory,
   onCloseModal,
 }) => {
-  const {t} = useTranslation();
 
   const [category, setCategory] = useState(selectedCategory);
 
@@ -68,11 +67,11 @@ const MapFiltersComponent = ({
           },
         ]}>
         <TouchableOpacity style={buttonContainer} onPress={onCloseModal}>
-          <Text style={buttonText}>{t('map_screen.modal.close')}</Text>
+          <Text style={buttonText}>{I18n.t('map_screen.modal.close')}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={buttonContainer} onPress={applyFilters}>
           <Text style={[buttonText, buttonTextBold]}>
-            {t('map_screen.modal.apply')}
+            {I18n.t('map_screen.modal.apply')}
           </Text>
         </TouchableOpacity>
       </View>

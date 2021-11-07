@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text} from 'react-native';
 
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import TextInput from '@aaua/components/common/Inputs/TextInputWithLabel';
 
@@ -9,10 +9,8 @@ import styles from './styles';
 
 const PhoneInput = props => {
   const {containerStyle} = styles;
-  const {onChangeText, label, placeholder, value, secureTextEntry, onFocus} =
+  const {onChangeText, label, placeholder, value, secureTextEntry, onBlur} =
     props;
-
-  const {t} = useTranslation();
 
   const handleChange = text => {
     if (text.length <= 1) {
@@ -23,7 +21,6 @@ const PhoneInput = props => {
   };
 
   const handleOnFocus = () => {
-    console.log('===handleOnFocus', value);
     if (value == '') {
       onChangeText('+380');
     }
@@ -32,10 +29,11 @@ const PhoneInput = props => {
   return (
     <View style={containerStyle}>
       <TextInput
-        label={label || t('labels.phone_number')}
+        label={label || I18n.t('labels.phone_number')}
         placeholder={placeholder || '+380'}
         {...props}
         onFocus={handleOnFocus}
+        onBlur={onBlur}
         placeholderTextColor="#b6b9bf"
         multiline={false}
         maxLength={13}

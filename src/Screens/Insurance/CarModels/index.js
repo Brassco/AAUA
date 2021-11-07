@@ -1,7 +1,7 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
 
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import {MainCard, Header} from '@aaua/components/common';
 import {DEVICE_OS, iOS} from '@aaua/actions/constants';
@@ -9,8 +9,6 @@ import {DEVICE_OS, iOS} from '@aaua/actions/constants';
 import AutocompleteScreen from '@aaua/components/common/AutocompleteScreen';
 
 const CarModels = (props) => {
-
-  const {t} = useTranslation();
 
   const {insurance: {carModels}} = useSelector( state => state);
 
@@ -25,7 +23,7 @@ const CarModels = (props) => {
         defaultList={[]}
         data={carModels}
         onSelect={onChangeCarModel}
-        textInputPlacehokder={t('insurance_screen.kasko.car_model.placeholder')}
+        textInputPlaceholder={I18n.t('insurance_screen.kasko.car_model.placeholder')}
       />
     </MainCard>
   );

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import TextInput from '@aaua/components/common/Inputs/TextInputWithLabel';
 
@@ -9,7 +9,7 @@ import styles from './styles';
 
 const PasswordInput = props => {
 
-  const {t} = useTranslation();
+  // const {t} = useTranslation();
 
   const [hidePass, setHidePass] = useState(true);
 
@@ -23,9 +23,9 @@ const PasswordInput = props => {
     <View style={wrapper}>
       <View style={inputWrapper}>
         <TextInput
-          label={label || t('labels.password')}
+          label={label || I18n.t('labels.password')}
           placeholderTextColor="#b6b9bf"
-          placeholder={placeholder || t('placeholders.password')}
+          placeholder={placeholder || I18n.t('placeholders.password')}
           secureTextEntry={hidePass}
           value={value}
           onChangeText={onChangeText}

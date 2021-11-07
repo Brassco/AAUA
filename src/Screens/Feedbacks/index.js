@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, Image, TouchableOpacity, Linking} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import {
   MainCard,
@@ -28,7 +28,6 @@ import {feedbackPhone} from '@aaua/services/config';
 import styles from './styles';
 
 const FeedBack = () => {
-  const {t} = useTranslation();
 
   const dispatch = useDispatch();
   const {
@@ -41,7 +40,7 @@ const FeedBack = () => {
 
   useEffect(() => {
     if (feedbackSubmited) {
-      showAlert('', t('feedback_screen.modal.message'), 'OK');
+      showAlert('', I18n.t('feedback_screen.modal.message'), 'OK');
     }
   }, [feedbackSubmited]);
 
@@ -74,7 +73,7 @@ const FeedBack = () => {
   return (
     <MainCard>
       <Header burger goToMain={DEVICE_OS == iOS ? true : false}>
-        {t('feedback_screen.header')}
+        {I18n.t('feedback_screen.header')}
       </Header>
       <CardItem style={titleContainer}>
         <View
@@ -82,7 +81,7 @@ const FeedBack = () => {
             marginTop: 33 * RATIO,
             marginBottom: 19 * RATIO,
           }}>
-          <Text style={phoneText}>{t('feedback_screen.service_phone')}</Text>
+          <Text style={phoneText}>{I18n.t('feedback_screen.service_phone')}</Text>
         </View>
         <View style={phoneContainer}>
           <Icon
@@ -102,16 +101,16 @@ const FeedBack = () => {
       </CardItem>
       <CardItem style={textInputWrapper}>
         <TextInput
-          label={t('feedback_screen.subject.title')}
-          placeholder={t('feedback_screen.subject.placeholder')}
+          label={I18n.t('feedback_screen.subject.title')}
+          placeholder={I18n.t('feedback_screen.subject.placeholder')}
           onChangeText={setSubject}
           value={subject}
         />
       </CardItem>
       <CardItem style={textInputWrapper}>
         <TextInput
-          label={t('feedback_screen.message.title')}
-          placeholder={t('feedback_screen.message.placeholder')}
+          label={I18n.t('feedback_screen.message.title')}
+          placeholder={I18n.t('feedback_screen.message.placeholder')}
           onChangeText={setMessage}
           value={message}
         />
@@ -130,7 +129,7 @@ const FeedBack = () => {
           }}
           textStyle={{color: '#1B1B1B'}}
           onPress={onSubmitFeedback}>
-          {t('feedback_screen.send')}
+          {I18n.t('feedback_screen.send')}
         </ButtonRoundet>
       </CardItem>
     </MainCard>

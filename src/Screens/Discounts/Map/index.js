@@ -7,14 +7,15 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
-import MapView, {Marker, Callout} from 'react-native-maps';
+import MapView, {Marker, CalloutSubview, Callout} from 'react-native-maps';
 import Modal from 'react-native-modalbox';
 import {useSelector, useDispatch} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
-import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
-import CustomMarker from '@aaua/components/Discounts/CustomMarker';
+// import CustomMarker from '@aaua/components/Discounts/CustomMarker';
+import {BASE_URL} from '@aaua/actions/constants';
+import CustomCallout from '@aaua/components/Discounts/CustomCallout';
 import MapFiltersComponent from '@aaua/components/Discounts/MapFiltersComponent';
 import {
   MainCard,
@@ -31,7 +32,6 @@ import {loadCategoryPlaces} from '@aaua/actions/DiscountsAction';
 import styles from './styles';
 
 const Map = ({selectedCategory}) => {
-  const {t} = useTranslation();
 
   const dispatch = useDispatch();
 
@@ -56,7 +56,7 @@ const Map = ({selectedCategory}) => {
   }, []);
 
   useEffect(() => {
-    console.log('---Map useEffect ---', category)
+    console.log('---Map useEffect ---', category);
     if (category) {
       dispatch(loadCategoryPlaces(token, category));
     }
@@ -67,18 +67,24 @@ const Map = ({selectedCategory}) => {
   };
 
   const renderMarkers = () => {
-    console.log('---render Markers', places)
     if (places) {
       return places.map(marker => {
         if (marker.lat) {
           const latitude = parseFloat(marker.lat);
           const longitude = parseFloat(marker.lon);
+          const uri = BASE_URL + marker.img;
+          console.log('---render Marker', {marker, uri});
           return (
             <Marker
               key={marker.id}
               coordinate={{latitude: latitude, longitude: longitude}}>
-              <Callout onPress={() => Actions.MarkerInfo(marker)}>
-                <CustomMarker {...marker} />
+              <Callout
+                alphaHitTest
+                tooltip
+                onPress={e => {
+                  Actions.MarkerInfo(marker);
+                }}>
+                <CustomCallout uri={uri}/>
               </Callout>
             </Marker>
           );
@@ -92,8 +98,8 @@ const Map = ({selectedCategory}) => {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
-          title: t('location_request.title'),
-          message: t('location_request.message'),
+          title: I18n.t('location_request.title'),
+          message: I18n.t('location_request.message'),
         },
       );
       console.log(granted);

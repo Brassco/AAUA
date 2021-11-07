@@ -10,7 +10,7 @@ import {
   Linking,
 } from 'react-native';
 
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import {MainCard, CardItem, Header} from '@aaua/components/common';
 import {RATIO, WIDTH_RATIO} from '@aaua/styles/constants';
@@ -27,7 +27,6 @@ import styles from './styles';
 const imgBanner = require('@aaua/images/subscription_banner.png');
 
 const DetailsComponent = () => {
-  const {t} = useTranslation();
 
   const {
     textStyle,
@@ -41,7 +40,7 @@ const DetailsComponent = () => {
   return (
     <MainCard>
       <Header back goToMain={DEVICE_OS == iOS ? true : false}>
-        {t('subscription_screen.screen_header')}
+        {I18n.t('subscription_screen.screen_header')}
       </Header>
       <ScrollView>
         <CardItem style={imageContainer}>
@@ -54,65 +53,65 @@ const DetailsComponent = () => {
         <CardItem>
           <View style={styles.textContainer}>
             <Text style={textStyle}>
-              {t('subscription_screen.details.what_is_subscription')}
+              {I18n.t('subscription_screen.details.what_is_subscription')}
             </Text>
           </View>
         </CardItem>
         <CardItem>
           <View style={styles.textTitleConteinerStyle}>
             <Text style={styles.textTitleStyle}>
-              {t('subscription_screen.details.tech_help')}
+              {I18n.t('subscription_screen.details.tech_help')}
             </Text>
           </View>
         </CardItem>
         <CardItem>
           <View style={styles.textContainer}>
             <Text style={textStyle}>
-              {t('subscription_screen.details.tech_help_description')}
+              {I18n.t('subscription_screen.details.tech_help_description')}
             </Text>
           </View>
         </CardItem>
         <CardItem>
           <View style={styles.textTitleConteinerStyle}>
             <Text style={styles.textTitleStyle}>
-              {t('subscription_screen.details.car_evacuation')}
+              {I18n.t('subscription_screen.details.car_evacuation')}
             </Text>
           </View>
         </CardItem>
         <CardItem>
           <View style={styles.textContainer}>
             <Text style={textStyle}>
-              {t('subscription_screen.details.car_evacuation_point_1')}
+              {I18n.t('subscription_screen.details.car_evacuation_point_1')}
             </Text>
             <Text style={textStyle}>
-              {t('subscription_screen.details.car_evacuation_point_2')}
+              {I18n.t('subscription_screen.details.car_evacuation_point_2')}
             </Text>
             <Text style={textStyle}>
-              {t('subscription_screen.details.car_evacuation_point_3')}
+              {I18n.t('subscription_screen.details.car_evacuation_point_3')}
             </Text>
             <Text style={textStyle}>
-              {t('subscription_screen.details.car_evacuation_point_4')}
+              {I18n.t('subscription_screen.details.car_evacuation_point_4')}
             </Text>
             <Text style={textStyle}>
-              {t('subscription_screen.details.car_evacuation_cost')}
+              {I18n.t('subscription_screen.details.car_evacuation_cost')}
             </Text>
           </View>
         </CardItem>
         <CardItem>
           <View style={styles.textTitleConteinerStyle}>
             <Text style={styles.textTitleStyle}>
-              {t('subscription_screen.details.fuel_delivery')}
+              {I18n.t('subscription_screen.details.fuel_delivery')}
             </Text>
           </View>
         </CardItem>
         <CardItem>
           <View style={styles.textContainer}>
             <Text style={textStyle}>
-              {` ${t('subscription_screen.details.fuel_delivery_description')}
+              {` ${I18n.t('subscription_screen.details.fuel_delivery_description')}
 
-- ${t('subscription_screen.details.fuel_delivery_description_point_1')}
+- ${I18n.t('subscription_screen.details.fuel_delivery_description_point_1')}
 
-- ${t('subscription_screen.details.fuel_delivery_description_point_2')}
+- ${I18n.t('subscription_screen.details.fuel_delivery_description_point_2')}
 `}
             </Text>
           </View>
@@ -120,7 +119,7 @@ const DetailsComponent = () => {
         <CardItem>
           <View style={styles.textTitleConteinerStyle}>
             <Text style={styles.textTitleStyle}>
-              {t('subscription_screen.details.start_engine.title')}
+              {I18n.t('subscription_screen.details.start_engine.title')}
             </Text>
           </View>
         </CardItem>
@@ -128,13 +127,13 @@ const DetailsComponent = () => {
           <View style={styles.textContainer}>
             <Text style={textStyle}>
               {`
-${t('subscription_screen.details.start_engine.description')}
+${I18n.t('subscription_screen.details.start_engine.description')}
 
-- ${t('subscription_screen.details.start_engine.point_1')}
+- ${I18n.t('subscription_screen.details.start_engine.point_1')}
 
-- ${t('subscription_screen.details.start_engine.point_2')}
+- ${I18n.t('subscription_screen.details.start_engine.point_2')}
 
-- ${t('subscription_screen.details.start_engine.point_3')}
+- ${I18n.t('subscription_screen.details.start_engine.point_3')}
 `}
             </Text>
           </View>
@@ -142,20 +141,20 @@ ${t('subscription_screen.details.start_engine.description')}
         <CardItem>
           <View style={styles.textTitleConteinerStyle}>
             <Text style={styles.textTitleStyle}>
-              {t('subscription_screen.details.wheel_change.title')}
+              {I18n.t('subscription_screen.details.wheel_change.title')}
             </Text>
           </View>
         </CardItem>
         <CardItem>
           <View style={styles.textContainer}>
             <Text style={textStyle}>
-              {`${t('subscription_screen.details.wheel_change.description')}
+              {`${I18n.t('subscription_screen.details.wheel_change.description')}
 
-- ${t('subscription_screen.details.wheel_change.point_1')}
+- ${I18n.t('subscription_screen.details.wheel_change.point_1')}
 
-- ${t('subscription_screen.details.wheel_change.point_2')}
+- ${I18n.t('subscription_screen.details.wheel_change.point_2')}
 
-- ${t('subscription_screen.details.wheel_change.point_3')}
+- ${I18n.t('subscription_screen.details.wheel_change.point_3')}
 `}
             </Text>
           </View>
@@ -163,20 +162,20 @@ ${t('subscription_screen.details.start_engine.description')}
         <CardItem>
           <View style={styles.textTitleConteinerStyle}>
             <Text style={styles.textTitleStyle}>
-              {t('subscription_screen.details.emergancy_door_open.title')}
+              {I18n.t('subscription_screen.details.emergancy_door_open.title')}
             </Text>
           </View>
         </CardItem>
         <CardItem>
           <View style={styles.textContainer}>
             <Text style={textStyle}>
-              {`${t(
+              {`${I18n.t(
                 'subscription_screen.details.emergancy_door_open.description',
               )}
 
-- ${t('subscription_screen.details.emergancy_door_open.point_1')}
+- ${I18n.t('subscription_screen.details.emergancy_door_open.point_1')}
 
-- ${t('subscription_screen.details.emergancy_door_open.point_2')}
+- ${I18n.t('subscription_screen.details.emergancy_door_open.point_2')}
 `}
             </Text>
           </View>
@@ -185,28 +184,28 @@ ${t('subscription_screen.details.start_engine.description')}
         <CardItem>
           <View style={styles.textTitleConteinerStyle}>
             <Text style={styles.textTitleStyle}>
-              {t('subscription_screen.details.legal_help.title')}
+              {I18n.t('subscription_screen.details.legal_help.title')}
             </Text>
           </View>
         </CardItem>
         <CardItem style={{flexDirection: 'column'}}>
           <View style={styles.textContainer}>
             <Text style={textStyle}>
-              {`${t('subscription_screen.details.legal_help.description')}
+              {`${I18n.t('subscription_screen.details.legal_help.description')}
 
-- ${t('subscription_screen.details.legal_help.point_1')}
+- ${I18n.t('subscription_screen.details.legal_help.point_1')}
 
-- ${t('subscription_screen.details.legal_help.point_2')}
+- ${I18n.t('subscription_screen.details.legal_help.point_2')}
 
-- ${t('subscription_screen.details.legal_help.point_3')}
+- ${I18n.t('subscription_screen.details.legal_help.point_3')}
 
-- ${t('subscription_screen.details.legal_help.point_4')}
+- ${I18n.t('subscription_screen.details.legal_help.point_4')}
 
-- ${t('subscription_screen.details.legal_help.point_5')}
+- ${I18n.t('subscription_screen.details.legal_help.point_5')}
 
-- ${t('subscription_screen.details.legal_help.point_6')}
+- ${I18n.t('subscription_screen.details.legal_help.point_6')}
 
-- ${t('subscription_screen.details.legal_help.point_7')}
+- ${I18n.t('subscription_screen.details.legal_help.point_7')}
 `}
             </Text>
           </View>
@@ -214,17 +213,17 @@ ${t('subscription_screen.details.start_engine.description')}
         <CardItem style={{flexDirection: 'column'}}>
           <View style={styles.textContainer}>
             <Text style={styles.textTitleStyle}>
-              {t('subscription_screen.details.legal_help.notice.title')}
+              {I18n.t('subscription_screen.details.legal_help.notice.title')}
             </Text>
           </View>
           <View style={styles.textContainer}>
             <Text style={textStyle}>
               {`
-- ${t('subscription_screen.details.legal_help.notice.point_1')}
+- ${I18n.t('subscription_screen.details.legal_help.notice.point_1')}
 
-- ${t('subscription_screen.details.legal_help.notice.point_2')}
+- ${I18n.t('subscription_screen.details.legal_help.notice.point_2')}
 
-- ${t('subscription_screen.details.legal_help.notice.point_3')}
+- ${I18n.t('subscription_screen.details.legal_help.notice.point_3')}
 `}
             </Text>
           </View>
@@ -232,7 +231,7 @@ ${t('subscription_screen.details.start_engine.description')}
         <CardItem>
           <View style={styles.textTitleConteinerStyle}>
             <Text style={styles.textTitleStyle}>
-              {t('subscription_screen.details.consultation.title')}
+              {I18n.t('subscription_screen.details.consultation.title')}
             </Text>
           </View>
         </CardItem>
@@ -244,32 +243,32 @@ ${t('subscription_screen.details.start_engine.description')}
           }}>
           <View style={styles.textContainer}>
             <Text style={[textStyle, {fontSize: 18}]}>
-              {t(
+              {I18n.t(
                 'subscription_screen.details.consultation.location_information.title',
               )}
             </Text>
           </View>
           <View style={styles.textContainer}>
             <Text style={textStyle}>
-              {`-${t(
+              {`-${I18n.t(
                 'subscription_screen.details.consultation.location_information.point_1',
               )}
 
--${t('subscription_screen.details.consultation.location_information.point_2')}
+-${I18n.t('subscription_screen.details.consultation.location_information.point_2')}
 
--${t('subscription_screen.details.consultation.location_information.point_3')}
+-${I18n.t('subscription_screen.details.consultation.location_information.point_3')}
 
--${t('subscription_screen.details.consultation.location_information.point_4')}
+-${I18n.t('subscription_screen.details.consultation.location_information.point_4')}
 
--${t('subscription_screen.details.consultation.location_information.point_5')}
+-${I18n.t('subscription_screen.details.consultation.location_information.point_5')}
 
--${t('subscription_screen.details.consultation.location_information.point_6')}
+-${I18n.t('subscription_screen.details.consultation.location_information.point_6')}
 
--${t('subscription_screen.details.consultation.location_information.point_7')}
+-${I18n.t('subscription_screen.details.consultation.location_information.point_7')}
 
--${t('subscription_screen.details.consultation.location_information.point_8')}
+-${I18n.t('subscription_screen.details.consultation.location_information.point_8')}
 
--${t('subscription_screen.details.consultation.location_information.point_9')}
+-${I18n.t('subscription_screen.details.consultation.location_information.point_9')}
 `}
             </Text>
           </View>
@@ -282,16 +281,16 @@ ${t('subscription_screen.details.start_engine.description')}
           }}>
           <View style={styles.textContainer}>
             <Text style={[textStyle, {fontSize: 18}]}>
-            {t('subscription_screen.details.consultation.consultation.title')}
+            {I18n.t('subscription_screen.details.consultation.consultation.title')}
             </Text>
           </View>
           <View style={styles.textContainer}>
             <Text style={textStyle}>
-              {`-${t('subscription_screen.details.consultation.consultation.point_1')}
+              {`-${I18n.t('subscription_screen.details.consultation.consultation.point_1')}
 
--${t('subscription_screen.details.consultation.consultation.point_2')}
+-${I18n.t('subscription_screen.details.consultation.consultation.point_2')}
 
--${t('subscription_screen.details.consultation.consultation.point_3')}
+-${I18n.t('subscription_screen.details.consultation.consultation.point_3')}
 `}
             </Text>
           </View>
@@ -304,22 +303,22 @@ ${t('subscription_screen.details.start_engine.description')}
           }}>
           <View style={styles.textContainer}>
             <Text style={[textStyle, {fontSize: 18}]}>
-            {t('subscription_screen.details.consultation.crash_consultation.title')}
+            {I18n.t('subscription_screen.details.consultation.crash_consultation.title')}
             </Text>
           </View>
           <View style={styles.textContainer}>
             <Text style={textStyle}>
-              {`-${t('subscription_screen.details.consultation.crash_consultation.point_1')}
+              {`-${I18n.t('subscription_screen.details.consultation.crash_consultation.point_1')}
 
--${t('subscription_screen.details.consultation.crash_consultation.point_2')}
+-${I18n.t('subscription_screen.details.consultation.crash_consultation.point_2')}
 
--${t('subscription_screen.details.consultation.crash_consultation.point_3')}
+-${I18n.t('subscription_screen.details.consultation.crash_consultation.point_3')}
 
--${t('subscription_screen.details.consultation.crash_consultation.point_4')}
+-${I18n.t('subscription_screen.details.consultation.crash_consultation.point_4')}
 
--${t('subscription_screen.details.consultation.crash_consultation.point_5')}
+-${I18n.t('subscription_screen.details.consultation.crash_consultation.point_5')}
 
--${t('subscription_screen.details.consultation.crash_consultation.point_6')}
+-${I18n.t('subscription_screen.details.consultation.crash_consultation.point_6')}
 `}
             </Text>
           </View>
@@ -327,7 +326,7 @@ ${t('subscription_screen.details.start_engine.description')}
         <CardItem>
           <View style={styles.textTitleConteinerStyle}>
             <Text style={styles.textTitleStyle}>
-            {t('subscription_screen.details.organization_services.title')}
+            {I18n.t('subscription_screen.details.organization_services.title')}
             </Text>
           </View>
         </CardItem>
@@ -339,32 +338,32 @@ ${t('subscription_screen.details.start_engine.description')}
           }}>
           <View style={styles.textContainer}>
             <Text style={[textStyle, {fontSize: 18}]}>
-            {t('subscription_screen.details.organization_services.description')}
+            {I18n.t('subscription_screen.details.organization_services.description')}
             </Text>
           </View>
           <View style={styles.textContainer}>
             <Text style={textStyle}>
-              {`-${t('subscription_screen.details.organization_services.point_1')}
+              {`-${I18n.t('subscription_screen.details.organization_services.point_1')}
 
--${t('subscription_screen.details.organization_services.point_2')}
+-${I18n.t('subscription_screen.details.organization_services.point_2')}
 
--${t('subscription_screen.details.organization_services.point_3')}
+-${I18n.t('subscription_screen.details.organization_services.point_3')}
 
--${t('subscription_screen.details.organization_services.point_4')}
+-${I18n.t('subscription_screen.details.organization_services.point_4')}
 
--${t('subscription_screen.details.organization_services.point_5')}
+-${I18n.t('subscription_screen.details.organization_services.point_5')}
 
--${t('subscription_screen.details.organization_services.point_6')}
+-${I18n.t('subscription_screen.details.organization_services.point_6')}
 
--${t('subscription_screen.details.organization_services.point_7')}
+-${I18n.t('subscription_screen.details.organization_services.point_7')}
 
--${t('subscription_screen.details.organization_services.point_8')}
+-${I18n.t('subscription_screen.details.organization_services.point_8')}
 
--${t('subscription_screen.details.organization_services.point_9')}
+-${I18n.t('subscription_screen.details.organization_services.point_9')}
 
--${t('subscription_screen.details.organization_services.point_10')}
+-${I18n.t('subscription_screen.details.organization_services.point_10')}
 
--${t('subscription_screen.details.organization_services.point_11')}
+-${I18n.t('subscription_screen.details.organization_services.point_11')}
 `}
             </Text>
           </View>

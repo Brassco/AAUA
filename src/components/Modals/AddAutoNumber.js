@@ -9,7 +9,7 @@ import {
   Image,
   TextInput,
 } from 'react-native';
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 const {width, height} = Dimensions.get('window');
 
@@ -19,8 +19,6 @@ const paddingHorizontal = width * 0.05;
 const modalWidth = width * 0.9;
 
 const AddAutoNumber = ({show, callback, type}) => {
-  
-  const {t} = useTranslation();
 
   const [number, setNumber] = useState('');
 
@@ -38,7 +36,7 @@ const AddAutoNumber = ({show, callback, type}) => {
       }}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={styles.title}>{t('modals.car_number.title')}</Text>
+          <Text style={styles.title}>{I18n.t('modals.car_number.title')}</Text>
           <View style={styles.content}>
             <View style={styles.inputContainer}>
               <Image source={imgNumber} style={styles.number} />
@@ -57,12 +55,12 @@ const AddAutoNumber = ({show, callback, type}) => {
               onPress={() => {
                 callback('', type);
               }}>
-              <Text style={styles.btnCancelText}>{t('modals.car_number.cancel')}</Text>
+              <Text style={styles.btnCancelText}>{I18n.t('modals.car_number.cancel')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.btnPay}
               onPress={() => callback(number, type)}>
-              <Text style={styles.btnPayText}>{t('modals.car_number.pay')}</Text>
+              <Text style={styles.btnPayText}>{I18n.t('modals.car_number.pay')}</Text>
             </TouchableOpacity>
           </View>
         </View>

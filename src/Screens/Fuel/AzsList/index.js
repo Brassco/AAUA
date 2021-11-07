@@ -12,12 +12,11 @@ import {useSelector, useDispatch} from 'react-redux';
 import {DEVICE_OS, iOS, BASE_URL} from '@aaua/actions/constants';
 import AZSComponent from '@aaua/components/AAUA_card/AZSComponent';
 
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import styles from './styles';
 
 const AZSListScreen = props => {
-  const {t} = useTranslation();
   const dispatch = useDispatch();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +40,7 @@ const AZSListScreen = props => {
   return (
     <MainCard>
       <Header burger goToMain={DEVICE_OS == iOS ? true : false}>
-        {'ТОПЛИВО'}
+        {I18n.t('fuel_screen.header')}
       </Header>
       <CardItem
         style={{

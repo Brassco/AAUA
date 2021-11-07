@@ -51,6 +51,7 @@ import {encode} from 'base-64';
 Products, Categories
  */
 export const getCategories = (token, phone) => {
+  console.log('--getCategories', token, phone)
   return dispatch => {
     dispatch({
       type: STORE_GET_CATEGORIES,

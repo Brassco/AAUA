@@ -97,18 +97,10 @@ export const orderKasko = kaskoObj => {
       type: ORDER_KASKO_START,
     });
 
-    const obj = kaskoObj;
-
-    const data = JSON.stringify(obj);
-    const signature = md5(SECRET_KEY + data);
+    const data = kaskoObj;
 
     axios
-      .post(BID_KASKO_URL, data, {
-        headers: {
-          Signature: signature,
-          'Content-Type': 'application/json',
-        },
-      })
+      .post(BID_KASKO_URL, data)
       .then(result => KaskoSuccess(dispatch, result.data))
       .catch(error => {
         console.log(error);
@@ -173,22 +165,14 @@ export const orderOsago = osagoData => {
       type: ORDER_OSAGO_START,
     });
 
-    const obj = {
+    const data = {
       token: osagoData.token,
       city_id: osagoData.cityId,
       type_car: osagoData.carType,
     };
 
-    const data = JSON.stringify(obj);
-    const signature = md5(SECRET_KEY + data);
-
     axios
-      .post(BID_OSAGO_URL, data, {
-        headers: {
-          Signature: signature,
-          'Content-Type': 'application/json',
-        },
-      })
+      .post(BID_OSAGO_URL, data)
       .then(response => osagoSuccess(dispatch, response.data))
       .catch(error => {
         console.log(error);

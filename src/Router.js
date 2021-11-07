@@ -17,18 +17,20 @@ import {
   Actions,
 } from 'react-native-router-flux';
 
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { connect, useSelector, useDispatch} from 'react-redux';
+import {connect, useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 import md5 from 'js-md5';
 
-import {
-  InviteFriendComponent,
- } from './components/Auth/';
- 
- import Login from '@aaua/Screens/Auth/Login';
- import ForgotPassword from '@aaua/Screens/Auth/ForgotPassword'
+import {InviteFriendComponent} from './components/Auth/';
+
+import Login from '@aaua/Screens/Auth/Login';
+import ForgotPassword from '@aaua/Screens/Auth/ForgotPassword';
 
 import FirstStage from '@aaua/Screens/Auth/Register/FirstStage';
 import SecondStage from '@aaua/Screens/Auth/Register/SecondStage';
@@ -36,8 +38,8 @@ import SecondStage from '@aaua/Screens/Auth/Register/SecondStage';
 // import InviteFriendComponent from './components/Auth/InviteFriendComponent';
 // import ForgotPassComponent from './components/Auth/ForgotPassComponent';
 import LicenceComponent from './components/Auth/Register/LicenceComponent';
-import CitiesScreen from './components/Auth/Register/CitiesScreen';
-import CarsScreen from './components/Auth/Register/CarsScreen';
+import CitiesScreen from '@aaua/Screens/Auth/Register/Cities';
+import CarsScreen from '@aaua/Screens/Auth/Register/Cars';
 import LeftBarComponent from './components/LeftBarComponent';
 // import MainComponent from './components/MainComponent';
 import HomeScreen from '@aaua/Screens/Home';
@@ -78,11 +80,11 @@ import QRcode from './components/AAUA_card/QRcode';
 import AZSListScreen from '@aaua/Screens/Fuel/AzsList';
 import ButtonsScreen from '@aaua/Screens/Fuel/AauaCardVariants';
 import OrderingComponent from './components/Store/OrderingComponent';
-import MessagesListComponent from './components/Messages/ListComponent';
+import MessagesListComponent from '@aaua/Screens/Messages';
 import MessageComponent from './components/Messages/MessageComponent';
-import SettingsComponent from './components/Settings';
+import SettingsComponent from '@aaua/Screens/Settings';
 import PDFScreen from '@aaua/Screens/Subscription/PDFContent';
-import SubscriptionDetailsComponent from '@aaua/Screens/Subscription/DetailsComponent';
+import SubscriptionDetailsComponent from '@aaua/Screens/Subscription/Details';
 import StoreCitiesScreen from './components/Store/StoreCitiesScreen';
 import StoreNPCitiesScreen from './components/Store/StoreNPCitiesScreen';
 import aauaCitiesScreen from './components/AAUA_card/CitiesScreen';
@@ -109,8 +111,9 @@ import {CHECK_TOKEN_URL, SECRET_KEY} from './actions/constants';
 import {setUserFromSession} from './actions/AuthAction';
 import {countMessages} from './actions/MessagesActions';
 
-
 // const RouterComponent = () => {
+//   const dispatch = useDispatch();
+
 //   const [hasToken, setHasToken] = useState(false);
 //   const [isLoaded, setIsLoaded] = useState(false);
 //   const [latitude, setLatitude] = useState(null);
@@ -121,13 +124,179 @@ import {countMessages} from './actions/MessagesActions';
 //     state => state.basket,
 //   );
 
+//   const handleAppStateChange = nextAppState => {
+//     if (nextAppState.match(/inactive|background/)) {
+//       addBasketToStorage();
+//     }
+//   };
+
+//   const onBackPress = () => {
+//     if (Actions.state.index === 0) {
+//       let routs = [
+//         'QRcode',
+//         'subscription',
+//         'AAUA_main',
+//         'my_aaua_cards',
+//         'onroadCategories',
+//         'tabs',
+//         'discontCards',
+//         'messagesList',
+//         'history',
+//         'categories',
+//         'wallet',
+//         'feedback',
+//       ];
+//       console.log('router ', Actions.currentScene);
+//       if (Actions.currentScene == 'mainScreen') {
+//         BackHandler.exitApp();
+//       } else if (routs.includes(Actions.currentScene)) {
+//         Actions.mainScreen();
+//       } else if (Actions.currentScene == 'message') {
+//         Actions.push('messagesList');
+//       } else if (Actions.currentScene == 'firstStage') {
+//         Actions.pop();
+//       } else if (Actions.currentScene == 'secondStage') {
+//         return true;
+//       } else {
+//         console.log('router else');
+//         Actions.pop();
+//       }
+//       return true;
+//     }
+//   };
+
 //   useEffect(() => {
-//     this.props.getBrands();
-//     this.props.getCities();
+//     getBrands();
+//     getCities();
 //     //Check if User logged in
-//     this.props.getPushToken();
+//     getPushToken();
+
+//     let str = AsyncStorage.multiGet(['user', '@basketInfo']);
+
+//     str.then((stores, error) => {
+//       return stores.map(data => {
+//         console.log('-1- ROUTER startApp', data[0]);
+//         if (data[0] == 'user') {
+//           const user = JSON.parse(data[1]);
+//           if (user !== null) {
+//             console.log('-1- ROUTER user from store', user);
+//             const data = {
+//               token: user.token,
+//               phone: user.profile.phone,
+//             };
+
+//             axios
+//               .post(CHECK_TOKEN_URL, data)
+//               .then(res => {
+//                 console.log('CHECK_TOKEN_URL res ', res);
+//                 if (res.data.error == 0) {
+//                   console.log('user is checked', res.data, res.data.data == 1);
+//                   if (res.data.data == 1) {
+//                     console.log('user is valid', user);
+//                     return user;
+//                   } else {
+//                     AsyncStorage.removeItem('user');
+//                     setHasToken(false);
+//                     setIsLoaded(true);
+//                   }
+//                 } else {
+//                   setHasToken(false);
+//                   setIsLoaded(true);
+
+//                   return res.data.error;
+//                 }
+//               })
+//               .then(user => {
+//                 console.log({user});
+//                 dispatch(setUserFromSession(user));
+//                 // return user;
+//                 setHasToken(user.token !== null);
+//                 setIsLoaded(true);
+//               })
+//               // .then((user, err) => {
+//               //     // console.log(user);
+//               //     this.props.getSliderImages(user.token)
+//               //     return user;
+//               // }).then( (user, err)=> {
+//               //     // console.log(user);
+//               //     this.props.countMessages(user.token)
+//               //     return user;
+//               // }).then( (user, err) => {
+//               //     // console.log(user);
+//               //     this.props.getBonusesWog(user.token)
+//               //     this.setState({
+//               //         hasToken: user.token !== null,
+//               //         // hasCard: user.card !== null,
+//               //         isLoaded: true
+//               //     })
+//               // })
+//               .catch(error => {
+//                 console.log(error);
+//               });
+//           } else {
+//             setHasToken(false);
+//             setIsLoaded(true);
+//           }
+//         }
+//         if (data[0] == '@basketInfo') {
+//           let basketInfo = JSON.parse(data[1]);
+//           if (basketInfo) {
+//             setBasketFromStorage(basketInfo);
+//           }
+//         }
+//       });
+//     });
+
+//     AppState.addEventListener('change', handleAppStateChange);
+
+//     return () => {
+//       AppState.removeEventListener('change', handleAppStateChange);
+//     };
 //   }, []);
+
+//   const {width} = Dimensions.get('window');
+
+//   if (!isLoaded) {
+//     return <ActivityIndicator />;
+//   }
+
+//   const Stack = createNativeStackNavigator();
+//   const Drawer = createDrawerNavigator();
+
+//   const Root = () => {
+//     return (
+//       <Drawer.Navigator initialRouteName="Home">
+//         <Drawer.Screen
+//           name="Home"
+//           component={HomeScreen}
+//           options={{headerShown: false}}
+//         />
+//         <Drawer.Screen name="ImageContent" component={ImageContent} />
+//         <Stack.Screen
+//           name="SubscriptionComponent"
+//           component={SubscriptionComponent}
+//         />
+//       </Drawer.Navigator>
+//     );
+//   };
+
+//   return (
+//     <NavigationContainer>
+//       <Stack.Navigator options={{headerShown: false}}>
+//         {hasToken ? (
+//           <Stack.Screen
+//             name="Root"
+//             component={Root}
+//             options={{headerShown: false}}
+//           />
+//         ) : (
+//           <Stack.Screen name="Login" component={Login} />
+//         )}
+//       </Stack.Navigator>
+//     </NavigationContainer>
+//   );
 // };
+// export default RouterComponent;
 
 class RouterComponent extends React.Component {
   constructor() {
@@ -296,16 +465,10 @@ class RouterComponent extends React.Component {
           <Stack initial={!this.state.hasToken} key="auth" hideNavBar>
             <Scene title="login" key="login" component={Login} />
             <Stack hideNavBar key="register">
+              <Scene hideNavBar key="firstStage" component={FirstStage} />
               <Scene
+                // initial
                 hideNavBar
-                title="Персональные данные"
-                key="firstStage"
-                component={FirstStage}
-              />
-              <Scene
-              // initial
-                hideNavBar
-                title="Персональные данные"
                 key="secondStage"
                 component={SecondStage}
               />
@@ -581,5 +744,3 @@ export default connect(mapStateToProps, {
   deleteFromBasket,
   addBasketToStorage,
 })(RouterComponent);
-
-// export default RouterComponent;

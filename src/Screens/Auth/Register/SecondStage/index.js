@@ -1,21 +1,12 @@
 import React, {useRef, useState} from 'react';
 import {View, ScrollView, Alert, TouchableOpacity, Text} from 'react-native';
-import {useSelector, useReducer} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import {
-  changePass,
-  changeCar,
-  changeCity,
-  changeEmail,
-  changeName,
-  changeYear,
-  changeConfirmPass,
   sendStep2,
-  onChangeBrand,
-  onSelectBrand,
 } from '@aaua/actions/RegisterAction';
 
 import {
@@ -37,172 +28,89 @@ import {CITIES} from '@aaua/actions/constants';
 import styles from './styles';
 
 const SecondStage = props => {
-  // constructor(props) {
-  //   super(props);
-
-  //   this.state = {
-  //     enableScrollViewScroll: true,
-  //     searchedCities: [],
-  //     searchedBrands: [],
-  //   };
-  // }
-  const {t} = useTranslation();
-
   const scrollElement = useRef(null);
 
+  const dispatch = useDispatch();
+
   const [enableScrollViewScroll, setEnableScrollViewScroll] = useState(true);
+  const [name, setName] = useState('');
+  const [year, setYear] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [selectedBrand, setSelectedBrand] = useState(null);
 
   const {citiesBrands, register, auth} = useSelector(state => state);
 
-  const {
-    name,
-    city,
-    cityId,
-    car,
-    brandId,
-    email,
-    year,
-    password,
-    confirm_password,
-    token,
-    username,
-    phone,
-    sendingStep2,
-  } = register;
+  const {token, phone, sendingStep2} = register;
+
+  console.log('---- render Secons stage---', register);
 
   const {brands, cities} = citiesBrands;
 
   const {pushToken} = auth;
 
-  const onChangeName = val => {
-    changeName(val);
-  };
-  const onChangeYear = year => {
-    changeYear(year);
-  };
-  const onChangeEmail = email => {
-    changeEmail(email);
-  };
-  const onChangePassword = pass => {
-    changePass(pass);
-  };
-  const onChangeConfirmPass = pass => {
-    changeConfirmPass(pass);
+  const onChangeCity = city => {
+    setSelectedCity(city);
   };
 
-  const onChangeBrand = title => {
-    if (title.length >= 2) {
-      searchedBrands(title);
-    }
-    onChangeBrand(title);
-    this.refs._scrollView.scrollTo({x: 800, y: 500, animated: true});
-  };
-  const onSelectBrand = brandObj => {
-    this.setState({searchedBrands: []});
-    onSelectBrand(brandObj);
-  };
-  const onChangeCity = title => {
-    if (title.length >= 2) {
-      searchedCities(title);
-    }
-    changeCity(title);
-    if (title.length == 1) {
-      this.refs._scrollView.scrollTo({x: 800, y: 500, animated: true});
-    }
-  };
-
-  const onSelectCity = cityObj => {
-    this.setState({searchedCities: []});
-    selectCity(cityObj);
-  };
-
-  const searchedCities = searchedText => {
-    var searchedItems = cities.filter(function (item) {
-      return item.title.toLowerCase().indexOf(searchedText.toLowerCase()) == 0;
-    });
-    if (searchedText.length <= 0) {
-      searchedItems = [];
-    }
-    if (searchedItems.length == 1) {
-      onSelectCity(searchedItems[0]);
-      this.setState({searchedCities: []});
-    }
-    cities.some(e => {
-      if (e.title.toLowerCase() === searchedText.toLowerCase().trim()) {
-        onSelectCity(e);
-        this.setState({searchedCities: []});
-      }
-    });
-    this.setState({searchedCities: searchedItems.slice(0, 30)});
-  };
-
-  const searchedBrands = searchedText => {
-    var searchedItems = brands.filter(function (item) {
-      return item.title.toLowerCase().indexOf(searchedText.toLowerCase()) == 0;
-    });
-    if (searchedText.length <= 0) {
-      searchedItems = [];
-    }
-    if (searchedItems.length == 1) {
-      onSelectBrand(searchedItems[0]);
-      this.setState({searchedBrands: []});
-    }
-    this.props.brands.some(e => {
-      if (e.title.toLowerCase() === searchedText.toLowerCase().trim()) {
-        onSelectBrand(e);
-        this.setState({searchedBrands: []});
-      }
-    });
-    this.setState({searchedBrands: searchedItems.slice(0, 30)});
+  const onSelectBrand = brand => {
+    setSelectedBrand(brand);
+    // dispatch(getCarModel(brand.id));
   };
 
   const showAlert = () => {
-    Alert.alert('Ошибка', 'Не все поля заполнены или заполнены не верно', [
-      {
-        text: 'OK',
-        onPress: () => {
-          console.log('close alert');
+    Alert.alert(
+      I18n.t('modals.error_title'),
+      I18n.t('errors.data_not_filled'),
+      [
+        {
+          text: 'OK',
+          onPress: () => {
+            console.log('close alert');
+          },
         },
-      },
-    ]);
+      ],
+    );
   };
 
   const onSubmit = () => {
     const userData = {
       token: token,
       name: name,
-      city_id: cityId,
+      city_id: selectedCity.id,
       email: email,
       year: year,
-      brand_id: brandId,
-      password: password,
+      brand_id: selectedBrand.id,
+      password,
       phone: phone,
       pushToken: pushToken,
     };
     if (
       name.length > 0 &&
-      cityId > 0 &&
+      selectedCity &&
       year.length > 0 &&
       email.length &&
       password.length > 0 &&
-      confirm_password.length > 0 &&
-      brandId > 0
+      confirmPassword.length > 0 &&
+      selectedBrand
     ) {
       if (validate(email)) {
-        if (password == confirm_password) {
-          sendStep2(userData);
+        if (password == confirmPassword) {
+          dispatch(sendStep2(userData));
         } else {
           showAlert(
-            t('modals.error_title'),
-            t('errors.password_not_matches'),
-            t('modals.close_title'),
+            I18n.t('modals.error_title'),
+            I18n.t('errors.password_not_matches'),
+            I18n.t('modals.close_title'),
           );
         }
       } else {
         showAlert(
-          t('modals.error_title'),
-          t('errors.wrong_email_format'),
-          t('modals.close_title'),
+          I18n.t('modals.error_title'),
+          I18n.t('errors.wrong_email_format'),
+          I18n.t('modals.close_title'),
         );
       }
     } else {
@@ -222,13 +130,13 @@ const SecondStage = props => {
   const isFullInfo = () => {
     // let {city, name, car, year, email, password, confirm_password} = props;
     return (
-      city.length > 0 &&
+      selectedCity &&
       name.length > 0 &&
-      car.length > 0 &&
+      selectedBrand &&
       year.length > 0 &&
       email.length > 0 &&
       password.length > 0 &&
-      confirm_password.length > 0
+      confirmPassword.length > 0
     );
   };
 
@@ -236,48 +144,62 @@ const SecondStage = props => {
 
   return (
     <MainCard>
-      <Header>{t('screen_headers.personal_data')}</Header>
+      <Header>{I18n.t('screen_headers.personal_data')}</Header>
       <ScrollView ref={scrollElement} scrollEnabled={enableScrollViewScroll}>
         <View style={inputsWrapper}>
           <TextInput
-            label={t('labels.name')}
-            placeholder={t('placeholders.name')}
-            onChangeText={onChangeName.bind(this)}
+            label={I18n.t('labels.name')}
+            placeholder={I18n.t('placeholders.name')}
+            onChangeText={text => setName(text)}
             value={name}
           />
           <ClickableTextRow
-            onPress={Actions.AutocompleteScreen}
-            label={t('labels.city')}
-            value={city ? city : null}
-            placeholder={t('placeholders.auto_brand')}
+            onPress={() =>
+              Actions.AutocompleteScreen({
+                onSelectCity: onChangeCity,
+              })
+            }
+            // onPress={Actions.AutocompleteScreen}
+            label={I18n.t('labels.city')}
+            value={selectedCity ? selectedCity.title : null}
+            placeholder={I18n.t('placeholders.auto_brand')}
           />
           <ClickableTextRow
-            onPress={Actions.CarsScreen}
-            label={t('labels.auto_brand')}
-            value={car ? car : null}
-            placeholder={t('placeholders.auto_brand')}
+            onPress={() =>
+              Actions.CarsScreen({
+                onSelectBrand: onSelectBrand,
+              })
+            }
+            label={I18n.t('labels.auto_brand')}
+            value={selectedBrand ? selectedBrand.title : null}
+            placeholder={I18n.t('placeholders.auto_brand')}
           />
           <TextInput
-            label={t('labels.car_year')}
+            label={I18n.t('labels.car_year')}
             placeholder={'0000'}
             maxLength={4}
             keyboardType="numeric"
-            onChangeText={onChangeYear}
+            onChangeText={text => setYear(text)}
             value={year}
           />
           <TextInput
             keyboardType={'email-address'}
             label={'Email'}
             placeholder={'sample@index.com'}
-            onChangeText={onChangeEmail}
+            onChangeText={text => setEmail(text)}
             value={email}
           />
-          <PasswordInput onChangeText={onChangePassword} value={password} />
+          <PasswordInput
+            secureTextEntry
+            onChangeText={text => setPassword(text)}
+            value={password}
+          />
 
           <PasswordInput
-            label={t('labels.repeat_pass')}
-            onChangeText={onChangeConfirmPass}
-            value={confirm_password}
+            secureTextEntry
+            label={I18n.t('labels.repeat_pass')}
+            onChangeText={text => setConfirmPassword(text)}
+            value={confirmPassword}
           />
         </View>
         <View style={styles.footerWrapper}>
@@ -290,7 +212,7 @@ const SecondStage = props => {
               }}
               disabled={sendingStep2}
               onPress={onSubmit}>
-              {t('buttons.next')}
+              {I18n.t('buttons.next')}
             </ButtonSquad>
           )}
         </View>

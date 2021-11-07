@@ -4,19 +4,15 @@ import {
   Image,
   Text,
   TouchableOpacity,
-  Platform,
-  BackHandler,
-  AsyncStorage,
+  ActivityIndicator,
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
-import {connect, useSelector, useDispatch} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
-import {loginUser, getPushToken} from '@aaua/actions/AuthAction';
-import {getBrands, getCities} from '@aaua/actions/CitiesBrands';
-import {getToken} from '@aaua/actions/constants';
-import {LOGIN_USER} from '@aaua/actions/types';
+import {onLoginSuccess} from '@aaua/actions/AuthAction';
+import Authentication from '@aaua/services/Authentification/';
 
 import {showAlert} from '@aaua/components/Modals';
 import {MainCard, Spiner} from '@aaua/components/common';
@@ -33,10 +29,11 @@ const Login = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [token, setToken] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [phone, setPhone] = useState('+380968266485');
-  const [password, setPassword] = useState('ojf1T');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
 
-  const {t} = useTranslation();
+  // const [phone, setPhone] = useState('+380660514384');
+  // const [password, setPassword] = useState('123456');
 
   const {user, error, loginError, loading, pushToken} = useSelector(
     state => state.auth,
@@ -44,39 +41,40 @@ const Login = () => {
 
   const dispatch = useDispatch();
 
-  console.log('render NEW LOGIN', {
-    user,
-    error,
-    loginError,
-    loading,
-    pushToken,
-  });
-
   const closeModal = () => {
     setIsOpen(false);
-  };
-
-  const showAlert = () => {
-    // showAlert(
-    //   'Ошибка',
-    //   'Не все поля заполнены или заполнены не верно',
-    //   'OK',
-    //   console.log('onSubmit'),
-    // );
   };
 
   useEffect(() => {
     if (user !== null) {
       Actions.drawer();
+      // navigation.navigate('Root')
     }
   }, [user]);
 
-  const onLogin = () => {
+  const onLogin = async () => {
     if (phone && password) {
       setIsLoading(true);
-      dispatch(loginUser(phone, password, pushToken));
+      // dispatch(loginUser(phone, password, pushToken));
+      const loginResponse = await Authentication.loginUser(
+        phone,
+        pushToken,
+        password,
+      );
+      console.log('---loginResponse---', loginResponse);
+      if (loginResponse.error) {
+        showAlert(I18n.t('modals.error_title'), loginResponse.error, 'OK');
+        setIsLoading(false);
+      } else {
+        dispatch(onLoginSuccess(loginResponse));
+      }
     } else {
-      showAlert();
+      setIsLoading(false);
+      showAlert(
+        I18n.t('modals.error_title'),
+        I18n.t('errors.data_not_filled'),
+        'OK',
+      );
     }
   };
 
@@ -87,17 +85,6 @@ const Login = () => {
 
   const onPasswordChange = txt => {
     setPassword(txt);
-  };
-
-  const renderButton = () => {
-    if (isLoading === false) {
-      return (
-        <View style={loginButtonWrapper}>
-          <ButtonRoundet onPress={onLogin}>{t('buttons.enter')}</ButtonRoundet>
-        </View>
-      );
-    }
-    return <Spiner />;
   };
 
   const {
@@ -111,6 +98,10 @@ const Login = () => {
     buttonContainer,
   } = styles;
 
+  console.log('render NEW LOGIN', {
+    isLoading
+  });
+
   return (
     <MainCard>
       <View style={imageWrapper}>
@@ -118,33 +109,43 @@ const Login = () => {
           <Image style={imageStyle} source={require('@aaua/images/logo.png')} />
         </View>
         <View>
-          <Text>{t('login_screen.asociation')}</Text>
-          <Text>{t('login_screen.driwers')}</Text>
-          <Text>{t('login_screen.ukraine')}</Text>
+          <Text>{I18n.t('login_screen.asociation')}</Text>
+          <Text>{I18n.t('login_screen.driwers')}</Text>
+          <Text>{I18n.t('login_screen.ukraine')}</Text>
         </View>
       </View>
 
       <View style={inputsWrapper}>
         <PhoneInput value={phone} onChangeText={onPhoneChange} />
         <PasswordInput
-          label={t('labels.password')}
-          placeholder={t('labels.password')}
+          label={I18n.t('labels.password')}
+          placeholder={I18n.t('labels.password')}
           onChangeText={onPasswordChange}
           value={password}
         />
       </View>
 
-      <View style={buttonContainer}>{renderButton()}</View>
+      <View style={buttonContainer}>
+        <View style={loginButtonWrapper}>
+          {isLoading ? (
+            <ActivityIndicator size={'small'} />
+          ) : (
+            <ButtonRoundet onPress={onLogin}>
+              {I18n.t('buttons.enter')}
+            </ButtonRoundet>
+          )}
+        </View>
+      </View>
 
       <View style={footerLinksContainer}>
         <View style={linkStyle}>
           <TouchableOpacity onPress={Actions.forgot}>
-            <Text style={linkText}>{t('login_screen.forgot_pass')}?</Text>
+            <Text style={linkText}>{I18n.t('login_screen.forgot_pass')}?</Text>
           </TouchableOpacity>
         </View>
         <View style={[linkStyle, {alignItems: 'flex-end'}]}>
           <TouchableOpacity onPress={Actions.register}>
-            <Text style={linkText}>{t('login_screen.registration')}</Text>
+            <Text style={linkText}>{I18n.t('login_screen.registration')}</Text>
           </TouchableOpacity>
         </View>
       </View>

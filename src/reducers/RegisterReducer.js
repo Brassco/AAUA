@@ -126,7 +126,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         sms: null,
-        // smsSended: false,
+        smsSended: false,
         smsError: action.payload,
         loading: false,
       };
@@ -140,10 +140,12 @@ export default (state = INITIAL_STATE, action) => {
       };
     case STEP_1_SUCCESS:
       // Actions.secondStage();
+      const {phone, token, username} = action.payload;
       return {
         ...state,
-        token: action.payload.token,
-        username: action.payload.username,
+        phone,
+        token,
+        username,
         loading: true,
         error: '',
         smsSended: false,

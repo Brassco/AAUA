@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import {connect, useSelector, useDispatch} from 'react-redux';
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import {
   LeftBarMenuItem,
@@ -39,7 +39,7 @@ import feedback from '@aaua/images/icons/feedback.png';
 import styles from './styles';
 
 const LeftBarComponent = props => {
-  const {t} = useTranslation();
+  const dispatch = useDispatch();
 
   const [userName, setUserName] = useState('');
   const [userSurName, setUserSurName] = useState('');
@@ -50,67 +50,67 @@ const LeftBarComponent = props => {
   const menuItems = [
     {
       id: 1,
-      title: t('leftBarMenu.valet'),
+      title: I18n.t('leftBarMenu.valet'),
       img: wallet,
       onPress: Actions.wallet,
     },
     {
       id: 2,
-      title: t('leftBarMenu.subscription'),
+      title: I18n.t('leftBarMenu.subscription'),
       img: subscriptionIcon,
       onPress: Actions.subscriptionStack,
     },
     {
       id: 3,
-      title: t('leftBarMenu.store'),
+      title: I18n.t('leftBarMenu.store'),
       img: store,
       onPress: Actions.categories,
     },
     {
       id: 4,
-      title: t('leftBarMenu.fuel'),
+      title: I18n.t('leftBarMenu.fuel'),
       img: fuel,
       onPress: Actions.AAUA_card,
     },
     {
       id: 5,
-      title: t('leftBarMenu.on_road_support'),
+      title: I18n.t('leftBarMenu.on_road_support'),
       img: onroad,
       onPress: Actions.onroadSupport,
     },
     {
       id: 6,
-      title: t('leftBarMenu.discounts'),
+      title: I18n.t('leftBarMenu.discounts'),
       img: discounts,
       onPress: Actions.discontCards,
     },
     {
       id: 7,
-      title: t('leftBarMenu.insurance'),
+      title: I18n.t('leftBarMenu.insurance'),
       img: insurance,
       onPress: Actions.insurance,
     },
+    // {
+    //   id: 8,
+    //   title: I18n.t('leftBarMenu.history'),
+    //   img: history,
+    //   onPress: Actions.historyStack,
+    // },
     {
-      id: 8,
-      title: t('leftBarMenu.history'),
-      img: history,
-      onPress: Actions.historyStack,
+      id: 9,
+      title: I18n.t('leftBarMenu.questions'),
+      img: AnQ,
+      onPress: Actions.AnQ,
     },
-    {id: 9, title: t('leftBarMenu.questions'), img: AnQ, onPress: Actions.AnQ},
     {
       id: 10,
-      title: t('leftBarMenu.feedback'),
+      title: I18n.t('leftBarMenu.feedback'),
       img: feedback,
       onPress: Actions.feedback,
     },
   ];
 
   useEffect(() => {
-    console.log(
-      '--- left bar useeffect =',
-      subscription,
-      subscription.bought_at,
-    );
     if (auth.user) {
       const {name, surname} = auth.user.profile;
       const userName = name;
@@ -127,33 +127,26 @@ const LeftBarComponent = props => {
   }, [auth.user, subscription]);
 
   const onExit = () => {
-    // Actions.reset('auth');
-    Alert.alert('Подтверждение', 'Вы точно хотите выйти?', [
-      // {text: 'Да', onPress: () => {
-      //     console.log(this.props);
-      //     this.props.logOut(this.props.token);
-      // }},
-      {text: 'Да', onPress: goToAuth},
-      {
-        text: 'Закрыть',
-        onPress: () => {
-          console.log('close alert');
+
+    Alert.alert(
+      I18n.t('leftBarMenu.modal.header'),
+      I18n.t('leftBarMenu.modal.message'),
+      [
+        {text: I18n.t('leftBarMenu.modal.button_yes'), onPress: goToAuth},
+        {
+          text: I18n.t('leftBarMenu.modal.button_cancel'),
+          onPress: () => {
+            console.log('close alert');
+          },
         },
-      },
-    ]);
+      ],
+    );
   };
 
   const goToAuth = () => {
+    dispatch(logOut());
     Actions.reset('auth');
-    // logOut(token);
   };
-
-  //   componentWillReceiveProps(nextProps) {
-  //     console.log('componentWillReceiveProps0', nextProps.token);
-  //     if (nextProps.token != this.props.token && !this.props.bought_at) {
-  //       this.props.getData(nextProps.token);
-  //     }
-  //   }
 
   const renderStatus = () => {
     if (isActiveStatus) {
@@ -181,6 +174,7 @@ const LeftBarComponent = props => {
     rightContainer,
     imageContainer,
     titleText,
+    logoContainer,
   } = styles;
 
   return (
@@ -188,43 +182,39 @@ const LeftBarComponent = props => {
       source={require('@aaua/images/transparent.png')}
       style={container}>
       <View style={leftContainer}>
-        <View style={imageContainer}>
-          <Image
-            style={{
-              width: 119,
-              height: 119,
-            }}
-            source={require('@aaua/images/logo.png')}
-          />
-          <Text style={titleText}>
-            {userName} {userSurName}
-          </Text>
-          <View
-            style={{
-              width: 66,
-              height: 20,
-            }}>
-            {renderStatus()}
+        <View style={logoContainer}>
+          <View style={imageContainer}>
+            <Image
+              style={{
+                width: 119,
+                height: 119,
+              }}
+              source={require('@aaua/images/logo.png')}
+            />
+            <View>
+              <Text>{I18n.t('login_screen.asociation')}</Text>
+              <Text>{I18n.t('login_screen.driwers')}</Text>
+              <Text>{I18n.t('login_screen.ukraine')}</Text>
+            </View>
+          </View>
+          <View>
+            <Text style={titleText}>
+              {userName} {userSurName}
+            </Text>
+            <View
+              style={{
+                width: 66,
+                height: 20,
+              }}>
+              {renderStatus()}
+            </View>
           </View>
         </View>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={linksContainer}
-          // data={menuItems}
-          // renderItem={({item}) => {
-          //   return (
-          //     <LeftBarMenuItem
-          //       title={item.title}
-          //       image={item.img}
-          //       onPress={item.onPress}
-          //     />
-          //   );
-          // }}
-          // keyExtractor={item => item.id}
-        >
+        <ScrollView showsVerticalScrollIndicator={false} style={linksContainer}>
           {menuItems.map(item => {
             return (
               <LeftBarMenuItem
+                key={item.id}
                 title={item.title}
                 image={item.img}
                 onPress={item.onPress}

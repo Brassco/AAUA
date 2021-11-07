@@ -3,7 +3,7 @@ import {View, Text, Image} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import {
   MainCard,
@@ -25,7 +25,6 @@ const SERVICE = '4';
 
 const Categories = () => {
 
-    const {t} = useTranslation();
   const dispatch = useDispatch();
   const {
     onRoad: {categories, loading},
@@ -87,7 +86,7 @@ const Categories = () => {
       return (
         <MainCard>
           <Header burger goToMain={DEVICE_OS == iOS ? true : false}>
-            {t('on_road_support_screen.header')}
+            {I18n.t('on_road_support_screen.header')}
           </Header>
           <CardItem
             style={{

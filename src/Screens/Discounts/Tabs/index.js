@@ -2,8 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Text, View} from 'react-native';
 import Tabs from 'react-native-tabs';
 import {useSelector, useDispatch} from 'react-redux';
-
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import {MainCard, CardItem, Header, Spiner} from '@aaua/components/common';
 import CategoriesTab from '../Catalog';
@@ -15,7 +14,6 @@ import {loadCategories, loadCards} from '@aaua/actions/DiscountsAction';
 import styles from './styles';
 
 const TabsComponent = () => {
-  const {t} = useTranslation();
   const dispatch = useDispatch();
 
   const [page, setPage] = useState('1');
@@ -55,7 +53,7 @@ const TabsComponent = () => {
   return (
     <MainCard>
       <Header burger goToMain={DEVICE_OS == iOS ? true : false}>
-        {t('discounts_screen.screen_header')}
+        {I18n.t('discounts_screen.screen_header')}
       </Header>
       <CardItem style={container}>
         <Tabs
@@ -66,10 +64,10 @@ const TabsComponent = () => {
           selectedStyle={selectedTabText}
           onSelect={el => setPage(el.props.name)}>
           <Text selectedIconStyle={selectedTab} style={tabText} name="1">
-            {t('discounts_screen.catalog')}
+            {I18n.t('discounts_screen.catalog')}
           </Text>
           <Text style={tabText} name="2" selectedIconStyle={selectedTab}>
-            {t('discounts_screen.discount_cards')}
+            {I18n.t('discounts_screen.discount_cards')}
           </Text>
         </Tabs>
       </CardItem>

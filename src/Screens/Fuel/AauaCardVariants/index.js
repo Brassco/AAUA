@@ -4,7 +4,7 @@ import {Actions} from 'react-native-router-flux';
 import {useSelector, useDispatch} from 'react-redux';
 import Modal from 'react-native-modalbox';
 
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import {
   MainCard,
@@ -29,8 +29,6 @@ const AddAauaCard = () => {
   } = useSelector(state => state);
 
   const dispatch = useDispatch();
-
-  const {t} = useTranslation();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -83,7 +81,7 @@ const AddAauaCard = () => {
   return (
     <MainCard>
       <Header back goToMain={DEVICE_OS == iOS ? true : false}>
-        {t('fuel_screen.aaua_card.header')}
+        {I18n.t('fuel_screen.aaua_card.header')}
       </Header>
       <CardItem
         style={{
@@ -97,13 +95,13 @@ const AddAauaCard = () => {
           isDisabled={myCards != null && myCards.card != null}
           imageSrc={require('@aaua/images/icons/add_card.png')}
           onPress={onAddCardPressed}>
-          {t('fuel_screen.aaua_card.add_card')}
+          {I18n.t('fuel_screen.aaua_card.add_card')}
         </CardComponent>
         <CardComponent
           isDisabled={myCards != null && myCards.card != null}
           imageSrc={require('@aaua/images/icons/order_card.png')}
           onPress={() => setIsOpen(true)}>
-          {t('fuel_screen.aaua_card.add_virtual_card')}
+          {I18n.t('fuel_screen.aaua_card.add_virtual_card')}
         </CardComponent>
       </CardItem>
       <CardItem
@@ -115,17 +113,17 @@ const AddAauaCard = () => {
           paddingHorizontal: 15,
         }}>
         <Text style={styles.textStyle}>
-          {t('fuel_screen.aaua_card.description')}
+          {I18n.t('fuel_screen.aaua_card.description')}
         </Text>
         <Text style={styles.textStyle}>
-          {t('fuel_screen.aaua_card.description_site')}{' '}
+          {I18n.t('fuel_screen.aaua_card.description_site')}{' '}
           <Text
             style={{color: 'blue'}}
             onPress={() => Linking.openURL('https://wog.ua/ua/registration/')}>
             {' '}
             https://wog.ua/ua/registration/
           </Text>{' '}
-          {t('fuel_screen.aaua_card.description_phone')}
+          {I18n.t('fuel_screen.aaua_card.description_phone')}
         </Text>
       </CardItem>
       <Modal
@@ -142,7 +140,7 @@ const AddAauaCard = () => {
             isDisabled={true}
             onPress={orderVirtualCard}
             style={modalTextContainer}>
-            <Text style={modalText}>{t('fuel_screen.aaua_card.order_virtual_card')}</Text>
+            <Text style={modalText}>{I18n.t('fuel_screen.aaua_card.order_virtual_card')}</Text>
           </TouchableOpacity>
           {/*
                     <TouchableOpacity style={modalTextContainer}
@@ -163,7 +161,7 @@ const AddAauaCard = () => {
           <TouchableOpacity
             onPress={() => setIsOpen(false)}
             style={modalTextContainer}>
-            <Text style={[modalText, {color: '#ffc200'}]}>{t('fuel_screen.aaua_card.close')}</Text>
+            <Text style={[modalText, {color: '#ffc200'}]}>{I18n.t('fuel_screen.aaua_card.close')}</Text>
           </TouchableOpacity>
         </ModalCard>
       </Modal>

@@ -20,10 +20,10 @@ import {connect} from 'react-redux';
 class ListComponent extends Component {
 
 
-    componentWillMount() {
-        let {user, getHistory} = this.props;
-        getHistory(user);
-    }
+    // componentWillMount() {
+    //     let {user, getHistory} = this.props;
+    //     getHistory(user);
+    // }
 
     openDetails(orderId) {
         console.log(this.props, orderId);
@@ -105,15 +105,31 @@ class ListComponent extends Component {
     }
 
     render() {
+        // return (
+        //     <MainCard>
+        //         <Header burger goToMain={DEVICE_OS == iOS ? true : false}>
+        //             {"ИСТОРИЯ ЗАКАЗОВ"}
+        //         </Header>
+        //         {
+        //             this.renderContent()
+        //         }
+        //     </MainCard>
+        // )
         return (
-            <MainCard>
-                <Header burger goToMain={DEVICE_OS == iOS ? true : false}>
-                    {"ИСТОРИЯ ЗАКАЗОВ"}
-                </Header>
-                {
-                    this.renderContent()
-                }
-            </MainCard>
+            <View
+        style={{
+          flex: 1,
+          // backgroundColor: '#194',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Text style={{
+          fontSize: 16,
+          fontWeight: '500',
+        }}>
+          Розділ в розробці
+        </Text>
+      </View>
         )
     }
 }

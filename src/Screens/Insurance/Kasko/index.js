@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 // import {View, Text, ScrollView} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import {
   MainCard,
@@ -23,8 +23,6 @@ import {showAlert} from '@aaua/components/Modals';
 import styles from './styles';
 
 const Kasko = props => {
-  const {t} = useTranslation();
-
   const {
     auth: {
       user: {token},
@@ -37,7 +35,7 @@ const Kasko = props => {
 
   const {textInputWrapper, buttonStyle} = styles;
 
-  const [carPrice, setCarPrice] = useState('0');
+  const [carPrice, setCarPrice] = useState('');
   const [carBrand, setCarBrand] = useState('');
   const [carYear, setCarYear] = useState();
   const [selectedBrand, setSelectedBrand] = useState(null);
@@ -45,10 +43,15 @@ const Kasko = props => {
 
   useEffect(() => {
     if (kaskoOrderSuccess) {
-      showAlert('Спасибо', 'Ваша заявка принята', 'Закрыть', () => {
-        resetData();
-        Actions.insuranceCategories();
-      });
+      showAlert(
+        I18n.t('insurance_screen.kasko.thanks'),
+        I18n.t('insurance_screen.kasko.request_accepted'),
+        'Ok',
+        () => {
+          resetData();
+          Actions.insuranceCategories();
+        },
+      );
     }
   }, [kaskoOrderSuccess]);
 
@@ -75,7 +78,7 @@ const Kasko = props => {
     const orderData = {
       token: token,
       bid: {
-        brand_id: carBrand.id,
+        brand_id: selectedBrand.id,
         modela_id: selectedCarModel.id,
         year: carYear,
         price: carPrice,
@@ -94,16 +97,16 @@ const Kasko = props => {
               onChangeCarModel: onChangeCarModel,
             })
           }
-          label={t('insurance_screen.kasko.car_model.title')}
+          label={I18n.t('insurance_screen.kasko.car_model.title')}
           value={selectedCarModel ? selectedCarModel.title : null}
-          placeholder={t('insurance_screen.kasko.car_model.placeholder')}
+          placeholder={I18n.t('insurance_screen.kasko.car_model.placeholder')}
         />
       );
     } else {
       return (
         <TextInput
-          label={t('insurance_screen.kasko.car_model.title')}
-          placeholder={t('insurance_screen.kasko.car_model.placeholder')}
+          label={I18n.t('insurance_screen.kasko.car_model.title')}
+          placeholder={I18n.t('insurance_screen.kasko.car_model.placeholder')}
           editable={false}
         />
       );
@@ -113,9 +116,9 @@ const Kasko = props => {
   return (
     <MainCard>
       <Header back>КАСКО</Header>
-      <CardItem style={textInputWrapper}>
+      <CardItem style={[textInputWrapper, {marginTop: 30}]}>
         <TextInput
-          label={t('insurance_screen.kasko.car_price')}
+          label={I18n.t('insurance_screen.kasko.car_price')}
           placeholder={'0'}
           keyboardType="numeric"
           onChangeText={onChangeCarPrice}
@@ -127,15 +130,15 @@ const Kasko = props => {
           onPress={() =>
             Actions.InsuranceCarsScreen({onSelectBrand: onSelectBrand})
           }
-          label={t('insurance_screen.kasko.car_brand.title')}
+          label={I18n.t('insurance_screen.kasko.car_brand.title')}
           value={carBrand ? carBrand : null}
-          placeholder={t('insurance_screen.kasko.car_brand.placeholder')}
+          placeholder={I18n.t('insurance_screen.kasko.car_brand.placeholder')}
         />
       </CardItem>
       <CardItem style={textInputWrapper}>{renderCarModel()}</CardItem>
       <CardItem style={textInputWrapper}>
         <TextInput
-          label={t('insurance_screen.kasko.car_year.title')}
+          label={I18n.t('insurance_screen.kasko.car_year.title')}
           placeholder={'0000'}
           maxLength={4}
           keyboardType="numeric"
@@ -152,7 +155,7 @@ const Kasko = props => {
           style={buttonStyle}
           textStyle={{color: '#1B1B1B'}}
           onPress={onOrder}>
-          {t('insurance_screen.get_proposal')}
+          {I18n.t('insurance_screen.get_proposal')}
         </ButtonRoundet>
       </CardItem>
     </MainCard>

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View, Text} from 'react-native';
 import {connect, useSelector, useDispatch} from 'react-redux';
 
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import {
   MainCard,
@@ -22,17 +22,16 @@ const ValetComponent = () => {
     console.log('add to balance');
   };
 
-  const {t} = useTranslation();
 
   const valetAmount = 22;
-  let amountTitle = t('valet_screen.grivna_5');
+  let amountTitle = I18n.t('valet_screen.grivna_5');
 
   if (valetAmount > 4) {
-    amountTitle = t('valet_screen.grivna_5');
+    amountTitle = I18n.t('valet_screen.grivna_5');
   } else if (valetAmount > 1) {
-    amountTitle = t('valet_screen.grivna_2');
+    amountTitle = I18n.t('valet_screen.grivna_2');
   } else if (valetAmount > 0) {
-    amountTitle = t('valet_screen.grivna_1');
+    amountTitle = I18n.t('valet_screen.grivna_1');
   }
 
   const {
@@ -48,7 +47,7 @@ const ValetComponent = () => {
   return (
     <MainCard>
       <Header burger goToMain={DEVICE_OS == iOS ? true : false}>
-        {t('valet_screen.screen_header')}
+        {I18n.t('valet_screen.screen_header')}
       </Header>
       <CardItem style={amountContainerWrapper}>
         <View style={amountContainer}>
@@ -61,11 +60,11 @@ const ValetComponent = () => {
           style={buttonStyle}
           textStyle={{color: '#1B1B1B'}}
           onPress={addToBalance}>
-          {t('valet_screen.add_to_balance')}
+          {I18n.t('valet_screen.add_to_balance')}
         </ButtonRoundet>
       </CardItem>
       <CardItem style={textContainer}>
-        <Text>{t('valet_screen.service_develop')}</Text>
+        <Text>{I18n.t('valet_screen.service_develop')}</Text>
       </CardItem>
     </MainCard>
   );

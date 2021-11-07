@@ -74,44 +74,63 @@ const Categories = () => {
   };
 
   const renderContent = () => {
-    
-    if (!loading) {
-      return (
-        <FlatList
-          horizontal={false}
-          numColumns={3}
-          columnWrapperStyle={{
-            flex: 1,
-            justifyContent: 'space-around',
-          }}
-          data={storeCategories}
-          renderItem={({item}) => {
-            return (
-              <View
-                key={item.id}
-                style={{
-                  // flex: 1,
-                  margin: 1,
-                }}>
-                <Item
-                  onPress={() => openStoreCategories(item)}
-                  imageSrc={{uri: item.image}}>
-                  {item.name}
-                </Item>
-              </View>
-            );
-          }}
-          keyExtractor={item => item.id}
-        />
-      );
-    } else {
-      return <Spiner />;
-    }
+    return (
+      <View
+        style={{
+          flex: 1,
+          // backgroundColor: '#194',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Text style={{
+          fontSize: 16,
+          fontWeight: '500',
+        }}>
+          Розділ в розробці
+        </Text>
+      </View>
+    );
+
+    // if (!loading) {
+    //   return (
+    //     <FlatList
+    //       horizontal={false}
+    //       numColumns={3}
+    //       columnWrapperStyle={{
+    //         flex: 1,
+    //         justifyContent: 'space-around',
+    //       }}
+    //       data={storeCategories}
+    //       renderItem={({item}) => {
+    //         return (
+    //           <View
+    //             key={item.id}
+    //             style={{
+    //               // flex: 1,
+    //               margin: 1,
+    //             }}>
+    //             <Item
+    //               onPress={() => openStoreCategories(item)}
+    //               imageSrc={{uri: item.image}}>
+    //               {item.name}
+    //             </Item>
+    //           </View>
+    //         );
+    //       }}
+    //       keyExtractor={item => item.id}
+    //     />
+    //   );
+    // } else {
+    //   return <Spiner />;
+    // }
   };
 
   return (
     <MainCard>
-      <Header burger basket>
+      <Header
+       burger 
+      // basket
+      >
         Магазин
       </Header>
       {renderContent()}

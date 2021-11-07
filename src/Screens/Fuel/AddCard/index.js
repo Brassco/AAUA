@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {View, Image, Text, TouchableOpacity, Alert} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import {changeCardNumber, addCard} from '@aaua/actions/AAUA_CardAction';
 import {
@@ -16,7 +16,6 @@ import {
 import {showAlert} from '@aaua/Modals';
 
 const AddCard = () => {
-  const {t} = useTranslation();
 
   const {
     AAUA_Card,
@@ -52,7 +51,7 @@ const AddCard = () => {
 
   return (
     <MainCard>
-      <Header back>{t('fuel_screen.add_card.header')}</Header>
+      <Header back>{I18n.t('fuel_screen.add_card.header')}</Header>
       <CardItem
         style={{
           flex: 0,
@@ -62,7 +61,7 @@ const AddCard = () => {
           alignItems: 'flex-start',
         }}>
         <CreditCardInput
-          label={t('fuel_screen.add_card.card_number')}
+          label={I18n.t('fuel_screen.add_card.card_number')}
           value={cardNumber}
           onChangeText={onCodeChange}
           placeholder={'XXXX XXXX XXXX XXX'}
@@ -79,7 +78,7 @@ const AddCard = () => {
             height: 45,
           }}
           onPress={onPress}>
-          {t('fuel_screen.add_card.add_card')}
+          {I18n.t('fuel_screen.add_card.add_card')}
         </ButtonRoundet>
       </CardItem>
     </MainCard>

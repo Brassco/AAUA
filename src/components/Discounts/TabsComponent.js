@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Text, View} from 'react-native';
 import Tabs from 'react-native-tabs';
 
-import {useTranslation} from 'react-i18next';
+import I18n from '@aaua/i18n';
 
 import {MainCard, CardItem, Header} from '../common';
 import CategoriesScreen from './CategoriesScreen';
