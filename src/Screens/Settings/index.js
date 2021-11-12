@@ -7,7 +7,7 @@ import {
   Linking,
   Share,
 } from 'react-native';
-import Permissions from 'react-native-permissions';
+import {checkNotifications, RESULTS} from 'react-native-permissions';
 import I18n from '@aaua/i18n';
 
 import {
@@ -23,15 +23,18 @@ import {feedbackPhone} from '@aaua/services/config';
 import styles from './styles';
 
 const Settings = () => {
-
   const [pushes, setPushes] = useState(false);
   const [politics, setPolitics] = useState(true);
   const [privacy, setPrivacy] = useState(true);
 
   useEffect(() => {
-    Permissions.check('notification').then(response => {
+    checkNotifications().then(response => {
+      const {status} = response;
+
       // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-      setPushes(response == 'authorized');
+      const pushes = status == RESULTS.GRANTED || status == RESULTS.LIMITED;
+
+      setPushes(pushes);
     });
   }, []);
 

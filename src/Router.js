@@ -55,7 +55,7 @@ import PaymentComponent from './components/Store/PaymentComponent';
 import OnroadCategoriesComponent from '@aaua/Screens/OnRoadSupport/Categories';
 import OnroadCategoriesDetailsComponent from '@aaua/Screens/OnRoadSupport/CategoryDetails';
 import OrderSupport from './components/OnRoadSupport/OrderSupport';
-import MarkerInfo from './components/Discounts/MarkerInfo';
+import MarkerInfo from '@aaua/components/Discounts/MarkerInfo';
 // import DiscontMapComponent from './components/Discounts/MapComponent';
 import DiscontMapComponent from '@aaua/Screens/Discounts/Map';
 // import TabsComponent from './components/Disconts/TabsComponent';

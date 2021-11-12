@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Image, TouchableOpacity} from 'react-native';
+import {View, Image, TouchableOpacity, useWindowDimensions} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import ImageSlider from 'react-native-image-slider';
 import {useSelector, useDispatch} from 'react-redux';
@@ -21,6 +21,9 @@ import {
 } from '@aaua/components/common';
 
 const HomeScreen = props => {
+
+  const { width: windowWidth } = useWindowDimensions();
+
   const {auth, citiesBrands, messages} = useSelector(state => state);
   const user = auth.user;
   const bonus = auth.user ? citiesBrands.bonuses : 0;

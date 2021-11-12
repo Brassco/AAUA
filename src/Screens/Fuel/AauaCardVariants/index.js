@@ -44,7 +44,7 @@ const AddAauaCard = () => {
     if (orderVirtualCardSuccess) {
       showAlert();
     }
-  }, []);
+  }, [orderVirtualCardSuccess]);
 
   const orderVirtualCard = () => {
     const orderData = {
@@ -56,11 +56,11 @@ const AddAauaCard = () => {
 
   const showAlert = () => {
     Alert.alert(
-      'Ваша виртуальная карта создана',
-      'Спасибо за заказ',
+      I18n.t('fuel_screen.aaua_card.virtual_card.header'),
+      I18n.t('fuel_screen.aaua_card.virtual_card.message'),
       [
         {
-          text: 'Закрыть',
+          text: 'Закрити',
           onPress: () => {
             Actions.AAUA_main();
           },

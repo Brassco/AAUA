@@ -21,8 +21,8 @@ export default StyleSheet.create({
   },
   textContainer: {
     top: 0,
-    paddingRight: 27,
-    paddingLeft: 32,
+    paddingHorizontal: 25,
+    // paddingLeft: 32,
     // paddingBottom: 33
   },
   imageContainer: {

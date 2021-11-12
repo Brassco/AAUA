@@ -1,24 +1,58 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import WebView from 'react-native-webview';
 
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Image, Text} from 'react-native';
 import {Spiner} from '@aaua/components/common';
 
 const propTypes = {
-  children: PropTypes.node.isRequired,
+  // children: PropTypes.node.isRequired,
   style: PropTypes.object,
 };
 
-const CustomCallout = props => {
+const CustomCallout = ({uri, style}) => {
+  const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    if (uri) {
+      setImage(uri);
+    }
+  }, [uri]);
+
+  const htmlWrapper = `<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+        width: 200px;
+      }
+      img {
+        width: 60vw;
+        height: 60vh;
+        display: block;
+        // margin-left: auto;
+        // margin-right: auto;
+        // width: 50%;
+}
+      
+    </style>
+  </head>
+  <body>
+    <img
+      src=${image}
+    />
+  </body>
+</html>`;
+
   return (
-    <View style={[styles.container, props.style]}>
+    <View style={[styles.container, style]}>
       <View style={styles.bubble}>
         <WebView
           startInLoadingState={true}
           renderLoading={() => <Spiner />}
-          style={{height: 100, width: 230}}
-          source={{uri: props.uri}}
+          // style={{height: 171, width: 200}}
+          source={{html: htmlWrapper}}
         />
       </View>
       <View style={styles.arrowBorder} />

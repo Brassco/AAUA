@@ -56,12 +56,13 @@ export default StyleSheet.create({
   },
   inputsWrapper: {
     flex: 2,
-    // backgroundColor: '#144',
-    // height: 100,
   },
   buttonContainer: {
-    // flex: 1,
-    // backgroundColor: '#194',
     height: 75,
+  },
+  aauaTitle: {
+    fontFamily: 'SFUIText-Regular',
+    fontSize: 19,
+    fontWeight: '500',
   },
 });

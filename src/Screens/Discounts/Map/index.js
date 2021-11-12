@@ -72,8 +72,9 @@ const Map = ({selectedCategory}) => {
         if (marker.lat) {
           const latitude = parseFloat(marker.lat);
           const longitude = parseFloat(marker.lon);
+          const imageArray = marker.img.split('/');
           const uri = BASE_URL + marker.img;
-          console.log('---render Marker', {marker, uri});
+          const thumbImg = BASE_URL + marker.thumb;
           return (
             <Marker
               key={marker.id}

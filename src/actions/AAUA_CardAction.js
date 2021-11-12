@@ -161,37 +161,9 @@ export const addCardSuccess = (dispatch, response) => {
 
 export const orderCard = card => {
   return dispatch => {
-    dispatch({
-      type: ORDER_CARD,
-    });
 
-    // const obj = {
-    //     "token" : card.token,
-    //     "bid" : {
-    //         "city" : card.city,
-    //         "delivery" : card.delivery,
-    //         "address" : card.address,
-    //         "address_comment" : card.comment,
-    //         "phone" : card.phone
-    //     }
-    // };
-
-    const data = JSON.stringify(card);
-    const signature = md5(SECRET_KEY + data);
-    console.log(
-      '--- ORDER CARD---',
-      ORDER_AAUA_CARD_URL,
-      card,
-      data,
-      signature,
-    );
     axios
-      .post(ORDER_AAUA_CARD_URL, data, {
-        headers: {
-          Signature: signature,
-          'Content-Type': 'application/json',
-        },
-      })
+      .post(ORDER_AAUA_CARD_URL, card)
       .then(response =>
         orderCardSuccess(dispatch, response.data, card.isvirtual == 1),
       );

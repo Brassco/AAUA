@@ -19,8 +19,6 @@ import {MainCard, Spiner} from '@aaua/components/common';
 import ButtonRoundet from '@aaua/components/common/Buttons/RoundButton';
 import {PhoneInput, PasswordInput} from '@aaua/components/common/Inputs';
 
-import {MIN_HEIGHT, RATIO} from '@aaua/styles/constants';
-
 import styles from './styles';
 
 let listener = null;
@@ -31,9 +29,6 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-
-  // const [phone, setPhone] = useState('+380660514384');
-  // const [password, setPassword] = useState('123456');
 
   const {user, error, loginError, loading, pushToken} = useSelector(
     state => state.auth,
@@ -96,6 +91,7 @@ const Login = () => {
     loginButtonWrapper,
     inputsWrapper,
     buttonContainer,
+    aauaTitle,
   } = styles;
 
   console.log('render NEW LOGIN', {
@@ -109,7 +105,7 @@ const Login = () => {
           <Image style={imageStyle} source={require('@aaua/images/logo.png')} />
         </View>
         <View>
-          <Text>{I18n.t('login_screen.asociation')}</Text>
+          <Text style={aauaTitle} >{I18n.t('login_screen.asociation')}</Text>
           <Text>{I18n.t('login_screen.driwers')}</Text>
           <Text>{I18n.t('login_screen.ukraine')}</Text>
         </View>
