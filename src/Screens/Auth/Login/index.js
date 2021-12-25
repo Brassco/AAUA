@@ -95,7 +95,7 @@ const Login = () => {
   } = styles;
 
   console.log('render NEW LOGIN', {
-    isLoading
+    isLoading,
   });
 
   return (
@@ -105,9 +105,9 @@ const Login = () => {
           <Image style={imageStyle} source={require('@aaua/images/logo.png')} />
         </View>
         <View>
-          <Text style={aauaTitle} >{I18n.t('login_screen.asociation')}</Text>
-          <Text>{I18n.t('login_screen.driwers')}</Text>
-          <Text>{I18n.t('login_screen.ukraine')}</Text>
+          <Text style={aauaTitle}>{I18n.t('login_screen.asociation')}</Text>
+          <Text style={aauaTitle}>{I18n.t('login_screen.driwers')}</Text>
+          <Text style={aauaTitle}>{I18n.t('login_screen.ukraine')}</Text>
         </View>
       </View>
 

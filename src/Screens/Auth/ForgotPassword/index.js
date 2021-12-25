@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {View} from 'react-native';
+import {useDispatch} from 'react-redux';
 
 import I18n from '@aaua/i18n';
 
@@ -13,6 +14,8 @@ import styles from './styles';
 
 const ForgotPassword = props => {
 
+  const dispatch = useDispatch();
+
   const [phone, setPhone] = useState('');
 
   const onPhoneChange = phone => {
@@ -20,7 +23,7 @@ const ForgotPassword = props => {
   };
 
   const onSubmit = () => {
-    sendData(phone);
+    dispatch(sendData(phone));
   };
 
   const {inputWrapper, buttonWrapper} = styles;

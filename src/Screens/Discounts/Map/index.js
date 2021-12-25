@@ -5,6 +5,7 @@ import {
   Image,
   TouchableOpacity,
   PermissionsAndroid,
+  Platform,
 } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import MapView, {Marker, CalloutSubview, Callout} from 'react-native-maps';
@@ -13,7 +14,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import I18n from '@aaua/i18n';
 
-// import CustomMarker from '@aaua/components/Discounts/CustomMarker';
+import CustomMarker from '@aaua/components/Discounts/CustomMarker';
 import {BASE_URL} from '@aaua/actions/constants';
 import CustomCallout from '@aaua/components/Discounts/CustomCallout';
 import MapFiltersComponent from '@aaua/components/Discounts/MapFiltersComponent';
@@ -32,8 +33,10 @@ import {loadCategoryPlaces} from '@aaua/actions/DiscountsAction';
 import styles from './styles';
 
 const Map = ({selectedCategory}) => {
-
   const dispatch = useDispatch();
+
+  // latitudeDelta: 30.516674942314864,
+  // longitudeDelta: 50.4037542202435,
 
   const [isOpen, setIsOpen] = useState(false);
   const [category, setCategory] = useState(selectedCategory);
@@ -47,7 +50,9 @@ const Map = ({selectedCategory}) => {
   let watchId = null;
 
   useEffect(() => {
-    requestPermission();
+    if (Platform.OS == 'android') {
+      requestPermission();
+    }
     return () => {
       if (watchId) {
         Geolocation.clearWatch(watchId);
@@ -56,7 +61,7 @@ const Map = ({selectedCategory}) => {
   }, []);
 
   useEffect(() => {
-    console.log('---Map useEffect ---', category);
+    
     if (category) {
       dispatch(loadCategoryPlaces(token, category));
     }
@@ -75,18 +80,15 @@ const Map = ({selectedCategory}) => {
           const imageArray = marker.img.split('/');
           const uri = BASE_URL + marker.img;
           const thumbImg = BASE_URL + marker.thumb;
+          
           return (
             <Marker
+              onPress={e => {
+                Actions.MarkerInfo(marker);
+              }}
               key={marker.id}
               coordinate={{latitude: latitude, longitude: longitude}}>
-              <Callout
-                alphaHitTest
-                tooltip
-                onPress={e => {
-                  Actions.MarkerInfo(marker);
-                }}>
-                <CustomCallout uri={uri}/>
-              </Callout>
+              <CustomCallout uri={thumbImg} />
             </Marker>
           );
         }
@@ -96,6 +98,8 @@ const Map = ({selectedCategory}) => {
 
   const requestPermission = async () => {
     try {
+      // geolocation.requestAuthorization();
+
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
@@ -108,8 +112,8 @@ const Map = ({selectedCategory}) => {
         console.log('You can use the geolocation');
         watchId = Geolocation.watchPosition(
           position => {
-            setLatitude(position.coords.latitude);
-            setLongitude(position.coords.longitude);
+            // setLatitude(position.coords.latitude);
+            // setLongitude(position.coords.longitude);
             setError(null);
           },
           error => console.log(error.message),

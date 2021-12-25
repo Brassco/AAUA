@@ -13,10 +13,13 @@ import {
 } from '@aaua/components/common';
 import TextInput from '@aaua/components/common/Inputs/TextInput';
 import {
-  orderKasko,
+  // orderKasko,
   getCarModel,
   resetData,
 } from '@aaua/actions/InsuranceAction';
+
+import Insurance from '@aaua/services/Insurance';
+
 import {DEVICE_OS, iOS} from '@aaua/actions/constants';
 import {showAlert} from '@aaua/components/Modals';
 
@@ -41,19 +44,19 @@ const Kasko = props => {
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [selectedCarModel, setSelectedCarModel] = useState(null);
 
-  useEffect(() => {
-    if (kaskoOrderSuccess) {
-      showAlert(
-        I18n.t('insurance_screen.kasko.thanks'),
-        I18n.t('insurance_screen.kasko.request_accepted'),
-        'Ok',
-        () => {
-          resetData();
-          Actions.insuranceCategories();
-        },
-      );
-    }
-  }, [kaskoOrderSuccess]);
+  // useEffect(() => {
+  //   if (kaskoOrderSuccess) {
+  //     showAlert(
+  //       I18n.t('insurance_screen.kasko.thanks'),
+  //       I18n.t('insurance_screen.kasko.request_accepted'),
+  //       'Ok',
+  //       () => {
+  //         resetData();
+  //         Actions.insuranceCategories();
+  //       },
+  //     );
+  //   }
+  // }, [kaskoOrderSuccess]);
 
   useEffect(() => {
     if (selectedBrand) {
@@ -71,7 +74,7 @@ const Kasko = props => {
   };
 
   const onChangeCarPrice = price => {
-    setCarPrice(Number(price));
+    setCarPrice(price);
   };
 
   const onOrder = () => {
@@ -81,10 +84,24 @@ const Kasko = props => {
         brand_id: selectedBrand.id,
         modela_id: selectedCarModel.id,
         year: carYear,
-        price: carPrice,
+        price: Number(carPrice),
       },
     };
-    dispatch(orderKasko(orderData));
+    const insuranceResponse = Insurance.orderKasko(orderData);
+    if (!insuranceResponse.error) {
+      showAlert(
+        I18n.t('insurance_screen.kasko.thanks'),
+        I18n.t('insurance_screen.kasko.request_accepted'),
+        'Ok',
+        () => {
+          dispatch(resetData());
+          Actions.insuranceCategories();
+        },
+      );
+    } else {
+      showAlert(I18n.t('modals.error_title'), insuranceResponse.error, 'Ok');
+    }
+    // dispatch(orderKasko(orderData));
   };
 
   const renderCarModel = () => {

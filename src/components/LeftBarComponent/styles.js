@@ -42,4 +42,9 @@ export default StyleSheet.create({
     color: '#423485',
     fontFamily: 'Roboto-Bold',
   },
+  aauaTitle: {
+    fontFamily: 'SFUIText-Regular',
+    fontSize: 17,
+    fontWeight: '500',
+  }
 });

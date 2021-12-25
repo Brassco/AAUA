@@ -11,12 +11,15 @@ import {
 import {useSelector, useDispatch} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 
+import {DEVICE_OS, iOS, Android} from '@aaua/actions/constants';
 import {MainCard, Spiner, CardItem, Header} from '@aaua/components/common';
 import ListItem from './ListItem';
 
-import {loadMessages} from '@aaua/actions/MessagesActions';
+import Messages from '@aaua/services/Messages';
 
 import I18n from '@aaua/i18n';
+
+import styles from './styles';
 
 let listener = null;
 
@@ -27,15 +30,33 @@ const MessagesList = () => {
     auth: {
       user: {token},
     },
-    messages: {messages, loading, error},
+    // messages: {loading},
   } = useSelector(state => state);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [seed, setSeed] = useState(1);
+  const [messages, setMessages] = useState([]);
+  const [error, setError] = useState(null);
+
+  const {emptyListContainer, emptyListText} = styles;
+
+  const loadMessages = async () => {
+    const response = await Messages.getMessages(token);
+    
+    setIsLoading(false);
+    if (response.error) {
+      setError(response.error);
+    } else {
+      setMessages(response);
+    }
+  };
 
   useEffect(() => {
-    dispatch(loadMessages(token));
+    // dispatch(loadMessages(token));
+
+    loadMessages();
+
     if (Platform.OS == 'android' && listener == null) {
       listener = BackHandler.addEventListener('hardwareBackPress', () => {
         if (Actions.currentScene == 'messagesList') {
@@ -84,28 +105,36 @@ const MessagesList = () => {
   };
 
   const renderRow = item => {
-    console.log('---renderRow messages ---', item);
     return (
       <ListItem
         key={item.item.id}
         phone={''}
-        date={timeConverter(item.item.title.created_at)}
-        viewed={item.item.title.viewed}
-        id={item.item.title.id}>
-        {item.item.title.text}
+        date={timeConverter(item.item.created_at)}
+        viewed={item.item.viewed}
+        id={item.item.id}>
+        {item.item.text}
       </ListItem>
     );
   };
 
   const renderFlatList = () => {
-    
+    if (messages.length < 1) {
+      return (
+        <View style={emptyListContainer}>
+          <Text style={emptyListText}>
+            {I18n.t('messages_screen.empty_list')}
+          </Text>
+        </View>
+      );
+    }
+
     return (
       <CardItem>
         <FlatList
           style={{
             marginTop: 15,
           }}
-          initialNumToRender={6}
+          initialNumToRender={10}
           data={messages}
           keyExtractor={(item, index) => item.id}
           renderItem={renderRow}
@@ -117,8 +146,10 @@ const MessagesList = () => {
 
   return (
     <MainCard>
-      <Header burger>{I18n.t('messages_screen.header')}</Header>
-      {loading ? renderFlatList() : <Spiner />}
+      <Header burger goToMain={DEVICE_OS == iOS ? true : false}>
+        {I18n.t('messages_screen.header')}
+      </Header>
+      {isLoading ? <Spiner /> : renderFlatList()}
     </MainCard>
   );
 };

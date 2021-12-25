@@ -48,15 +48,18 @@ const CustomCallout = ({uri, style}) => {
   return (
     <View style={[styles.container, style]}>
       <View style={styles.bubble}>
-        <WebView
-          startInLoadingState={true}
-          renderLoading={() => <Spiner />}
-          // style={{height: 171, width: 200}}
-          source={{html: htmlWrapper}}
+        <Image
+          source={{uri: uri}}
+          resizeMode={'stretch'}
+          style={{
+            flex: 1,
+            resizeMode: 'cover', // or 'stretch'
+            backgroundColor: '#e8e8e8',
+          }}
         />
       </View>
-      <View style={styles.arrowBorder} />
       <View style={styles.arrow} />
+      <View style={styles.arrowPoint} />
     </View>
   );
 };
@@ -69,17 +72,14 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   bubble: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
+    width: 50,
+    height: 50,
+    borderRadius: 40,
     flexDirection: 'row',
     alignSelf: 'flex-start',
     backgroundColor: '#fff',
-    // paddingHorizontal: 20,
-    // paddingVertical: 12,
-    // borderRadius: 6,
     borderColor: '#fff',
-    borderWidth: 0.2,
+    borderWidth: 5,
     overflow: 'hidden',
   },
   amount: {
@@ -87,19 +87,29 @@ const styles = StyleSheet.create({
   },
   arrow: {
     backgroundColor: 'transparent',
-    borderWidth: 16,
+    borderWidth: 12,
     borderColor: 'transparent',
     borderTopColor: '#fff',
     alignSelf: 'center',
-    marginTop: -32,
+    marginTop: -2,
+    zIndex: 100,
   },
   arrowBorder: {
     backgroundColor: 'transparent',
-    borderWidth: 16,
+    borderWidth: 12,
     borderColor: 'transparent',
-    borderTopColor: '#007a87',
+    borderTopColor: '#fff',
     alignSelf: 'center',
-    marginTop: -1.2,
+    marginTop: -3.5,
+  },
+  arrowPoint: {
+    backgroundColor: '#f72a2a',
+    // borderWidth: 4,
+    borderRadius: 6,
+    width: 12,
+    height: 12,
+    marginLeft: 19,
+    marginTop: -17,
   },
 });
 

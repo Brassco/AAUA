@@ -48,24 +48,24 @@ const LeftBarComponent = props => {
   const {auth, subscription} = useSelector(state => state);
 
   const menuItems = [
-    {
-      id: 1,
-      title: I18n.t('leftBarMenu.valet'),
-      img: wallet,
-      onPress: Actions.wallet,
-    },
+    // {
+    //   id: 1,
+    //   title: I18n.t('leftBarMenu.valet'),
+    //   img: wallet,
+    //   onPress: Actions.wallet,
+    // },
     {
       id: 2,
       title: I18n.t('leftBarMenu.subscription'),
       img: subscriptionIcon,
       onPress: Actions.subscriptionStack,
     },
-    {
-      id: 3,
-      title: I18n.t('leftBarMenu.store'),
-      img: store,
-      onPress: Actions.categories,
-    },
+    // {
+    //   id: 3,
+    //   title: I18n.t('leftBarMenu.store'),
+    //   img: store,
+    //   onPress: Actions.categories,
+    // },
     {
       id: 4,
       title: I18n.t('leftBarMenu.fuel'),
@@ -175,6 +175,7 @@ const LeftBarComponent = props => {
     imageContainer,
     titleText,
     logoContainer,
+    aauaTitle,
   } = styles;
 
   return (
@@ -192,9 +193,9 @@ const LeftBarComponent = props => {
               source={require('@aaua/images/logo.png')}
             />
             <View>
-              <Text>{I18n.t('login_screen.asociation')}</Text>
-              <Text>{I18n.t('login_screen.driwers')}</Text>
-              <Text>{I18n.t('login_screen.ukraine')}</Text>
+              <Text style={aauaTitle} >{I18n.t('login_screen.asociation')}</Text>
+              <Text style={aauaTitle} >{I18n.t('login_screen.driwers')}</Text>
+              <Text style={aauaTitle} >{I18n.t('login_screen.ukraine')}</Text>
             </View>
           </View>
           <View>

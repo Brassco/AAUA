@@ -30,12 +30,12 @@ const AZSListScreen = props => {
   } = useSelector(state => state);
 
   useEffect(() => {
-    if (token) {
+    if (token && azs.length < 1) {
       dispatch(getAZSList(token));
     }
   }, [token]);
 
-  console.log('redner list', azs);
+  console.log('redner list', azs, token);
   const {modal, modalTextContainer, modalText} = styles;
   return (
     <MainCard>

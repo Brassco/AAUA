@@ -107,32 +107,32 @@ export const changePhone = phone => {
   };
 };
 
-export const addCard = card => {
-  return dispatch => {
-    dispatch({
-      type: ORDER_CARD,
-    });
+// export const addCard = card => {
+//   return dispatch => {
+//     dispatch({
+//       type: ORDER_CARD,
+//     });
 
-    const obj = {
-      token: card.token,
-      number: card.number,
-    };
+//     const obj = {
+//       token: card.token,
+//       number: card.number,
+//     };
 
-    const data = JSON.stringify(obj);
-    const signature = md5(SECRET_KEY + data);
+//     const data = JSON.stringify(obj);
+//     const signature = md5(SECRET_KEY + data);
 
-    console.log('ACTION ADD CARD', data, signature);
+//     console.log('ACTION ADD CARD', data, signature);
 
-    axios
-      .post(ADD_AAUA_CARD_URL, data, {
-        headers: {
-          Signature: signature,
-          'Content-Type': 'application/json',
-        },
-      })
-      .then(response => addCardSuccess(dispatch, response.data));
-  };
-};
+//     axios
+//       .post(ADD_AAUA_CARD_URL, data, {
+//         headers: {
+//           Signature: signature,
+//           'Content-Type': 'application/json',
+//         },
+//       })
+//       .then(response => addCardSuccess(dispatch, response.data));
+//   };
+// };
 
 export const addCardSuccess = (dispatch, response) => {
   console.log('ADD CARD RESPONSE', response);

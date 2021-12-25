@@ -73,10 +73,10 @@ import AnQComponent from '@aaua/Screens/Questions';
 import FeedbackComponent from '@aaua/Screens/Feedbacks';
 import AAUAMainComponent from '@aaua/Screens/Fuel';
 import AAUAAddCardComponent from '@aaua/Screens/Fuel/AddCard';
-import AAUAOrderCardComponent from './components/AAUA_card/OrderCardComponent';
-import MyAAUACardsComponent from './components/AAUA_card/MyAAUACardsComponent';
-import OrderVirtualCardComponent from './components/AAUA_card/OrderVirtualCardComponent';
-import QRcode from './components/AAUA_card/QRcode';
+import AAUAOrderCardComponent from '@aaua/components/AAUA_card/OrderCardComponent';
+import MyAAUACardsComponent from '@aaua/components/AAUA_card/MyAAUACardsComponent';
+import OrderVirtualCardComponent from '@aaua/components/AAUA_card/OrderVirtualCardComponent';
+import QRcode from './components/AAUA_card/QrCode/';
 import AZSListScreen from '@aaua/Screens/Fuel/AzsList';
 import ButtonsScreen from '@aaua/Screens/Fuel/AauaCardVariants';
 import OrderingComponent from './components/Store/OrderingComponent';
@@ -439,6 +439,7 @@ class RouterComponent extends React.Component {
       if (Actions.currentScene == 'mainScreen') {
         BackHandler.exitApp();
       } else if (routs.includes(Actions.currentScene)) {
+        console.log(' ---- ROUTER WILL GO TO MAIN SCREEN ----')
         Actions.mainScreen();
       } else if (Actions.currentScene == 'message') {
         Actions.push('messagesList');

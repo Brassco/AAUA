@@ -1,11 +1,9 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {View, Image, Text, TouchableOpacity, Alert} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 
 import I18n from '@aaua/i18n';
 
-import {changeCardNumber, addCard} from '@aaua/actions/AAUA_CardAction';
 import {
   MainCard,
   CardItem,
@@ -13,16 +11,17 @@ import {
   Header,
   CreditCardInput,
 } from '@aaua/components/common';
-import {showAlert} from '@aaua/Modals';
+import {showAlert} from '@aaua/components/Modals';
+
+import AauaCard from '@aaua/services/AauaCard';
 
 const AddCard = () => {
-
   const {
     AAUA_Card,
     auth: {
       user: {token},
     },
-  } = useSelector( state => state);
+  } = useSelector(state => state);
 
   const [cardNumber, setCardNumber] = useState('');
 
@@ -30,24 +29,36 @@ const AddCard = () => {
     setCardNumber(text);
   };
 
-  const onPress = () => {
+  const onPress = async () => {
     const validNumber = cardNumber.replace(/\-/g, '');
     const card = {
       token: token,
       number: validNumber,
     };
-    addCard(card);
-  };
+    const addCardResponse = await AauaCard.addCard(card);
 
-  // componentWillReceiveProps(nextProps) {
-  //     if (nextProps.addCardError != null) {
-  //         showAlert(
-  //             'Ошибка',
-  //             nextProps.addCardError,
-  //             'Закрыть',
-  //         )
-  //     }
-  // }
+    if (addCardResponse.error > 0) {
+      const {error} = addCardResponse;
+      let errorMsg = I18n.t('fuel_screen.add_card.errors.some_wrong');
+      if (error == 2) {
+        errorMsg = I18n.t('fuel_screen.add_card.errors.unauthorized');
+      }
+      if (error == 3) {
+        errorMsg = I18n.t('fuel_screen.add_card.errors.no_card');
+      }
+      if (error == 4) {
+        errorMsg = I18n.t('fuel_screen.add_card.errors.not_found');
+      }
+      showAlert(I18n.t('modals.error_title'), errorMsg, I18n.t('modals.close'));
+    } else {
+      showAlert(
+        I18n.t('modals.thanks_title'),
+        I18n.t('fuel_screen.add_card.card_added'),
+        I18n.t('modals.close'),
+        Actions.AAUA_main(),
+      );
+    }
+  };
 
   return (
     <MainCard>
@@ -84,17 +95,5 @@ const AddCard = () => {
     </MainCard>
   );
 };
-
-// const mapStateToProps = ({AAUA_Card, auth}) => {
-//   return {
-//     token: auth.user.token,
-//     card_number: AAUA_Card.card_number,
-//     addCardError: AAUA_Card.addCardError,
-//   };
-// };
-
-// export default connect(mapStateToProps, {changeCardNumber, addCard})(
-//   AddCardComponent,
-// );
 
 export default AddCard;

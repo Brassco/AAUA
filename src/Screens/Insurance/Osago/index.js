@@ -4,6 +4,8 @@ import {useSelector, useDispatch} from 'react-redux';
 import {Actions} from 'react-native-router-flux';
 import Modal from 'react-native-modalbox';
 
+import Insurance from '@aaua/services/Insurance';
+
 import I18n from '@aaua/i18n';
 
 import {
@@ -19,9 +21,9 @@ import {calculateOsago, orderOsago} from '@aaua/actions/InsuranceAction';
 import {showAlert} from '@aaua/components/Modals';
 
 import styles from './styles';
+import {STORE_PRODUCT_INCREASE_VIEWS_URL} from '../../../actions/constants';
 
 const Osago = () => {
-
   const dispatch = useDispatch();
 
   const {
@@ -58,36 +60,59 @@ const Osago = () => {
   const [engineVolume, setEngineVolume] = useState(dropdownElements[0]);
   const [selectedCity, setSelectedCity] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [price, setPrice] = useState(0);
 
   useEffect(() => {
     if (selectedCity != null) {
-      dispatch(calculateOsago(token, selectedCity.id, engineVolume));
+      // dispatch(calculateOsago(token, selectedCity.id, engineVolume));
+      calculate();
     }
   }, [engineVolume, selectedCity]);
+
+  const calculate = async () => {
+    const response = await Insurance.calculateOsago(
+      token,
+      selectedCity.id,
+      engineVolume,
+    );
+
+console.log('calculate ----', response);
+
+    if (response.error) {
+      showAlert(I18n.t('modals.error_title'), response.error, 'Ok');
+    } else {
+      setPrice(response);
+    }
+  };
 
   const onChangeVolume = itemValue => {
     setEngineVolume(itemValue);
   };
 
-  const onOrder = () => {
+  const onOrder = async () => {
     const orderData = {
       token,
       carType: engineVolume,
       cityId: selectedCity.id,
     };
-    dispatch(orderOsago(orderData));
+    const response = await Insurance.orderOsago(orderData);
+    if (response.error === 0) {
+      showAlert(
+        I18n.t('insurance_screen.osago.thanks'),
+        I18n.t('insurance_screen.osago.request_accepted'),
+        'Ok',
+        () => {
+          Actions.insuranceCategories();
+        },
+      );
+    } else {
+      showAlert(I18n.t('modals.error_title'), response.error, 'Ok');
+    }
+    // dispatch(orderOsago(orderData));
   };
 
   const onChangeCity = city => {
     setSelectedCity(city);
-  };
-
-  const renderPrice = () => {
-    if (loadingPrice) {
-      return <Spiner />;
-    } else {
-      return <Text style={priceText}>{parseInt(osagoPrice)}грн</Text>;
-    }
   };
 
   const {
@@ -106,9 +131,7 @@ const Osago = () => {
 
   return (
     <MainCard>
-      <Header back>
-      {I18n.t('insurance_screen.categories.osago')}
-      </Header>
+      <Header back>{I18n.t('insurance_screen.categories.osago')}</Header>
       <CardItem style={contentContainer}>
         <DropDown
           fontSize={13}
@@ -129,7 +152,9 @@ const Osago = () => {
         />
       </CardItem>
       <CardItem style={contentContainer}>
-        <View style={priceWrapper}>{renderPrice()}</View>
+        <View style={priceWrapper}>
+          <Text style={priceText}>{parseInt(price)}грн</Text>
+        </View>
       </CardItem>
       <CardItem
         style={{
@@ -137,6 +162,7 @@ const Osago = () => {
           flex: 1,
         }}>
         <ButtonRoundet
+          isDisabled={selectedCity === null}
           style={buttonStyle}
           textStyle={{color: '#1B1B1B'}}
           onPress={onOrder}>
@@ -149,8 +175,12 @@ const Osago = () => {
             <Text style={textColor}>{I18n.t('insurance_screen.osago.or')}</Text>
           </View>
           <View style={textStyle}>
-            <Text style={textColor}>{I18n.t('insurance_screen.osago.buy')}</Text>
-            <Text style={textColor}>{I18n.t('insurance_screen.osago.insurance')}</Text>
+            <Text style={textColor}>
+              {I18n.t('insurance_screen.osago.buy')}
+            </Text>
+            <Text style={textColor}>
+              {I18n.t('insurance_screen.osago.insurance')}
+            </Text>
           </View>
         </View>
         <View

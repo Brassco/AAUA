@@ -15,8 +15,8 @@ const MessageComponent = props => {
   const {
     auth: {
       user: {token},
-      messages: {message, loadingMessageInfo: loading, messageError},
     },
+    messages: {message, loadingMessageInfo: loading, messageError},
   } = useSelector(state => state);
 
   const timeConverter = UNIX_timestamp => {
@@ -45,8 +45,11 @@ const MessageComponent = props => {
     return time;
   };
 
-  useEffect(() => {
+  useEffect( () => {
     dispatch(getMessage(token, messageId));
+  }, [token, messageId])
+
+  useEffect(() => {
 
     if (Platform.OS == 'android' && listener == null) {
       listener = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -56,7 +59,7 @@ const MessageComponent = props => {
         }
       });
     }
-  }, [token, messageId]);
+  }, []);
 
   useEffect(() => {
     if (Platform.OS == 'android' && listener == null) {

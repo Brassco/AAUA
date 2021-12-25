@@ -30,7 +30,7 @@ import styles from './styles';
 const {width} = Dimensions.get('window');
 const bannerWidth = width * 0.98;
 const bannerHeight = width * 0.61;
-const imgBanner = require('@aaua/images/subscription_banner.png');
+const imgBanner = require('@aaua/images/subscription_banner2.jpg');
 
 const Subscription = () => {
 
@@ -48,6 +48,7 @@ const Subscription = () => {
 
   useEffect(() => {
     if (token) {
+      console.log(' --- Subscription useEffect ---', {token})
       dispatch(getData(token));
     }
   }, [token]);

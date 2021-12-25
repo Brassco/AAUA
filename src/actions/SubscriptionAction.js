@@ -53,10 +53,10 @@ const onGetDataSuccess = (dispatch, subscription) => {
       type: SUBSCRIPTION_GET_DATA_SUCCESS,
       payload: subscription.data,
     });
-    dispatch({
-      type: UPDATE_USER_SUBSCRIPTION,
-      payload: subscription.data,
-    });
+    // dispatch({
+    //   type: UPDATE_USER_SUBSCRIPTION,
+    //   payload: subscription.data,
+    // });
   } else if (subscription.error >= 1) {
     dispatch({
       type: SUBSCRIPTION_GET_DATA_FAIL,

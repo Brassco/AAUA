@@ -3,7 +3,7 @@ import {Spiner} from '@aaua/components/common';
 import {getMyCard, orderCard} from '@aaua/actions/AAUA_CardAction';
 import {useSelector, useDispatch} from 'react-redux';
 import ButtonsScreen from '@aaua/Screens/Fuel/AauaCardVariants';
-import QRcode from '@aaua/components/AAUA_card/QRcode';
+import QRcode from '@aaua/components/AAUA_card/QrCode/';
 import AZSListScreen from '@aaua/components/AAUA_card/AZSListScreen';
 
 const Main = () => {

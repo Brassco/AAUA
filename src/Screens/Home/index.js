@@ -1,5 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {View, Image, TouchableOpacity, useWindowDimensions} from 'react-native';
+import {
+  View,
+  Image,
+  TouchableWithoutFeedback,
+  useWindowDimensions,
+} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import ImageSlider from 'react-native-image-slider';
 import {useSelector, useDispatch} from 'react-redux';
@@ -21,8 +26,7 @@ import {
 } from '@aaua/components/common';
 
 const HomeScreen = props => {
-
-  const { width: windowWidth } = useWindowDimensions();
+  const {width: windowWidth} = useWindowDimensions();
 
   const {auth, citiesBrands, messages} = useSelector(state => state);
   const user = auth.user;
@@ -56,17 +60,18 @@ const HomeScreen = props => {
           autoPlayWithInterval={4000}
           customSlide={({index, item, style, width}) => {
             return (
-              <TouchableOpacity
+              <TouchableWithoutFeedback
                 onPress={item => {
                   Actions.imageContent({
                     images: images,
                     index: index,
                   });
                 }}
-                key={index}
-                style={[style, customSlide]}>
-                <Image source={{uri: item.url}} style={customImage} />
-              </TouchableOpacity>
+                key={index}>
+                <View style={[style, customSlide]}>
+                  <Image source={{uri: item.url}} style={customImage} />
+                </View>
+              </TouchableWithoutFeedback>
             );
           }}
         />
